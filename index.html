@@ -2,83 +2,126 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Palpite Verde</title>
   <meta name="description" content="Adivinhe o jogador do Palmeiras em 10 palpites. Projeto de fã, não oficial.">
-  <meta name="theme-color" content="#0b5d3b">
+  <meta name="theme-color" content="#006437">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
   <link rel="stylesheet" href="css/estilo.css">
 </head>
 <body>
-  <header class="topo">
-    <h1 class="marca">Palpite<span>Verde</span></h1>
-    <nav class="topo__acoes">
-      <button class="icone" id="btn-stats" aria-label="Estatísticas" title="Estatísticas">📊</button>
-      <button class="icone" id="btn-ajuda" aria-label="Como jogar" title="Como jogar">?</button>
-    </nav>
-  </header>
+  <!-- ===================== TELA INICIAL ===================== -->
+  <main class="inicio" id="tela-inicio">
+    <header class="inicio__marca">
+      <p class="inicio__sobre">Jogo de fã · Palmeiras</p>
+      <h1 class="logo">Palpite <span>Verde</span></h1>
+      <p class="inicio__lema">Descubra o craque secreto em até 10 palpites.</p>
+    </header>
 
-  <main class="palco">
-    <div class="modos" role="tablist" aria-label="Modo de jogo">
-      <button role="tab" class="modo ativo" data-modo="dia" aria-selected="true">Desafio do dia</button>
-      <button role="tab" class="modo" data-modo="treino" aria-selected="false">Treino ∞</button>
-    </div>
-
-    <div class="opcoes">
-      <div class="segmento" role="radiogroup" aria-label="Nível">
-        <button class="seg ativo" data-nivel="facil" role="radio" aria-checked="true">Fácil <small>2020+</small></button>
-        <button class="seg" data-nivel="dificil" role="radio" aria-checked="false">Difícil <small>1970+</small></button>
-        <button class="seg" data-nivel="lendas" role="radio" aria-checked="false">Lendas <small>todas</small></button>
+    <section class="painel" aria-labelledby="t-modo">
+      <h2 class="painel__titulo" id="t-modo">Como você quer jogar?</h2>
+      <div class="opcoes-grandes" role="radiogroup" aria-labelledby="t-modo">
+        <button class="opcao" id="op-dia" data-modo="dia" role="radio" aria-checked="true">
+          <span class="opcao__nome">Desafio do dia</span>
+          <span class="opcao__texto">Um jogador por dia, o mesmo para todo mundo. Troca à meia-noite.</span>
+          <span class="opcao__extra" id="op-dia-status"></span>
+        </button>
+        <button class="opcao" id="op-treino" data-modo="treino" role="radio" aria-checked="false">
+          <span class="opcao__nome">Treino ∞</span>
+          <span class="opcao__texto">Um jogador atrás do outro, sem fim. Bata seu recorde de sequência.</span>
+          <span class="opcao__extra" id="op-treino-status"></span>
+        </button>
       </div>
-      <button class="botao botao--leve" id="btn-novo" hidden>Pular</button>
-    </div>
 
-    <div class="placar" id="placar" hidden aria-label="Placar do treino infinito">
-      <div><b id="placar-acertos">0/0</b><small>Acertos</small></div>
-      <div><b id="placar-seq">0</b><small>Sequência</small></div>
-      <div><b id="placar-recorde">0</b><small>Recorde</small></div>
-    </div>
-
-    <p class="status" id="status" aria-live="polite"></p>
-
-    <form class="busca" id="form-palpite" autocomplete="off">
-      <label for="campo" class="sr">Seu palpite</label>
-      <input id="campo" class="busca__campo" type="text" placeholder="Digite o nome de um jogador"
-             role="combobox" aria-expanded="false" aria-controls="sugestoes" aria-autocomplete="list" spellcheck="false">
-      <ul class="sugestoes" id="sugestoes" role="listbox" hidden></ul>
-    </form>
-
-    <div class="legenda" aria-hidden="true">
-      <span><i class="pin pin--ok"></i>Acertou</span>
-      <span><i class="pin pin--perto"></i>Perto</span>
-      <span><i class="pin pin--longe"></i>Longe</span>
-      <span>↑↓ o certo é maior/menor</span>
-    </div>
-
-    <section class="palpites" id="palpites" aria-label="Seus palpites"></section>
-
-    <section class="fim" id="fim" hidden>
-      <h2 id="fim-titulo"></h2>
-      <p id="fim-texto"></p>
-      <p><a id="fim-wiki" class="fim__wiki" target="_blank" rel="noopener" hidden>Ver o jogador na Wikipédia ↗</a></p>
-      <div class="fim__acoes">
-        <button class="botao" id="btn-de-novo" hidden>Próximo jogador →</button>
-        <button class="botao" id="btn-compartilhar">Compartilhar</button>
+      <h2 class="painel__titulo" id="t-nivel">Nível</h2>
+      <div class="niveis" role="radiogroup" aria-labelledby="t-nivel">
+        <button class="nivel" id="nv-facil" data-nivel="facil" role="radio" aria-checked="true">
+          <span class="nivel__nome">Fácil</span><span class="nivel__ano">de 2020 para cá</span><span class="nivel__qtd" data-qtd="facil"></span>
+        </button>
+        <button class="nivel" id="nv-dificil" data-nivel="dificil" role="radio" aria-checked="false">
+          <span class="nivel__nome">Difícil</span><span class="nivel__ano">de 1970 para cá</span><span class="nivel__qtd" data-qtd="dificil"></span>
+        </button>
+        <button class="nivel" id="nv-lendas" data-nivel="lendas" role="radio" aria-checked="false">
+          <span class="nivel__nome">Lendas</span><span class="nivel__ano">todas as épocas</span><span class="nivel__qtd" data-qtd="lendas"></span>
+        </button>
       </div>
-      <p class="fim__proximo" id="fim-proximo"></p>
+
+      <button class="botao botao--grande" id="btn-jogar">Jogar</button>
+      <div class="inicio__links">
+        <button class="link" id="btn-ajuda-inicio">Como jogar</button>
+        <button class="link" id="btn-stats-inicio">Minhas estatísticas</button>
+      </div>
     </section>
+
+    <p class="rodape">Projeto de fã, sem ligação oficial com a S.E. Palmeiras. Dados das fichas da Wikipédia e do Wikidata; podem estar incompletos.</p>
   </main>
 
-  <footer class="rodape">
-    Projeto de fã, sem ligação oficial com a S.E. Palmeiras. Dados das fichas da Wikipédia (podem estar incompletos).
-  </footer>
+  <!-- ===================== TELA DE JOGO ===================== -->
+  <div class="jogo" id="tela-jogo" hidden>
+    <header class="barra">
+      <button class="barra__voltar" id="btn-inicio" aria-label="Voltar para o início">← Início</button>
+      <p class="barra__titulo"><span class="logo logo--mini">Palpite <span>Verde</span></span><span class="chip" id="chip-modo"></span></p>
+      <nav class="barra__acoes">
+        <button class="icone" id="btn-stats" aria-label="Estatísticas" title="Estatísticas">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="10" width="3" height="7" rx="1"/><rect x="8.5" y="6" width="3" height="11" rx="1"/><rect x="14" y="3" width="3" height="14" rx="1"/></svg>
+        </button>
+        <button class="icone" id="btn-ajuda" aria-label="Como jogar" title="Como jogar">?</button>
+      </nav>
+    </header>
 
+    <main class="palco">
+      <div class="placar" id="placar" hidden aria-label="Placar do treino infinito">
+        <div><b id="placar-acertos">0/0</b><small>Acertos</small></div>
+        <div><b id="placar-seq">0</b><small>Sequência</small></div>
+        <div><b id="placar-recorde">0</b><small>Recorde</small></div>
+      </div>
+
+      <div class="linha-status">
+        <p class="status" id="status" aria-live="polite"></p>
+        <button class="botao botao--contorno botao--pequeno" id="btn-novo" hidden>Pular</button>
+      </div>
+
+      <form class="busca" id="form-palpite" autocomplete="off">
+        <label for="campo" class="sr">Seu palpite</label>
+        <input id="campo" class="busca__campo" type="text" placeholder="Digite o nome de um jogador"
+               role="combobox" aria-expanded="false" aria-controls="sugestoes" aria-autocomplete="list" spellcheck="false">
+        <ul class="sugestoes" id="sugestoes" role="listbox" hidden></ul>
+      </form>
+
+      <div class="legenda" aria-hidden="true">
+        <span><i class="pin pin--ok"></i>Acertou</span>
+        <span><i class="pin pin--perto"></i>Perto</span>
+        <span><i class="pin pin--longe"></i>Longe</span>
+        <span>↑↓ o certo é maior/menor</span>
+      </div>
+
+      <section class="fim" id="fim" hidden>
+        <p class="fim__selo" id="fim-selo"></p>
+        <h2 id="fim-titulo"></h2>
+        <p id="fim-texto"></p>
+        <div class="fim__acoes">
+          <button class="botao" id="btn-de-novo" hidden>Próximo jogador →</button>
+          <button class="botao" id="btn-card">Criar card do resultado</button>
+          <button class="botao botao--contorno" id="btn-compartilhar">Copiar resultado</button>
+        </div>
+        <p class="fim__proximo" id="fim-proximo"></p>
+        <p><a id="fim-wiki" class="fim__wiki" target="_blank" rel="noopener" hidden>Ver o jogador na Wikipédia ↗</a></p>
+      </section>
+
+      <section class="palpites" id="palpites" aria-label="Seus palpites"></section>
+    </main>
+  </div>
+
+  <!-- ===================== MODAIS ===================== -->
   <dialog class="modal" id="modal-ajuda">
     <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
     <h2>Como jogar</h2>
     <p>Descubra o jogador secreto do Palmeiras em até <strong>10 palpites</strong>. Cada palpite mostra uma ficha que compara o jogador que você chutou com o secreto:</p>
     <ul class="regras">
       <li><i class="pin pin--ok"></i><b>Verde</b>: igual ao jogador secreto.</li>
-      <li><i class="pin pin--perto"></i><b>Amarelo</b>: chegou perto.</li>
+      <li><i class="pin pin--perto"></i><b>Verde-água</b>: chegou perto.</li>
       <li><i class="pin pin--longe"></i><b>Cinza</b>: longe.</li>
       <li><b>↑ / ↓</b>: o número do jogador secreto é maior / menor.</li>
       <li><i class="pin pin--sem"></i><b>?</b>: a fonte não informa esse dado.</li>
@@ -88,13 +131,12 @@
       <tr><th>Estreia / Saída</th><td>até 5 anos de diferença</td></tr>
       <tr><th>Jogos</th><td>até 25 jogos</td></tr>
       <tr><th>Gols</th><td>até 10 gols</td></tr>
-      <tr><th>Posição</th><td>zagueiro ↔ lateral, meio-campo ↔ atacante</td></tr>
-      <tr><th>Nascimento</th><td>mesma região do Brasil, ou ambos estrangeiros</td></tr>
+      <tr><th>Nascimento</th><td>outro estado da mesma região do Brasil</td></tr>
+      <tr><th>Posição e país</th><td>não têm “perto”: ou acertou, ou está longe</td></tr>
     </table>
     <h3>Níveis</h3>
-    <p><b>Fácil</b>: só jogadores que atuaram pelo clube de 2020 para cá. <b>Difícil</b>: todos que atuaram de 1970 para cá. <b>Lendas</b>: todas as épocas, incluindo os grandes nomes de antes de 1970.</p>
-    <p><b>Desafio do dia</b>: o mesmo jogador para todo mundo, um por nível, troca à meia-noite (horário de Brasília). <b>Treino ∞</b>: um jogador atrás do outro, sem fim. Acertou, vem o próximo; travou, pode pular (zera a sequência). Tente bater seu recorde!</p>
-    <p>O sorteio dá preferência a jogadores mais recentes e a quem tem mais jogos pelo clube.</p>
+    <p><b>Fácil</b>: jogadores que atuaram pelo clube de 2020 para cá. <b>Difícil</b>: de 1970 para cá. <b>Lendas</b>: todas as épocas, incluindo os grandes nomes de antes de 1970.</p>
+    <p>O sorteio dá preferência a jogadores mais recentes e a quem tem mais jogos pelo clube. Quem ainda está no elenco aparece com saída em 2026.</p>
   </dialog>
 
   <dialog class="modal" id="modal-stats">
@@ -104,6 +146,17 @@
     <div class="numeros" id="numeros"></div>
     <h3>Palpites por vitória</h3>
     <div class="barras" id="barras"></div>
+  </dialog>
+
+  <dialog class="modal modal--card" id="modal-card">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Card do resultado</h2>
+    <img class="card-previa" id="card-img" alt="Card com o resultado da partida">
+    <p class="sub" id="card-dica">Salve a imagem para postar ou mandar para os amigos.</p>
+    <div class="fim__acoes">
+      <button class="botao" id="btn-salvar-card">Salvar imagem</button>
+      <button class="botao botao--contorno" id="btn-copiar-card">Copiar texto</button>
+    </div>
   </dialog>
 
   <div class="aviso" id="aviso" role="status" hidden></div>

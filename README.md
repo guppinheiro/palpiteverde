@@ -7,16 +7,21 @@ Projeto de fã, sem ligação oficial com o clube.
 
 A cada palpite aparece uma ficha que compara o jogador escolhido com o secreto:
 
-| Atributo   | "Perto" quando…                                   |
-|------------|---------------------------------------------------|
-| Posição    | zagueiro ↔ lateral, meio-campo ↔ atacante         |
-| Estreia    | até 5 anos de diferença                           |
+| Atributo   | "Perto" quando…                                        |
+|------------|--------------------------------------------------------|
+| Posição    | não tem "perto": acertou ou longe                      |
+| Estreia    | até 5 anos de diferença                                |
 | Saída      | até 5 anos (quem ainda está no elenco conta como 2026) |
-| Jogos      | até 25 jogos                                      |
-| Gols       | até 10 gols                                       |
-| Nascimento | mesma região do Brasil, ou os dois estrangeiros   |
+| Jogos      | até 25 jogos                                           |
+| Gols       | até 10 gols                                            |
+| Nascimento | outro estado da mesma região; país não tem "perto"     |
 
-Verde = igual, amarelo = perto, cinza = longe. As setas ↑/↓ dizem se o número do jogador secreto é maior ou menor.
+Verde = igual, verde-água = perto, cinza = longe. O campo de nascimento mostra a bandeira do estado ou do país (imagens de domínio público do Wikimedia Commons, em `img/bandeiras/`). As setas ↑/↓ dizem se o número do jogador secreto é maior ou menor.
+
+## Telas
+
+- **Início**: escolhe o modo (Desafio do dia ou Treino ∞) e o nível, e mostra a situação do desafio de hoje e o recorde do treino.
+- **Jogo**: a busca, as fichas de dicas e, no fim, o resultado com o **card do resultado**: uma imagem 1080×1350 com o jogador secreto, o resultado, todos os palpites com as cores das dicas, o palpite que chegou mais perto e a sequência. Ela pode ser salva para postar.
 
 ## Modos
 
