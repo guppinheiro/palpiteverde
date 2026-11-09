@@ -27,6 +27,8 @@
     gravar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* sem armazenamento */ } }
   };
   const dataCurta = iso => { const [, m, d] = iso.split("-"); return `${d}/${m}`; };
+  // cor do placar pelo resultado do Palmeiras: vitória, empate ou derrota
+  const classeResultado = j => j.gp > j.gc ? " placar--vitoria" : j.gp < j.gc ? " placar--derrota" : " placar--empate";
 
   // ---------------- estado ----------------
   const escolha = {
@@ -194,7 +196,7 @@
     adv.className = "jogo-linha__adv" + (visivel ? "" : " oculto");
     adv.textContent = visivel ? j.adv : "? ? ?";
     const placar = document.createElement("span");
-    placar.className = "jogo-linha__placar";
+    placar.className = "jogo-linha__placar" + (visivel ? classeResultado(j) : "");
     placar.textContent = visivel ? `${j.gp} × ${j.gc}` : "– × –";
     placar.title = "Palmeiras × adversário";
     el.append(data, dica(j), adv, placar);
@@ -227,7 +229,7 @@
       rot.firstChild.textContent = j.local === "casa" ? "Casa" : "Fora";
       rot.append(" " + dataCurta(j.data));
       const placar = document.createElement("span");
-      placar.className = "jogo-linha__placar";
+      placar.className = "jogo-linha__placar" + (visivel ? classeResultado(j) : "");
       placar.textContent = visivel ? `${j.gp} × ${j.gc}` : "– × –";
       placar.title = "Palmeiras × adversário";
       linha.append(rot, placar);
