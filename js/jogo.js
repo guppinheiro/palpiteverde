@@ -3,7 +3,7 @@
 
   const MAX_PALPITES = 10;
   const ANO_ATUAL = 2026; // usado para quem ainda está no elenco (ultimo: null)
-  const INICIO = Date.UTC(2026, 0, 1); // dia 1 do desafio
+  const INICIO = Date.UTC(2026, 10, 9); // desafio #1 = 9 de novembro de 2026 (horário de Brasília)
   const FUSO = "America/Sao_Paulo";
 
   const REGIAO = {
@@ -111,7 +111,8 @@
   // Redefinições extraordinárias do desafio do dia: número do desafio → quantas vezes foi
   // redefinido. Nesses dias o sorteio usa outra semente e evita o jogador que tinha saído,
   // e o progresso salvo da versão anterior é descartado. Vale para todos os níveis.
-  const REDEFINICOES = { 313: 1 };
+  // O #1 foi redefinido para não repetir jogadores do período de testes.
+  const REDEFINICOES = { 1: 1 };
   const versaoDoDia = dia => REDEFINICOES[dia] || 0;
   function jogadorDoDia(dia, nivel) {
     const pool = SORTEAVEIS[nivel];
@@ -723,8 +724,9 @@
     const dia = numeroDoDia();
     const salvo = armazenamento.ler(`pv:dia:${escolha.nivel}`, null);
     const hoje = salvo && salvo.dia === dia && (salvo.versao || 0) === versaoDoDia(dia) ? salvo : null;
+    const renovado = salvo && salvo.dia === dia && (salvo.versao || 0) !== versaoDoDia(dia);
     $("op-dia-status").textContent = !hoje || !hoje.palpites.length
-      ? (versaoDoDia(dia) ? `Desafio #${dia} renovado: jogador novo hoje!` : `Desafio #${dia} esperando por você`)
+      ? (renovado ? `Desafio #${dia} renovado: jogador novo hoje!` : `Desafio #${dia} esperando por você`)
       : !hoje.fim ? `Em andamento: ${hoje.palpites.length} palpite${hoje.palpites.length === 1 ? "" : "s"}`
       : hoje.palpites.at(-1) === jogadorDoDia(dia, escolha.nivel).nome ? `Feito hoje: acertou em ${hoje.palpites.length}`
       : "Feito hoje: não acertou";
@@ -772,5 +774,19 @@
   });
 
   // ---------- início ----------
+  // A contagem dos desafios recomeçou em 9/11/2026 (#1). Dados salvos com a numeração
+  // antiga confundiriam o progresso e a sequência: limpa o progresso do dia e as datas
+  // de referência, mantendo os totais de jogos e vitórias.
+  if (armazenamento.ler("pv:epoca", 1) < 2) {
+    for (const nivel of Object.keys(NIVEIS)) {
+      try { localStorage.removeItem(`pv:dia:${nivel}`); } catch { /* sem armazenamento */ }
+      const st = armazenamento.ler(`pv:stats:${nivel}`, null);
+      if (st) {
+        delete st.ultimoDiaVencido; delete st.ultimoDiaJogado; st.seq = 0;
+        armazenamento.gravar(`pv:stats:${nivel}`, st);
+      }
+    }
+    armazenamento.gravar("pv:epoca", 2);
+  }
   mostrarInicio();
 })();

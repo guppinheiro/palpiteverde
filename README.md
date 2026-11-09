@@ -25,7 +25,7 @@ Verde = igual, verde-água = perto, cinza = longe. O campo de nascimento mostra 
 
 ## Modos
 
-- **Desafio do dia**: o mesmo jogador para todos, trocado à meia-noite de Brasília. Há um desafio diário para cada nível.
+- **Desafio do dia**: o mesmo jogador para todos, trocado à meia-noite de Brasília. O desafio #1 foi em 9/11/2026. Há um desafio diário para cada nível.
 - **Treino ∞ (infinito)**: um jogador atrás do outro, sem fim. Acertou ou errou, aperte Enter (ou "Próximo jogador") e vem o próximo. Dá para **pular** um jogador, mas isso zera a sequência. O placar mostra acertos, sequência atual e recorde, por nível, e continua de onde parou mesmo recarregando a página.
 - **Estatísticas**: jogos, % de vitórias, sequência e distribuição de palpites, separadas por nível e salvas no navegador (localStorage).
 
@@ -59,7 +59,7 @@ Assim, um jogador atual sai cerca de 7 vezes mais que um dos anos 1970. Esse pes
 
 ## Redefinir o desafio do dia
 
-Para trocar, de forma extraordinária, o jogador de um dia (em todos os níveis), acrescente o número do desafio em `REDEFINICOES`, no `js/jogo.js` (ex.: `{ 313: 1 }`; use 2 para redefinir de novo no mesmo dia). O sorteio desse dia passa a usar outra semente, evita o jogador anterior, e o progresso salvo da versão antiga é descartado. Quem já tinha jogado naquele dia joga de novo sem perder nem ganhar sequência.
+Para trocar, de forma extraordinária, o jogador de um dia (em todos os níveis), acrescente o número do desafio em `REDEFINICOES`, no `js/jogo.js` (ex.: `{ 1: 1 }`; use 2 para redefinir de novo no mesmo dia). O sorteio desse dia passa a usar outra semente, evita o jogador anterior, e o progresso salvo da versão antiga é descartado. Quem já tinha jogado naquele dia joga de novo sem perder nem ganhar sequência.
 
 ## Rodar localmente
 
