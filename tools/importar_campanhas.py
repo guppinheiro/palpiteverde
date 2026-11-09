@@ -17,8 +17,8 @@ Correções aplicadas aos dados de origem:
   - nomes diferentes do mesmo clube são unificados (ALIAS_*);
   - nos mata-matas, os dois jogos de um confronto ficam na fase do jogo de volta
     (a fonte às vezes marca a ida na fase anterior);
-  - na Copa do Brasil, a numeração das fases antes das oitavas não bate com a oficial em
-    alguns anos; essas fases aparecem juntas como "Fases iniciais".
+  - na Copa do Brasil, a numeração das fases antes das oitavas é corrigida nos anos em que
+    a fonte está deslocada (DESLOCAMENTO_FASE_COPA).
 """
 import argparse
 import csv
@@ -112,7 +112,9 @@ def resultado_campanha(comp, ano, jogos, ordem):
         return "Campeão"
     if ultima == "Final":
         return "Vice-campeão"
-    return {"Fase de grupos": "Caiu na fase de grupos", "Fases iniciais": "Caiu nas fases iniciais",
+    if ultima.endswith("ª fase"):
+        return f"Caiu na {ultima}"
+    return {"Fase de grupos": "Caiu na fase de grupos",
             "Oitavas de final": "Caiu nas oitavas", "Quartas de final": "Caiu nas quartas",
             "Semifinal": "Caiu na semifinal"}[ultima]
 
@@ -128,7 +130,7 @@ def unificar_fases_mata_mata(jogos):
     """Os dois jogos de um confronto ficam na fase do jogo de volta."""
     por_adv = defaultdict(list)
     for j in jogos:
-        if j["fase"] not in ("Fase de grupos", "Fases iniciais"):
+        if j["fase"] != "Fase de grupos":
             por_adv[j["adv"]].append(j)
     for lista in por_adv.values():
         lista.sort(key=lambda j: j["data"])
@@ -174,7 +176,10 @@ def ler_libertadores(caminho):
     return {"nome": "Libertadores", "fases": ORDEM_LIB, "anos": anos, "times": sorted(times)}
 
 
-ORDEM_COPA = ["Fases iniciais", "Oitavas de final", "Quartas de final", "Semifinal", "Final"]
+ORDEM_COPA = ["1ª fase", "2ª fase", "3ª fase", "4ª fase", "Oitavas de final", "Quartas de final", "Semifinal", "Final"]
+# A fonte numera as rodadas antes das oitavas com uma a mais que a oficial em alguns anos
+# (ex.: 2015, Vitória da Conquista foi a 1ª fase e aparece como rodada 2).
+DESLOCAMENTO_FASE_COPA = {"2014": 1, "2015": 1}
 # Rodada final de cada edição na fonte (2021 está incompleta na fonte: a final seria a 7)
 RODADA_FINAL_COPA = {"2021": 7}
 
@@ -231,7 +236,8 @@ def ler_copa(caminho):
         palmeiras_casa = casa == "Palmeiras"
         adv, uf = (fora, uf_fora) if palmeiras_casa else (casa, uf_casa)
         faltam = final[ano] - int(x["round"])
-        fase = ["Final", "Semifinal", "Quartas de final", "Oitavas de final"][faltam] if faltam < 4 else "Fases iniciais"
+        fase = (["Final", "Semifinal", "Quartas de final", "Oitavas de final"][faltam] if faltam < 4
+                else f"{int(x['round']) - DESLOCAMENTO_FASE_COPA.get(ano, 0)}ª fase")
         hg, ag = int(float(x["home_goal"])), int(float(x["away_goal"]))
         gp, gc = (hg, ag) if palmeiras_casa else (ag, hg)
         por_ano[ano].append({"fase": fase, "data": data, "local": "casa" if palmeiras_casa else "fora",

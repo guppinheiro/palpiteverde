@@ -1127,7 +1127,10 @@ window.CAMPANHAS = {
  "copa": {
   "nome": "Copa do Brasil",
   "fases": [
-   "Fases iniciais",
+   "1ª fase",
+   "2ª fase",
+   "3ª fase",
+   "4ª fase",
    "Oitavas de final",
    "Quartas de final",
    "Semifinal",
@@ -1138,7 +1141,7 @@ window.CAMPANHAS = {
     "resultado": "Campeão",
     "jogos": [
      {
-      "fase": "Fases iniciais",
+      "fase": "1ª fase",
       "data": "2012-03-14",
       "local": "fora",
       "adv": "Coruripe",
@@ -1147,7 +1150,7 @@ window.CAMPANHAS = {
       "uf": "AL"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "1ª fase",
       "data": "2012-03-21",
       "local": "casa",
       "adv": "Coruripe",
@@ -1156,7 +1159,7 @@ window.CAMPANHAS = {
       "uf": "AL"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "2ª fase",
       "data": "2012-04-04",
       "local": "fora",
       "adv": "Horizonte",
@@ -1265,7 +1268,7 @@ window.CAMPANHAS = {
     "resultado": "Caiu nas oitavas",
     "jogos": [
      {
-      "fase": "Fases iniciais",
+      "fase": "1ª fase",
       "data": "2014-03-12",
       "local": "fora",
       "adv": "Vilhena",
@@ -1274,7 +1277,7 @@ window.CAMPANHAS = {
       "uf": "RO"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "1ª fase",
       "data": "2014-04-02",
       "local": "casa",
       "adv": "Vilhena",
@@ -1283,7 +1286,7 @@ window.CAMPANHAS = {
       "uf": "RO"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "2ª fase",
       "data": "2014-05-07",
       "local": "fora",
       "adv": "Sampaio Corrêa",
@@ -1292,7 +1295,7 @@ window.CAMPANHAS = {
       "uf": "MA"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "2ª fase",
       "data": "2014-05-14",
       "local": "casa",
       "adv": "Sampaio Corrêa",
@@ -1301,7 +1304,7 @@ window.CAMPANHAS = {
       "uf": "MA"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "3ª fase",
       "data": "2014-07-23",
       "local": "fora",
       "adv": "Avaí",
@@ -1310,7 +1313,7 @@ window.CAMPANHAS = {
       "uf": "SC"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "3ª fase",
       "data": "2014-08-06",
       "local": "casa",
       "adv": "Avaí",
@@ -1342,7 +1345,7 @@ window.CAMPANHAS = {
     "resultado": "Campeão",
     "jogos": [
      {
-      "fase": "Fases iniciais",
+      "fase": "1ª fase",
       "data": "2015-03-04",
       "local": "fora",
       "adv": "Vitória da Conquista",
@@ -1351,7 +1354,7 @@ window.CAMPANHAS = {
       "uf": "BA"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "2ª fase",
       "data": "2015-04-29",
       "local": "fora",
       "adv": "Sampaio Corrêa",
@@ -1360,7 +1363,7 @@ window.CAMPANHAS = {
       "uf": "MA"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "2ª fase",
       "data": "2015-05-12",
       "local": "casa",
       "adv": "Sampaio Corrêa",
@@ -1369,7 +1372,7 @@ window.CAMPANHAS = {
       "uf": "MA"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "3ª fase",
       "data": "2015-05-27",
       "local": "casa",
       "adv": "ASA",
@@ -1378,7 +1381,7 @@ window.CAMPANHAS = {
       "uf": "AL"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "3ª fase",
       "data": "2015-07-15",
       "local": "fora",
       "adv": "ASA",
@@ -1724,10 +1727,10 @@ window.CAMPANHAS = {
     ]
    },
    "2021": {
-    "resultado": "Caiu nas fases iniciais",
+    "resultado": "Caiu na 3ª fase",
     "jogos": [
      {
-      "fase": "Fases iniciais",
+      "fase": "3ª fase",
       "data": "2021-06-03",
       "local": "fora",
       "adv": "CRB",
@@ -1737,7 +1740,7 @@ window.CAMPANHAS = {
       "penaltis": "perdeu"
      },
      {
-      "fase": "Fases iniciais",
+      "fase": "3ª fase",
       "data": "2021-06-09",
       "local": "casa",
       "adv": "CRB",
