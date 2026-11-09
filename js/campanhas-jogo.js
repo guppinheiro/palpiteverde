@@ -88,7 +88,7 @@
     $("camp-placar").hidden = !MODOS[jogo.modo].placar;
     $("camp-campo").value = ""; $("camp-gp").value = ""; $("camp-gc").value = "";
     $("camp-retorno").textContent = MODOS[jogo.modo].placar
-      ? "Digite o adversário e o placar de um jogo (gols do Palmeiras × gols do rival)."
+      ? "Digite o adversário e o placar de um jogo (gols do Palmeiras × gols do rival). Caixa vazia vale 0."
       : "Digite um adversário que o Palmeiras enfrentou nesta campanha.";
     renderJogo();
     window.scrollTo(0, 0);
@@ -108,7 +108,7 @@
     const times = C[jogo.comp].times;
     const time = times.find(t => normalizar(t) === normalizar(nome));
     if (!time) return retorno("Escolha um time da lista.");
-    if (extremo && (gp === "" || gc === "")) return retorno("Preencha o placar: gols do Palmeiras (SEP) e do rival.");
+    if (extremo) { gp = gp === "" ? "0" : String(Number(gp)); gc = gc === "" ? "0" : String(Number(gc)); } // vazio vale 0
     const contra = jogo.jogos.filter(j => j.adv === time);
     const abertos = contra.filter(j => !jogo.revelados.has(j.i));
     if (contra.length && !abertos.length && !extremo) return retorno(`${time} já foi descoberto.`);
@@ -263,8 +263,10 @@
 
   function renderJogo() {
     const comp = C[jogo.comp];
-    $("camp-chip").textContent = `${comp.nome} ${jogo.ano} · ${MODOS[jogo.modo].nome}`;
-    $("camp-ano-titulo").textContent = jogo.ano;
+    // no Extremo o ano fica escondido até o fim
+    const anoVisivel = MODOS[jogo.modo].placar && !jogo.fim ? "????" : jogo.ano;
+    $("camp-chip").textContent = `${comp.nome} ${anoVisivel} · ${MODOS[jogo.modo].nome}`;
+    $("camp-ano-titulo").textContent = anoVisivel;
     $("camp-comp-titulo").textContent = `${comp.nome} · modo ${MODOS[jogo.modo].nome.toLowerCase()}`;
     $("camp-acertos").textContent = `${jogo.revelados.size}/${jogo.jogos.length}`;
     $("camp-chances").textContent = jogo.chances - jogo.usadas;
@@ -361,7 +363,8 @@
     const nome = $("camp-campo").value;
     const gp = $("camp-gp").value.trim(), gc = $("camp-gc").value.trim();
     chutar(nome, gp, gc);
-    if (!jogo.fim) { $("camp-campo").value = ""; $("camp-gp").value = ""; $("camp-gc").value = ""; $("camp-campo").focus(); }
+    // o placar digitado fica: só o time é limpo para o próximo palpite
+    if (!jogo.fim) { $("camp-campo").value = ""; $("camp-campo").focus(); }
   }
 
   async function copiar() {
