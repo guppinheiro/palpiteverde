@@ -6,6 +6,7 @@
   --borda: #d8e1da;
   --verde: #0b5d3b;
   --verde-claro: #e3f1e8;
+  --sobre-verde: #ffffff;
   --ok: #1f8a4c;
   --perto: #e0a800;
   --longe: #6f7a75;
@@ -14,7 +15,7 @@
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --fundo: #0e1512;
     --cartao: #17211c;
     --texto: #e8efe9;
@@ -22,12 +23,28 @@
     --borda: #2a3830;
     --verde: #3fbf7f;
     --verde-claro: #1d3327;
+    --sobre-verde: #06140d;
     --ok: #2e9e5d;
     --perto: #c99700;
     --longe: #4f5a55;
     --sombra: none;
     color-scheme: dark;
   }
+}
+:root[data-theme="dark"] {
+  --fundo: #0e1512;
+  --cartao: #17211c;
+  --texto: #e8efe9;
+  --suave: #9aaba1;
+  --borda: #2a3830;
+  --verde: #3fbf7f;
+  --verde-claro: #1d3327;
+  --sobre-verde: #06140d;
+  --ok: #2e9e5d;
+  --perto: #c99700;
+  --longe: #4f5a55;
+  --sombra: none;
+  color-scheme: dark;
 }
 
 * { box-sizing: border-box; }
@@ -37,7 +54,7 @@ body {
   font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   background: var(--fundo);
   color: var(--texto);
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -46,7 +63,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 
 .topo {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 12px 16px; border-bottom: 1px solid var(--borda); background: var(--cartao);
+  padding-block: 12px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); border-bottom: 1px solid var(--borda); background: var(--cartao);
 }
 .marca { margin: 0; font-size: 1.35rem; font-weight: 800; letter-spacing: -.02em; }
 .marca span { color: var(--verde); }
@@ -56,7 +73,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   background: transparent; font-weight: 700;
 }
 
-.palco { width: 100%; max-width: 760px; margin: 0 auto; padding: 16px; flex: 1; }
+.palco { width: 100%; max-width: 760px; margin: 0 auto; padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); flex: 1; }
 
 .modos { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--verde-claro); padding: 4px; border-radius: 999px; }
 .modo { border: 0; background: transparent; padding: 9px; border-radius: 999px; font-weight: 600; color: var(--suave); }
@@ -66,7 +83,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .segmento { display: inline-flex; border: 1px solid var(--borda); border-radius: 999px; overflow: hidden; }
 .seg { border: 0; background: transparent; padding: 7px 14px; color: var(--suave); }
 .seg small { font-size: .72rem; opacity: .8; }
-.seg.ativo { background: var(--verde); color: #fff; }
+.seg.ativo { background: var(--verde); color: var(--sobre-verde); }
 
 .placar {
   display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; text-align: center;
@@ -136,10 +153,10 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .fim__acoes { display: flex; gap: 10px; justify-content: center; margin-top: 12px; flex-wrap: wrap; }
 .fim__proximo { color: var(--suave); font-size: .9rem; }
 
-.botao { border: 0; background: var(--verde); color: #fff; padding: 10px 18px; border-radius: 999px; font-weight: 600; }
+.botao { border: 0; background: var(--verde); color: var(--sobre-verde); padding: 10px 18px; border-radius: 999px; font-weight: 600; }
 .botao--leve { background: transparent; color: var(--verde); border: 1px solid var(--verde); }
 
-.rodape { text-align: center; font-size: .75rem; color: var(--suave); padding: 16px; }
+.rodape { text-align: center; font-size: .75rem; color: var(--suave); padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 
 .modal {
   border: 0; border-radius: 18px; padding: 22px; max-width: min(460px, calc(100vw - 32px));
@@ -165,4 +182,8 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .aviso {
   position: fixed; left: 50%; top: 70px; transform: translateX(-50%); z-index: 20;
   background: var(--texto); color: var(--fundo); padding: 10px 16px; border-radius: 10px; font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ficha { animation: none; }
 }
