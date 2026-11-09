@@ -58,12 +58,22 @@
     return a;
   }
 
-  const poolFacil = JOGADORES.filter(j => j.facil);
-  const ordemDiaria = embaralhar(poolFacil.map(j => j.nome).sort(), aleatorioComSemente(1914));
+  // Nível = ano mínimo em que o jogador ainda atuava pelo clube
+  const NIVEIS = {
+    facil:   { desde: 2020, rotulo: "fácil",   semente: 1914 },
+    dificil: { desde: 1970, rotulo: "difícil", semente: 1942 }
+  };
+  const POOL = {};
+  const ORDEM_DIARIA = {};
+  for (const [nivel, cfg] of Object.entries(NIVEIS)) {
+    POOL[nivel] = JOGADORES.filter(j => (j.ultimo ?? ANO_ATUAL) >= cfg.desde);
+    ORDEM_DIARIA[nivel] = embaralhar(POOL[nivel].map(j => j.nome).sort(), aleatorioComSemente(cfg.semente));
+  }
 
-  function jogadorDoDia(dia) {
-    const n = ordemDiaria.length;
-    return porNome.get(ordemDiaria[(((dia - 1) % n) + n) % n]);
+  function jogadorDoDia(dia, nivel) {
+    const ordem = ORDEM_DIARIA[nivel];
+    const n = ordem.length;
+    return porNome.get(ordem[(((dia - 1) % n) + n) % n]);
   }
 
   // ---------- comparação ----------
@@ -91,9 +101,10 @@
   }
 
   // ---------- estado ----------
+  const nivelSalvo = armazenamento.ler("pv:nivel", "facil");
   const estado = {
     modo: "dia",
-    nivel: "facil",
+    nivel: NIVEIS[nivelSalvo] ? nivelSalvo : "facil",
     secreto: null,
     palpites: [],
     fim: false,
@@ -103,8 +114,8 @@
   function carregarDia() {
     estado.modo = "dia";
     estado.dia = numeroDoDia();
-    estado.secreto = jogadorDoDia(estado.dia);
-    const salvo = armazenamento.ler("pv:dia", null);
+    estado.secreto = jogadorDoDia(estado.dia, estado.nivel);
+    const salvo = armazenamento.ler(`pv:dia:${estado.nivel}`, null);
     if (salvo && salvo.dia === estado.dia) {
       estado.palpites = salvo.palpites.filter(n => porNome.has(n));
       estado.fim = salvo.fim;
@@ -116,7 +127,7 @@
 
   function novoTreino() {
     estado.modo = "treino";
-    const pool = estado.nivel === "facil" ? poolFacil : JOGADORES;
+    const pool = POOL[estado.nivel];
     let escolhido;
     do { escolhido = pool[Math.floor(Math.random() * pool.length)]; }
     while (pool.length > 1 && estado.secreto && escolhido === estado.secreto);
@@ -127,11 +138,11 @@
 
   function salvarDia() {
     if (estado.modo !== "dia") return;
-    armazenamento.gravar("pv:dia", { dia: estado.dia, palpites: estado.palpites, fim: estado.fim });
+    armazenamento.gravar(`pv:dia:${estado.nivel}`, { dia: estado.dia, palpites: estado.palpites, fim: estado.fim });
   }
 
   function lerStats() {
-    return armazenamento.ler("pv:stats", { jogos: 0, vitorias: 0, seq: 0, melhor: 0, dist: Array(MAX_PALPITES).fill(0), ultimoDiaVencido: null });
+    return armazenamento.ler(`pv:stats:${estado.nivel}`, { jogos: 0, vitorias: 0, seq: 0, melhor: 0, dist: Array(MAX_PALPITES).fill(0), ultimoDiaVencido: null });
   }
 
   function registrarResultado(venceu) {
@@ -147,14 +158,14 @@
     } else {
       s.seq = 0;
     }
-    armazenamento.gravar("pv:stats", s);
+    armazenamento.gravar(`pv:stats:${estado.nivel}`, s);
   }
 
   // ---------- jogar ----------
   function palpitar(nome) {
     if (estado.fim) return;
     const j = porNome.get(nome);
-    if (!j) return avisar("Escolha um jogador da lista");
+    if (!j || !POOL[estado.nivel].includes(j)) return avisar("Escolha um jogador da lista");
     if (estado.palpites.includes(nome)) return avisar("Você já tentou esse jogador");
     estado.palpites.push(nome);
     const acertou = j === estado.secreto;
@@ -198,15 +209,22 @@
     lista.replaceChildren(...estado.palpites.map(renderFicha));
 
     const restantes = MAX_PALPITES - estado.palpites.length;
+    const plural = restantes === 1 ? "" : "s";
+    const rotulo = NIVEIS[estado.nivel].rotulo;
     $("status").textContent = estado.fim ? ""
-      : estado.modo === "dia" ? `Desafio #${estado.dia} · ${restantes} palpite${restantes === 1 ? "" : "s"} restante${restantes === 1 ? "" : "s"}`
-      : `Treino (${estado.nivel === "facil" ? "fácil" : "difícil"}) · ${restantes} palpite${restantes === 1 ? "" : "s"} restante${restantes === 1 ? "" : "s"}`;
+      : estado.modo === "dia" ? `Desafio #${estado.dia} (${rotulo}) · ${restantes} palpite${plural} restante${plural}`
+      : `Treino (${rotulo}) · ${restantes} palpite${plural} restante${plural}`;
 
     const campo = $("campo");
     campo.disabled = estado.fim;
     campo.placeholder = estado.fim ? "Fim de jogo" : "Digite o nome de um jogador";
 
-    $("treino-opcoes").hidden = estado.modo !== "treino";
+    $("btn-novo").hidden = estado.modo !== "treino";
+    document.querySelectorAll(".seg").forEach(x => {
+      const ativo = x.dataset.nivel === estado.nivel;
+      x.classList.toggle("ativo", ativo);
+      x.setAttribute("aria-checked", ativo);
+    });
     document.querySelectorAll(".modo").forEach(b => {
       const ativo = b.dataset.modo === estado.modo;
       b.classList.toggle("ativo", ativo);
@@ -235,7 +253,7 @@
     const termo = normalizar($("campo").value);
     const ul = $("sugestoes");
     if (!termo) return fecharSugestoes();
-    sugestoes = JOGADORES
+    sugestoes = POOL[estado.nivel]
       .filter(j => !estado.palpites.includes(j.nome))
       .map(j => ({ j, pos: normalizar(j.nome).indexOf(termo) }))
       .filter(x => x.pos >= 0)
@@ -300,9 +318,11 @@
   function textoCompartilhar() {
     const emoji = { ok: "🟩", perto: "🟨", longe: "⬜" };
     const venceu = estado.palpites.at(-1) === estado.secreto.nome;
+    const rotulo = NIVEIS[estado.nivel].rotulo;
+    const placar = `${venceu ? estado.palpites.length : "X"}/${MAX_PALPITES}`;
     const titulo = estado.modo === "dia"
-      ? `Palpite Verde #${estado.dia} ${venceu ? estado.palpites.length : "X"}/${MAX_PALPITES}`
-      : `Palpite Verde (treino) ${venceu ? estado.palpites.length : "X"}/${MAX_PALPITES}`;
+      ? `Palpite Verde #${estado.dia} (${rotulo}) ${placar}`
+      : `Palpite Verde (treino ${rotulo}) ${placar}`;
     const linhas = estado.palpites.map(n => comparar(porNome.get(n), estado.secreto).map(d => emoji[d.classe]).join(""));
     return `${titulo}\n${linhas.join("\n")}\n${location.href.split("?")[0]}`;
   }
@@ -318,6 +338,7 @@
 
   function renderStats() {
     const s = lerStats();
+    $("stats-sub").textContent = `Desafio do dia · nível ${NIVEIS[estado.nivel].rotulo}`;
     const pct = s.jogos ? Math.round((100 * s.vitorias) / s.jogos) : 0;
     $("numeros").innerHTML = [
       [s.jogos, "Jogos"], [pct + "%", "Vitórias"], [s.seq, "Sequência"], [s.melhor, "Melhor seq."]
@@ -353,12 +374,10 @@
     renderizar();
   }));
   document.querySelectorAll(".seg").forEach(b => b.addEventListener("click", () => {
+    if (b.dataset.nivel === estado.nivel) return;
     estado.nivel = b.dataset.nivel;
-    document.querySelectorAll(".seg").forEach(x => {
-      x.classList.toggle("ativo", x === b);
-      x.setAttribute("aria-checked", x === b);
-    });
-    novoTreino();
+    armazenamento.gravar("pv:nivel", estado.nivel);
+    if (estado.modo === "dia") carregarDia(); else novoTreino();
     renderizar();
   }));
   $("btn-novo").addEventListener("click", () => { novoTreino(); renderizar(); });

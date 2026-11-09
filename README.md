@@ -20,9 +20,20 @@ Verde = igual, amarelo = perto, cinza = longe. As setas ↑/↓ dizem se o núme
 
 ## Modos
 
-- **Desafio do dia**: o mesmo jogador para todos, trocado à meia-noite de Brasília. Sorteado entre os jogadores com `facil: true`.
-- **Treino**: jogador aleatório, quantas vezes quiser. No nível fácil só aparecem os mais conhecidos; no difícil, todos.
-- **Estatísticas**: jogos, % de vitórias, sequência e distribuição de palpites, salvas no navegador (localStorage).
+- **Desafio do dia**: o mesmo jogador para todos, trocado à meia-noite de Brasília. Há um desafio diário para cada nível.
+- **Treino**: jogador aleatório, quantas vezes quiser.
+- **Estatísticas**: jogos, % de vitórias, sequência e distribuição de palpites, separadas por nível e salvas no navegador (localStorage).
+
+## Níveis
+
+O nível vale para o Desafio do dia e para o Treino. Ele define quem pode ser sorteado e quem aparece na busca:
+
+| Nível   | Jogadores                                        |
+|---------|--------------------------------------------------|
+| Fácil   | atuaram pelo clube de **2020** em diante         |
+| Difícil | atuaram pelo clube de **1970** em diante         |
+
+O critério usa o ano do último jogo (`ultimo`); quem ainda está no elenco (`ultimo: null`) entra nos dois.
 
 ## Rodar localmente
 
@@ -39,7 +50,7 @@ Para publicar, basta servir os arquivos (por exemplo, GitHub Pages apontando par
 
 Todos os dados estão em `js/jogadores.js`. **Os números atuais são aproximados**: revise jogos, gols e anos com uma fonte confiável antes de divulgar.
 
-Ao incluir ou remover jogadores com `facil: true`, a ordem do desafio do dia muda a partir daquele momento.
+Ao incluir ou remover jogadores, a ordem do desafio do dia daquele nível muda a partir daquele momento. Os anos de corte dos níveis ficam em `NIVEIS`, no início de `js/jogo.js`.
 
 ## Estrutura
 

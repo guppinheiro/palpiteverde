@@ -23,12 +23,12 @@
       <button role="tab" class="modo" data-modo="treino" aria-selected="false">Treino</button>
     </div>
 
-    <div class="treino-opcoes" id="treino-opcoes" hidden>
+    <div class="opcoes">
       <div class="segmento" role="radiogroup" aria-label="Nível">
-        <button class="seg ativo" data-nivel="facil" role="radio" aria-checked="true">Fácil</button>
-        <button class="seg" data-nivel="dificil" role="radio" aria-checked="false">Difícil</button>
+        <button class="seg ativo" data-nivel="facil" role="radio" aria-checked="true">Fácil <small>desde 2020</small></button>
+        <button class="seg" data-nivel="dificil" role="radio" aria-checked="false">Difícil <small>desde 1970</small></button>
       </div>
-      <button class="botao botao--leve" id="btn-novo">Novo jogador</button>
+      <button class="botao botao--leve" id="btn-novo" hidden>Novo jogador</button>
     </div>
 
     <p class="status" id="status" aria-live="polite"></p>
@@ -82,13 +82,15 @@
       <tr><th>Posição</th><td>zagueiro ↔ lateral, meio-campo ↔ atacante</td></tr>
       <tr><th>Nascimento</th><td>mesma região do Brasil, ou ambos estrangeiros</td></tr>
     </table>
-    <p><b>Desafio do dia</b>: o mesmo jogador para todo mundo, troca à meia-noite (horário de Brasília). <b>Treino</b>: jogue quantas vezes quiser.</p>
+    <h3>Níveis</h3>
+    <p><b>Fácil</b>: só jogadores que atuaram pelo clube de 2020 para cá. <b>Difícil</b>: todos que atuaram de 1970 para cá.</p>
+    <p><b>Desafio do dia</b>: o mesmo jogador para todo mundo, um por nível, troca à meia-noite (horário de Brasília). <b>Treino</b>: jogue quantas vezes quiser.</p>
   </dialog>
 
   <dialog class="modal" id="modal-stats">
     <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
     <h2>Suas estatísticas</h2>
-    <p class="sub">Desafio do dia</p>
+    <p class="sub" id="stats-sub">Desafio do dia</p>
     <div class="numeros" id="numeros"></div>
     <h3>Palpites por vitória</h3>
     <div class="barras" id="barras"></div>
