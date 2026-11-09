@@ -33,7 +33,7 @@ Na tela inicial, a aba **Campanhas** abre o segundo jogo: escolha a **Libertador
 | Difícil | 1,5 × nº de jogos  | o time; revela todos os jogos contra ele                   |
 | Extremo | 1,5 × nº de jogos  | time + placar (SEP × RIVAL); revela um jogo por vez        |
 
-¹ Para as chances, um confronto de mata-mata com ida e volta conta como um jogo. No Extremo, os dois placares do confronto precisam ser acertados.
+¹ Para as chances, os jogos contra o mesmo adversário numa fase contam como um só (ida e volta no mata-mata, casa e fora na fase de grupos). No Extremo, os dois placares do confronto precisam ser acertados.
 
 Os dados estão em `js/campanhas.js`, gerado por `tools/importar_campanhas.py` a partir de dois conjuntos do Kaggle: [ernestonlm/conmebol-libertadores-results-from-2011-to-2022](https://www.kaggle.com/datasets/ernestonlm/conmebol-libertadores-results-from-2011-to-2022) (CC0) e [ricardomattos05/jogos-do-campeonato-brasileiro](https://www.kaggle.com/datasets/ricardomattos05/jogos-do-campeonato-brasileiro) (CC BY 4.0). Cobertura: Libertadores 2013 e 2016–2024; Copa do Brasil 2012–2021. O importador remove jogos duplicados, unifica nomes de clubes, corrige a fase dos jogos de ida e marca decisões por pênaltis (que a fonte não traz). Na Copa do Brasil, a numeração das fases antes das oitavas é corrigida nos anos em que a fonte está deslocada (2014 e 2015).
 

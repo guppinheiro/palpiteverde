@@ -63,12 +63,10 @@
   }
 
   // ---------------- partida ----------------
-  // Para as chances, um confronto de mata-mata (ida e volta) vale um jogo;
-  // na fase de grupos, cada jogo vale um.
+  // Para as chances, os jogos contra o mesmo adversário numa fase valem um só:
+  // ida e volta no mata-mata, casa e fora na fase de grupos.
   function unidades(jogos) {
-    const grupos = jogos.filter(j => j.fase === "Fase de grupos").length;
-    const confrontos = new Set(jogos.filter(j => j.fase !== "Fase de grupos").map(j => `${j.fase}|${j.adv}`)).size;
-    return grupos + confrontos;
+    return new Set(jogos.map(j => `${j.fase}|${j.adv}`)).size;
   }
 
   function comecar() {
