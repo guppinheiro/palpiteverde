@@ -31,7 +31,6 @@
   // ---------------- estado ----------------
   const escolha = {
     comp: armazenamento.ler("pv:camp:comp", "libertadores"),
-    ano: "",
     modo: armazenamento.ler("pv:camp:modo", "normal")
   };
   if (!C[escolha.comp]) escolha.comp = "libertadores";
@@ -52,10 +51,6 @@
     if (camp) renderPainel();
   }
 
-  function concluido(comp, ano) {
-    return Object.keys(MODOS).some(m => armazenamento.ler(`pv:camp:${comp}:${ano}:${m}`, null)?.venceu);
-  }
-
   function renderPainel() {
     document.querySelectorAll(".camp-comp").forEach(b => b.setAttribute("aria-checked", b.dataset.comp === escolha.comp));
     document.querySelectorAll(".camp-modo").forEach(b => b.setAttribute("aria-checked", b.dataset.modo === escolha.modo));
@@ -63,19 +58,14 @@
       const anos = Object.keys(C[el.dataset.anos].anos);
       el.textContent = `${anos.length} edições: ${anos[0]}–${anos.at(-1)}`;
     });
-    const sel = $("camp-ano");
-    const anos = Object.keys(C[escolha.comp].anos).sort().reverse();
-    sel.replaceChildren(new Option("Sortear um ano", ""), ...anos.map(a => {
-      const c = C[escolha.comp].anos[a];
-      return new Option(`${a} · ${c.jogos.length} jogos${concluido(escolha.comp, a) ? " · ✓ feito" : ""}`, a);
-    }));
-    sel.value = anos.includes(escolha.ano) ? escolha.ano : "";
   }
 
   // ---------------- partida ----------------
   function comecar() {
+    // ano sorteado a cada partida, sem repetir o da partida anterior
     const anos = Object.keys(C[escolha.comp].anos);
-    const ano = escolha.ano || anos[Math.floor(Math.random() * anos.length)];
+    const opcoes = anos.length > 1 ? anos.filter(a => !(jogo && jogo.comp === escolha.comp && jogo.ano === a)) : anos;
+    const ano = opcoes[Math.floor(Math.random() * opcoes.length)];
     const camp = C[escolha.comp].anos[ano];
     armazenamento.gravar("pv:camp:comp", escolha.comp);
     armazenamento.gravar("pv:camp:modo", escolha.modo);
@@ -341,9 +331,8 @@
   // ---------------- eventos ----------------
   $("aba-craque").addEventListener("click", () => mostrarAba("craque"));
   $("aba-campanhas").addEventListener("click", () => mostrarAba("campanhas"));
-  document.querySelectorAll(".camp-comp").forEach(b => b.addEventListener("click", () => { escolha.comp = b.dataset.comp; escolha.ano = ""; renderPainel(); }));
+  document.querySelectorAll(".camp-comp").forEach(b => b.addEventListener("click", () => { escolha.comp = b.dataset.comp; renderPainel(); }));
   document.querySelectorAll(".camp-modo").forEach(b => b.addEventListener("click", () => { escolha.modo = b.dataset.modo; renderPainel(); }));
-  $("camp-ano").addEventListener("change", e => { escolha.ano = e.target.value; });
   $("btn-jogar-camp").addEventListener("click", comecar);
   $("btn-camp-inicio").addEventListener("click", voltar);
   $("btn-camp-outro").addEventListener("click", voltar);

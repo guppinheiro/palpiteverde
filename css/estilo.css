@@ -257,3 +257,4 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 @keyframes aparece { from { background: var(--verde-claro); } }
 @media (max-width: 420px) { .jogo-linha { grid-template-columns: 44px 28px 1fr auto; gap: 6px; } .confrontos { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .jogo-linha--novo { animation: none; } }
+.camp-modo { align-items: center; justify-content: center; text-align: center; }
