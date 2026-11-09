@@ -61,6 +61,14 @@
   }
 
   // ---------------- partida ----------------
+  // Para as chances, um confronto de mata-mata (ida e volta) vale um jogo;
+  // na fase de grupos, cada jogo vale um.
+  function unidades(jogos) {
+    const grupos = jogos.filter(j => j.fase === "Fase de grupos").length;
+    const confrontos = new Set(jogos.filter(j => j.fase !== "Fase de grupos").map(j => `${j.fase}|${j.adv}`)).size;
+    return grupos + confrontos;
+  }
+
   function comecar() {
     // ano sorteado a cada partida, sem repetir o da partida anterior
     const anos = Object.keys(C[escolha.comp].anos);
@@ -72,7 +80,7 @@
     jogo = {
       comp: escolha.comp, ano, modo: escolha.modo, jogos: camp.jogos.map((j, i) => ({ ...j, i })),
       resultado: camp.resultado, revelados: new Set(), usadas: 0,
-      chances: Math.ceil(camp.jogos.length * MODOS[escolha.modo].fator), erros: [], fim: false, novos: new Set()
+      chances: Math.ceil(unidades(camp.jogos) * MODOS[escolha.modo].fator), erros: [], fim: false, novos: new Set()
     };
     $("tela-inicio").hidden = true;
     $("tela-jogo").hidden = true;
@@ -193,10 +201,46 @@
     return el;
   }
 
-  function blocoConfronto(lista, mataMata) {
+  // Confronto de ida e volta: uma caixa só, com o adversário uma vez e as linhas Casa e Fora
+  function caixaIdaVolta(lista) {
     const box = document.createElement("div");
-    box.className = "confronto";
-    lista.forEach(j => box.append(linhaJogo(j)));
+    const algumVisivel = lista.some(j => jogo.revelados.has(j.i) || jogo.fim);
+    const todosCertos = lista.every(j => jogo.revelados.has(j.i));
+    box.className = "confronto confronto--iv" + (todosCertos ? " confronto--certo" : "")
+      + (lista.some(j => jogo.novos.has(j.i)) ? " jogo-linha--novo" : "");
+    const topo = document.createElement("div");
+    topo.className = "confronto__topo";
+    const adv = document.createElement("span");
+    adv.className = "jogo-linha__adv" + (algumVisivel ? "" : " oculto");
+    adv.textContent = algumVisivel ? lista[0].adv : "? ? ?";
+    topo.append(dica(lista[0]), adv);
+    box.append(topo);
+    for (const j of [...lista].sort((a, b) => a.data.localeCompare(b.data))) {
+      const visivel = jogo.revelados.has(j.i) || jogo.fim;
+      const linha = document.createElement("div");
+      linha.className = "perna" + (jogo.revelados.has(j.i) ? " perna--certa" : visivel ? " perna--revelada" : "");
+      const rot = document.createElement("span");
+      rot.className = "perna__local";
+      rot.innerHTML = "<b></b>";
+      rot.firstChild.textContent = j.local === "casa" ? "Casa" : "Fora";
+      rot.append(" " + dataCurta(j.data));
+      const placar = document.createElement("span");
+      placar.className = "jogo-linha__placar";
+      placar.textContent = visivel ? `${j.gp} × ${j.gc}` : "– × –";
+      placar.title = "Palmeiras × adversário";
+      linha.append(rot, placar);
+      box.append(linha);
+    }
+    return box;
+  }
+
+  function blocoConfronto(lista, mataMata) {
+    const idaVolta = mataMata && lista.length === 2;
+    const box = idaVolta ? caixaIdaVolta(lista) : document.createElement("div");
+    if (!idaVolta) {
+      box.className = "confronto";
+      lista.forEach(j => box.append(linhaJogo(j)));
+    }
     const todosVisiveis = lista.every(j => jogo.revelados.has(j.i) || jogo.fim);
     if (mataMata && lista.length > 1 && todosVisiveis) {
       const gp = lista.reduce((s, j) => s + j.gp, 0), gc = lista.reduce((s, j) => s + j.gc, 0);
