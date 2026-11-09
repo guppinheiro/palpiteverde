@@ -1,7 +1,8 @@
 /*
  * Campanhas do Palmeiras — GERADO AUTOMATICAMENTE por tools/importar_campanhas.py em 2026-11-09.
- * Fontes (Kaggle): ernestonlm/conmebol-libertadores-results-from-2011-to-2022 (CC0) e
- * ricardomattos05/jogos-do-campeonato-brasileiro (CC BY 4.0). Placares do ponto de vista do Palmeiras
+ * Fontes: Kaggle ernestonlm/conmebol-libertadores-results-from-2011-to-2022 (CC0) e
+ * ricardomattos05/jogos-do-campeonato-brasileiro (CC BY 4.0); edições sem dados no Kaggle: RSSSF
+ * (www.rsssf.org, com crédito à RSSSF e aos autores). Placares do ponto de vista do Palmeiras
  * (gp = gols do Palmeiras, gc = gols do adversário), sem pênaltis.
  */
 window.CAMPANHAS = {
@@ -15,6 +16,828 @@ window.CAMPANHAS = {
    "Final"
   ],
   "anos": {
+   "1994": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "1994-03-02",
+      "local": "casa",
+      "adv": "Cruzeiro",
+      "gp": 2,
+      "gc": 0,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1994-03-09",
+      "local": "casa",
+      "adv": "Boca Juniors",
+      "gp": 6,
+      "gc": 1,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1994-03-17",
+      "local": "fora",
+      "adv": "Vélez Sarsfield",
+      "gp": 0,
+      "gc": 1,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1994-03-25",
+      "local": "fora",
+      "adv": "Cruzeiro",
+      "gp": 1,
+      "gc": 2,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1994-03-30",
+      "local": "fora",
+      "adv": "Boca Juniors",
+      "gp": 1,
+      "gc": 2,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1994-04-07",
+      "local": "casa",
+      "adv": "Vélez Sarsfield",
+      "gp": 4,
+      "gc": 1,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1994-04-20",
+      "local": "casa",
+      "adv": "São Paulo",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1994-04-27",
+      "local": "fora",
+      "adv": "São Paulo",
+      "gp": 1,
+      "gc": 2,
+      "pais": "Brasil"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1995": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "1995-02-21",
+      "local": "casa",
+      "adv": "Grêmio",
+      "gp": 3,
+      "gc": 2,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1995-03-07",
+      "local": "fora",
+      "adv": "El Nacional",
+      "gp": 0,
+      "gc": 1,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1995-03-10",
+      "local": "fora",
+      "adv": "Emelec",
+      "gp": 3,
+      "gc": 1,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1995-03-22",
+      "local": "fora",
+      "adv": "Grêmio",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1995-03-28",
+      "local": "casa",
+      "adv": "Emelec",
+      "gp": 2,
+      "gc": 1,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1995-04-04",
+      "local": "casa",
+      "adv": "El Nacional",
+      "gp": 7,
+      "gc": 0,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1995-04-26",
+      "local": "fora",
+      "adv": "Bolívar",
+      "gp": 0,
+      "gc": 1,
+      "pais": "Bolívia"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1995-05-03",
+      "local": "casa",
+      "adv": "Bolívar",
+      "gp": 3,
+      "gc": 0,
+      "pais": "Bolívia"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "1995-07-26",
+      "local": "fora",
+      "adv": "Grêmio",
+      "gp": 0,
+      "gc": 5,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "1995-08-02",
+      "local": "casa",
+      "adv": "Grêmio",
+      "gp": 5,
+      "gc": 1,
+      "pais": "Brasil"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1999": {
+    "resultado": "Campeão",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "1999-02-26",
+      "local": "casa",
+      "adv": "Corinthians",
+      "gp": 1,
+      "gc": 0,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1999-03-03",
+      "local": "fora",
+      "adv": "Cerro Porteño",
+      "gp": 5,
+      "gc": 2,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1999-03-05",
+      "local": "fora",
+      "adv": "Olimpia",
+      "gp": 2,
+      "gc": 4,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1999-03-12",
+      "local": "casa",
+      "adv": "Olimpia",
+      "gp": 1,
+      "gc": 1,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1999-03-17",
+      "local": "fora",
+      "adv": "Corinthians",
+      "gp": 1,
+      "gc": 2,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "1999-04-07",
+      "local": "casa",
+      "adv": "Cerro Porteño",
+      "gp": 2,
+      "gc": 1,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1999-04-14",
+      "local": "casa",
+      "adv": "Vasco da Gama",
+      "gp": 1,
+      "gc": 1,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1999-04-21",
+      "local": "fora",
+      "adv": "Vasco da Gama",
+      "gp": 4,
+      "gc": 2,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "1999-05-05",
+      "local": "casa",
+      "adv": "Corinthians",
+      "gp": 2,
+      "gc": 0,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "1999-05-12",
+      "local": "fora",
+      "adv": "Corinthians",
+      "gp": 0,
+      "gc": 2,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Semifinal",
+      "data": "1999-05-19",
+      "local": "fora",
+      "adv": "River Plate",
+      "gp": 0,
+      "gc": 1,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Semifinal",
+      "data": "1999-05-26",
+      "local": "casa",
+      "adv": "River Plate",
+      "gp": 3,
+      "gc": 0,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Final",
+      "data": "1999-06-02",
+      "local": "fora",
+      "adv": "Deportivo Cali",
+      "gp": 0,
+      "gc": 1,
+      "penaltis": "venceu",
+      "pais": "Colômbia"
+     },
+     {
+      "fase": "Final",
+      "data": "1999-06-16",
+      "local": "casa",
+      "adv": "Deportivo Cali",
+      "gp": 2,
+      "gc": 1,
+      "penaltis": "venceu",
+      "pais": "Colômbia"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2000": {
+    "resultado": "Vice-campeão",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "2000-02-15",
+      "local": "casa",
+      "adv": "The Strongest",
+      "gp": 4,
+      "gc": 0,
+      "pais": "Bolívia"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2000-03-16",
+      "local": "fora",
+      "adv": "El Nacional",
+      "gp": 1,
+      "gc": 3,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2000-03-21",
+      "local": "casa",
+      "adv": "Juventude",
+      "gp": 3,
+      "gc": 0,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2000-04-06",
+      "local": "fora",
+      "adv": "The Strongest",
+      "gp": 2,
+      "gc": 4,
+      "pais": "Bolívia"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2000-04-13",
+      "local": "casa",
+      "adv": "El Nacional",
+      "gp": 4,
+      "gc": 1,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2000-04-20",
+      "local": "fora",
+      "adv": "Juventude",
+      "gp": 2,
+      "gc": 2,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Peñarol",
+      "gp": 0,
+      "gc": 2,
+      "penaltis": "venceu",
+      "pais": "Uruguai"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Peñarol",
+      "gp": 3,
+      "gc": 1,
+      "penaltis": "venceu",
+      "pais": "Uruguai"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Atlas",
+      "gp": 2,
+      "gc": 0,
+      "pais": "México"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Atlas",
+      "gp": 3,
+      "gc": 2,
+      "pais": "México"
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "fora",
+      "adv": "Corinthians",
+      "gp": 3,
+      "gc": 4,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "casa",
+      "adv": "Corinthians",
+      "gp": 3,
+      "gc": 2,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Final",
+      "data": null,
+      "local": "fora",
+      "adv": "Boca Juniors",
+      "gp": 2,
+      "gc": 2,
+      "penaltis": "perdeu",
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Final",
+      "data": null,
+      "local": "casa",
+      "adv": "Boca Juniors",
+      "gp": 0,
+      "gc": 0,
+      "penaltis": "perdeu",
+      "pais": "Argentina"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2001": {
+    "resultado": "Caiu na semifinal",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "2001-03-08",
+      "local": "casa",
+      "adv": "Universidad de Chile",
+      "gp": 2,
+      "gc": 1,
+      "pais": "Chile"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2001-03-14",
+      "local": "fora",
+      "adv": "Sport Boys",
+      "gp": 4,
+      "gc": 1,
+      "pais": "Peru"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2001-04-04",
+      "local": "fora",
+      "adv": "Cerro Porteño",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2001-04-11",
+      "local": "casa",
+      "adv": "Sport Boys",
+      "gp": 3,
+      "gc": 0,
+      "pais": "Peru"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2001-04-18",
+      "local": "fora",
+      "adv": "Universidad de Chile",
+      "gp": 2,
+      "gc": 1,
+      "pais": "Chile"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2001-05-02",
+      "local": "casa",
+      "adv": "Cerro Porteño",
+      "gp": 5,
+      "gc": 2,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "São Caetano",
+      "gp": 0,
+      "gc": 1,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "São Caetano",
+      "gp": 1,
+      "gc": 0,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Cruzeiro",
+      "gp": 3,
+      "gc": 3,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Cruzeiro",
+      "gp": 2,
+      "gc": 2,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "fora",
+      "adv": "Boca Juniors",
+      "gp": 2,
+      "gc": 2,
+      "penaltis": "perdeu",
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "casa",
+      "adv": "Boca Juniors",
+      "gp": 2,
+      "gc": 2,
+      "penaltis": "perdeu",
+      "pais": "Argentina"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2005": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "2005-03-02",
+      "local": "fora",
+      "adv": "Cerro Porteño",
+      "gp": 1,
+      "gc": 1,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2005-03-10",
+      "local": "casa",
+      "adv": "Deportivo Táchira",
+      "gp": 3,
+      "gc": 0,
+      "pais": "Venezuela"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2005-03-16",
+      "local": "casa",
+      "adv": "Santo André",
+      "gp": 1,
+      "gc": 1,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2005-04-19",
+      "local": "fora",
+      "adv": "Santo André",
+      "gp": 1,
+      "gc": 2,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2005-05-04",
+      "local": "fora",
+      "adv": "Deportivo Táchira",
+      "gp": 2,
+      "gc": 1,
+      "pais": "Venezuela"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2005-05-12",
+      "local": "casa",
+      "adv": "Cerro Porteño",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2005-05-18",
+      "local": "casa",
+      "adv": "São Paulo",
+      "gp": 0,
+      "gc": 1,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2005-05-25",
+      "local": "fora",
+      "adv": "São Paulo",
+      "gp": 0,
+      "gc": 2,
+      "pais": "Brasil"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2006": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "2006-02-15",
+      "local": "fora",
+      "adv": "Cerro Porteño",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2006-03-02",
+      "local": "casa",
+      "adv": "Atlético Nacional",
+      "gp": 3,
+      "gc": 2,
+      "pais": "Colômbia"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2006-03-15",
+      "local": "casa",
+      "adv": "Rosario Central",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2006-03-23",
+      "local": "fora",
+      "adv": "Rosario Central",
+      "gp": 2,
+      "gc": 2,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2006-04-04",
+      "local": "fora",
+      "adv": "Atlético Nacional",
+      "gp": 2,
+      "gc": 1,
+      "pais": "Colômbia"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2006-04-13",
+      "local": "casa",
+      "adv": "Cerro Porteño",
+      "gp": 2,
+      "gc": 3,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2006-04-26",
+      "local": "casa",
+      "adv": "São Paulo",
+      "gp": 1,
+      "gc": 1,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2006-05-03",
+      "local": "fora",
+      "adv": "São Paulo",
+      "gp": 1,
+      "gc": 2,
+      "pais": "Brasil"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2009": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "2009-02-17",
+      "local": "fora",
+      "adv": "LDU Quito",
+      "gp": 2,
+      "gc": 3,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2009-03-03",
+      "local": "casa",
+      "adv": "Colo Colo",
+      "gp": 1,
+      "gc": 3,
+      "pais": "Chile"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2009-04-08",
+      "local": "fora",
+      "adv": "Sport",
+      "gp": 2,
+      "gc": 0,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2009-04-15",
+      "local": "casa",
+      "adv": "Sport",
+      "gp": 1,
+      "gc": 1,
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2009-04-21",
+      "local": "casa",
+      "adv": "LDU Quito",
+      "gp": 2,
+      "gc": 0,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2009-04-29",
+      "local": "fora",
+      "adv": "Colo Colo",
+      "gp": 1,
+      "gc": 0,
+      "pais": "Chile"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Sport",
+      "gp": 1,
+      "gc": 0,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Sport",
+      "gp": 0,
+      "gc": 1,
+      "penaltis": "venceu",
+      "pais": "Brasil"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Nacional",
+      "gp": 1,
+      "gc": 1,
+      "pais": "Uruguai"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Nacional",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Uruguai"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
    "2013": {
     "resultado": "Caiu nas oitavas",
     "jogos": [
@@ -1057,6 +1880,8 @@ window.CAMPANHAS = {
    "Jorge Wilstermann",
    "Juan Aurich",
    "Junior",
+   "Juventude",
+   "LDU Quito",
    "LDU de Quito",
    "Lanús",
    "León",
@@ -1092,13 +1917,17 @@ window.CAMPANHAS = {
    "San Lorenzo",
    "San Luis FC",
    "Santa Fe",
+   "Santo André",
    "Santos",
    "Santos Laguna",
+   "Sport",
+   "Sport Boys",
    "Sport Boys Warnes",
    "Sport Huancayo",
    "Sporting Cristal",
    "Sportivo Trinidense",
    "Stellenbosch FC",
+   "São Caetano",
    "São Paulo",
    "Talleres de Cordoba",
    "The Strongest",
@@ -1127,16 +1956,1040 @@ window.CAMPANHAS = {
  "copa": {
   "nome": "Copa do Brasil",
   "fases": [
+   "Fase preliminar",
    "1ª fase",
    "2ª fase",
    "3ª fase",
-   "4ª fase",
    "Oitavas de final",
    "Quartas de final",
    "Semifinal",
    "Final"
   ],
   "anos": {
+   "1992": {
+    "resultado": "Caiu na semifinal",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "fora",
+      "adv": "Sampaio Corrêa",
+      "uf": "MA",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "casa",
+      "adv": "Sampaio Corrêa",
+      "uf": "MA",
+      "gp": 4,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Remo",
+      "uf": "PA",
+      "gp": 0,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Remo",
+      "uf": "PA",
+      "gp": 5,
+      "gc": 1
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Athletico Paranaense",
+      "uf": "PR",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Athletico Paranaense",
+      "uf": "PR",
+      "gp": 3,
+      "gc": 1
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "casa",
+      "adv": "Internacional",
+      "uf": "RS",
+      "gp": 0,
+      "gc": 2
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "fora",
+      "adv": "Internacional",
+      "uf": "RS",
+      "gp": 1,
+      "gc": 2
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1993": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "fora",
+      "adv": "4 de Julho",
+      "uf": "PI",
+      "gp": 2,
+      "gc": 0
+     },
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "casa",
+      "adv": "4 de Julho",
+      "uf": "PI",
+      "gp": 3,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Vitória",
+      "uf": "BA",
+      "gp": 1,
+      "gc": 2
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Vitória",
+      "uf": "BA",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Grêmio",
+      "uf": "RS",
+      "gp": 1,
+      "gc": 1,
+      "penaltis": "perdeu"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Grêmio",
+      "uf": "RS",
+      "gp": 1,
+      "gc": 1,
+      "penaltis": "perdeu"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1994": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "fora",
+      "adv": "4 de Julho",
+      "uf": "PI",
+      "gp": 3,
+      "gc": 1
+     },
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "casa",
+      "adv": "4 de Julho",
+      "uf": "PI",
+      "gp": 5,
+      "gc": 2
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Ceará",
+      "uf": "CE",
+      "gp": 0,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Ceará",
+      "uf": "CE",
+      "gp": 1,
+      "gc": 1
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1995": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "fora",
+      "adv": "ABC",
+      "uf": "RN",
+      "gp": 2,
+      "gc": 1
+     },
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "casa",
+      "adv": "ABC",
+      "uf": "RN",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Grêmio",
+      "uf": "RS",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Grêmio",
+      "uf": "RS",
+      "gp": 2,
+      "gc": 2
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1996": {
+    "resultado": "Vice-campeão",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "fora",
+      "adv": "Sergipe",
+      "uf": "SE",
+      "gp": 8,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Atlético Mineiro",
+      "uf": "MG",
+      "gp": 2,
+      "gc": 1
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Atlético Mineiro",
+      "uf": "MG",
+      "gp": 5,
+      "gc": 0
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Paraná",
+      "uf": "PR",
+      "gp": 2,
+      "gc": 0
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Paraná",
+      "uf": "PR",
+      "gp": 3,
+      "gc": 1
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "casa",
+      "adv": "Grêmio",
+      "uf": "RS",
+      "gp": 3,
+      "gc": 1
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "fora",
+      "adv": "Grêmio",
+      "uf": "RS",
+      "gp": 1,
+      "gc": 2
+     },
+     {
+      "fase": "Final",
+      "data": "1996-06-14",
+      "local": "fora",
+      "adv": "Cruzeiro",
+      "uf": "MG",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "Final",
+      "data": "1996-06-19",
+      "local": "casa",
+      "adv": "Cruzeiro",
+      "uf": "MG",
+      "gp": 1,
+      "gc": 2
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1997": {
+    "resultado": "Caiu na semifinal",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "fora",
+      "adv": "River-PI",
+      "uf": "PI",
+      "gp": 0,
+      "gc": 0
+     },
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "casa",
+      "adv": "River-PI",
+      "uf": "PI",
+      "gp": 7,
+      "gc": 1
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Coritiba",
+      "uf": "PR",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Coritiba",
+      "uf": "PR",
+      "gp": 4,
+      "gc": 2
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Ceará",
+      "uf": "CE",
+      "gp": 5,
+      "gc": 2
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Ceará",
+      "uf": "CE",
+      "gp": 5,
+      "gc": 0
+     },
+     {
+      "fase": "Semifinal",
+      "data": "1997-05-06",
+      "local": "fora",
+      "adv": "Flamengo",
+      "uf": "RJ",
+      "gp": 0,
+      "gc": 2
+     },
+     {
+      "fase": "Semifinal",
+      "data": "1997-05-08",
+      "local": "casa",
+      "adv": "Flamengo",
+      "uf": "RJ",
+      "gp": 0,
+      "gc": 1
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1998": {
+    "resultado": "Campeão",
+    "jogos": [
+     {
+      "fase": "Fase preliminar",
+      "data": null,
+      "local": "fora",
+      "adv": "CSA",
+      "uf": "AL",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Fase preliminar",
+      "data": null,
+      "local": "casa",
+      "adv": "CSA",
+      "uf": "AL",
+      "gp": 3,
+      "gc": 0
+     },
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "fora",
+      "adv": "Ceará",
+      "uf": "CE",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "1ª fase",
+      "data": null,
+      "local": "casa",
+      "adv": "Ceará",
+      "uf": "CE",
+      "gp": 6,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Botafogo",
+      "uf": "RJ",
+      "gp": 1,
+      "gc": 2
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Botafogo",
+      "uf": "RJ",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Sport",
+      "uf": "PE",
+      "gp": 2,
+      "gc": 0
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Sport",
+      "uf": "PE",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "Semifinal",
+      "data": "1998-05-19",
+      "local": "casa",
+      "adv": "Santos",
+      "uf": "SP",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "Semifinal",
+      "data": "1998-05-23",
+      "local": "fora",
+      "adv": "Santos",
+      "uf": "SP",
+      "gp": 2,
+      "gc": 2
+     },
+     {
+      "fase": "Final",
+      "data": "1998-05-26",
+      "local": "fora",
+      "adv": "Cruzeiro",
+      "uf": "MG",
+      "gp": 0,
+      "gc": 1
+     },
+     {
+      "fase": "Final",
+      "data": "1998-05-30",
+      "local": "casa",
+      "adv": "Cruzeiro",
+      "uf": "MG",
+      "gp": 2,
+      "gc": 0
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "1999": {
+    "resultado": "Caiu na semifinal",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "1999-02-10",
+      "local": "fora",
+      "adv": "São Raimundo",
+      "uf": "AM",
+      "gp": 2,
+      "gc": 1
+     },
+     {
+      "fase": "1ª fase",
+      "data": "1999-02-21",
+      "local": "casa",
+      "adv": "São Raimundo",
+      "uf": "AM",
+      "gp": 3,
+      "gc": 1
+     },
+     {
+      "fase": "2ª fase",
+      "data": "1999-03-19",
+      "local": "fora",
+      "adv": "Gama",
+      "uf": "DF",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "2ª fase",
+      "data": "1999-03-31",
+      "local": "casa",
+      "adv": "Gama",
+      "uf": "DF",
+      "gp": 5,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1999-04-09",
+      "local": "fora",
+      "adv": "Vitória",
+      "uf": "BA",
+      "gp": 2,
+      "gc": 2
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "1999-04-29",
+      "local": "casa",
+      "adv": "Vitória",
+      "uf": "BA",
+      "gp": 3,
+      "gc": 2
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "1999-05-14",
+      "local": "fora",
+      "adv": "Flamengo",
+      "uf": "RJ",
+      "gp": 1,
+      "gc": 2
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "1999-05-21",
+      "local": "casa",
+      "adv": "Flamengo",
+      "uf": "RJ",
+      "gp": 4,
+      "gc": 2
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "casa",
+      "adv": "Botafogo",
+      "uf": "RJ",
+      "gp": 1,
+      "gc": 1,
+      "penaltis": "perdeu"
+     },
+     {
+      "fase": "Semifinal",
+      "data": null,
+      "local": "fora",
+      "adv": "Botafogo",
+      "uf": "RJ",
+      "gp": 1,
+      "gc": 1,
+      "penaltis": "perdeu"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2000": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "Oitavas de final",
+      "data": "2000-06-01",
+      "local": "fora",
+      "adv": "ABC",
+      "uf": "RN",
+      "gp": 3,
+      "gc": 3
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2000-06-08",
+      "local": "casa",
+      "adv": "ABC",
+      "uf": "RN",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2000-06-24",
+      "local": "fora",
+      "adv": "São Paulo",
+      "uf": "SP",
+      "gp": 1,
+      "gc": 2
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2000-06-27",
+      "local": "casa",
+      "adv": "São Paulo",
+      "uf": "SP",
+      "gp": 2,
+      "gc": 3
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2002": {
+    "resultado": "Caiu na 1ª fase",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "2002-02-13",
+      "local": "fora",
+      "adv": "ASA",
+      "uf": "AL",
+      "gp": 0,
+      "gc": 1
+     },
+     {
+      "fase": "1ª fase",
+      "data": "2002-02-20",
+      "local": "casa",
+      "adv": "ASA",
+      "uf": "AL",
+      "gp": 2,
+      "gc": 1
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2003": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "2003-02-05",
+      "local": "fora",
+      "adv": "Operário-MT",
+      "uf": "MT",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "1ª fase",
+      "data": "2003-03-12",
+      "local": "casa",
+      "adv": "Operário-MT",
+      "uf": "MT",
+      "gp": 5,
+      "gc": 1
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2003-03-19",
+      "local": "fora",
+      "adv": "Criciúma",
+      "uf": "SC",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2003-03-26",
+      "local": "casa",
+      "adv": "Criciúma",
+      "uf": "SC",
+      "gp": 2,
+      "gc": 1
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2003-04-23",
+      "local": "casa",
+      "adv": "Vitória",
+      "uf": "BA",
+      "gp": 2,
+      "gc": 7
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2003-04-30",
+      "local": "fora",
+      "adv": "Vitória",
+      "uf": "BA",
+      "gp": 3,
+      "gc": 1
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2004": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "2004-02-04",
+      "local": "fora",
+      "adv": "Tuna Luso",
+      "uf": "PA",
+      "gp": 3,
+      "gc": 1
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2004-03-17",
+      "local": "fora",
+      "adv": "São Gabriel",
+      "uf": "RS",
+      "gp": 1,
+      "gc": 2
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2004-04-07",
+      "local": "casa",
+      "adv": "São Gabriel",
+      "uf": "RS",
+      "gp": 4,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2004-04-14",
+      "local": "fora",
+      "adv": "Goiás",
+      "uf": "GO",
+      "gp": 1,
+      "gc": 1,
+      "penaltis": "venceu"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2004-05-05",
+      "local": "casa",
+      "adv": "Goiás",
+      "uf": "GO",
+      "gp": 1,
+      "gc": 1,
+      "penaltis": "venceu"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2004-05-12",
+      "local": "fora",
+      "adv": "Santo André",
+      "uf": "SP",
+      "gp": 3,
+      "gc": 3
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2004-05-19",
+      "local": "casa",
+      "adv": "Santo André",
+      "uf": "SP",
+      "gp": 4,
+      "gc": 4
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2007": {
+    "resultado": "Caiu na 2ª fase",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "2007-02-14",
+      "local": "fora",
+      "adv": "Operário-MT",
+      "uf": "MT",
+      "gp": 5,
+      "gc": 0
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2007-03-21",
+      "local": "fora",
+      "adv": "Ipatinga",
+      "uf": "MG",
+      "gp": 0,
+      "gc": 2,
+      "penaltis": "perdeu"
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2007-04-05",
+      "local": "casa",
+      "adv": "Ipatinga",
+      "uf": "MG",
+      "gp": 2,
+      "gc": 0,
+      "penaltis": "perdeu"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2008": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "2008-02-27",
+      "local": "fora",
+      "adv": "CENE",
+      "uf": "MS",
+      "gp": 2,
+      "gc": 0
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2008-04-02",
+      "local": "fora",
+      "adv": "Central",
+      "uf": "PE",
+      "gp": 5,
+      "gc": 1
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2008-04-24",
+      "local": "casa",
+      "adv": "Sport",
+      "uf": "PE",
+      "gp": 0,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2008-04-30",
+      "local": "fora",
+      "adv": "Sport",
+      "uf": "PE",
+      "gp": 1,
+      "gc": 4
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2010": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "2010-02-10",
+      "local": "fora",
+      "adv": "Flamengo-PI",
+      "uf": "PI",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "1ª fase",
+      "data": "2010-02-25",
+      "local": "casa",
+      "adv": "Flamengo-PI",
+      "uf": "PI",
+      "gp": 4,
+      "gc": 0
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2010-03-17",
+      "local": "fora",
+      "adv": "Paysandu",
+      "uf": "PA",
+      "gp": 2,
+      "gc": 1
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2010-03-31",
+      "local": "casa",
+      "adv": "Paysandu",
+      "uf": "PA",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2010-04-15",
+      "local": "casa",
+      "adv": "Athletico Paranaense",
+      "uf": "PR",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2010-04-21",
+      "local": "fora",
+      "adv": "Athletico Paranaense",
+      "uf": "PR",
+      "gp": 1,
+      "gc": 1
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2010-04-29",
+      "local": "casa",
+      "adv": "Atlético Goianiense",
+      "uf": "GO",
+      "gp": 1,
+      "gc": 0,
+      "penaltis": "perdeu"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2010-05-05",
+      "local": "fora",
+      "adv": "Atlético Goianiense",
+      "uf": "GO",
+      "gp": 0,
+      "gc": 1,
+      "penaltis": "perdeu"
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2011": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "1ª fase",
+      "data": "2011-02-23",
+      "local": "fora",
+      "adv": "Comercial-PI",
+      "uf": "PI",
+      "gp": 2,
+      "gc": 1
+     },
+     {
+      "fase": "1ª fase",
+      "data": "2011-03-02",
+      "local": "casa",
+      "adv": "Comercial-PI",
+      "uf": "PI",
+      "gp": 5,
+      "gc": 1
+     },
+     {
+      "fase": "2ª fase",
+      "data": "2011-03-16",
+      "local": "fora",
+      "adv": "Uberaba",
+      "uf": "MG",
+      "gp": 4,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2011-04-13",
+      "local": "fora",
+      "adv": "Santo André",
+      "uf": "SP",
+      "gp": 2,
+      "gc": 1
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2011-04-21",
+      "local": "casa",
+      "adv": "Santo André",
+      "uf": "SP",
+      "gp": 1,
+      "gc": 0
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2011-05-05",
+      "local": "fora",
+      "adv": "Coritiba",
+      "uf": "PR",
+      "gp": 0,
+      "gc": 6
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2011-05-11",
+      "local": "casa",
+      "adv": "Coritiba",
+      "uf": "PR",
+      "gp": 2,
+      "gc": 0
+     }
+    ],
+    "fonte": "RSSSF"
+   },
    "2012": {
     "resultado": "Campeão",
     "jogos": [
@@ -1750,6 +3603,96 @@ window.CAMPANHAS = {
       "penaltis": "perdeu"
      }
     ]
+   },
+   "2022": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "São Paulo",
+      "uf": "SP",
+      "gp": 0,
+      "gc": 1
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "São Paulo",
+      "uf": "SP",
+      "gp": 2,
+      "gc": 1
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2023": {
+    "resultado": "Caiu nas quartas",
+    "jogos": [
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Fortaleza",
+      "uf": "CE",
+      "gp": 3,
+      "gc": 0
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Fortaleza",
+      "uf": "CE",
+      "gp": 0,
+      "gc": 1
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "São Paulo",
+      "uf": "SP",
+      "gp": 0,
+      "gc": 1
+     },
+     {
+      "fase": "Quartas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "São Paulo",
+      "uf": "SP",
+      "gp": 1,
+      "gc": 2
+     }
+    ],
+    "fonte": "RSSSF"
+   },
+   "2024": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "fora",
+      "adv": "Flamengo",
+      "uf": "RJ",
+      "gp": 0,
+      "gc": 2
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": null,
+      "local": "casa",
+      "adv": "Flamengo",
+      "uf": "RJ",
+      "gp": 1,
+      "gc": 0
+     }
+    ],
+    "fonte": "RSSSF"
    }
   },
   "times": [
@@ -1798,6 +3741,7 @@ window.CAMPANHAS = {
    "Brasiliense",
    "Brasília",
    "Brusque",
+   "CENE",
    "CRAC",
    "CRB",
    "CSA",
@@ -1816,6 +3760,7 @@ window.CAMPANHAS = {
    "Chapecoense",
    "Cianorte",
    "Comercial",
+   "Comercial-PI",
    "Confiança",
    "Cordino",
    "Corinthians",
@@ -1840,6 +3785,7 @@ window.CAMPANHAS = {
    "Figueirense",
    "Flamengo",
    "Flamengo do Piauí",
+   "Flamengo-PI",
    "Floresta",
    "Fluminense",
    "Fluminense de Feira",
@@ -1869,6 +3815,7 @@ window.CAMPANHAS = {
    "Inter de Limeira",
    "Internacional",
    "Interporto",
+   "Ipatinga",
    "Itabaiana",
    "Ituano",
    "Iv de Julho",
@@ -1908,6 +3855,7 @@ window.CAMPANHAS = {
    "Oeste",
    "Operario Ferroviario Esporte C",
    "Operário",
+   "Operário-MT",
    "Oratorio",
    "Palmas Ltda",
    "Paragominas",
@@ -1941,6 +3889,7 @@ window.CAMPANHAS = {
    "Rio Branco",
    "Rio Branco - Vn",
    "River Plate",
+   "River-PI",
    "Rondoniense",
    "Rondonopolis",
    "Ríver",
@@ -1964,6 +3913,7 @@ window.CAMPANHAS = {
    "Sport",
    "São Bento",
    "São Caetano",
+   "São Gabriel",
    "São José",
    "São Luiz",
    "São Paulo",
@@ -1974,7 +3924,9 @@ window.CAMPANHAS = {
    "Trem",
    "Treze",
    "Tubarão",
+   "Tuna Luso",
    "Tupi",
+   "Uberaba",
    "Uberlândia",
    "Uniclinic",
    "União",
@@ -2092,7 +4044,7 @@ window.CAMPANHAS = {
    "Confiança": "SE",
    "Tupi": "MG",
    "Ji-paraná": "RO",
-   "São Raimundo": "RR",
+   "São Raimundo": "AM",
    "Fast Clube": "AM",
    "CRB": "AL",
    "CSA": "AL",
@@ -2236,7 +4188,16 @@ window.CAMPANHAS = {
    "Fc Cascavel": "PR",
    "Mirassol": "SP",
    "Porto Velho": "RO",
-   "Jaraguá": "GO"
+   "Jaraguá": "GO",
+   "River-PI": "PI",
+   "Operário-MT": "MT",
+   "Tuna Luso": "PA",
+   "São Gabriel": "RS",
+   "Ipatinga": "MG",
+   "CENE": "MS",
+   "Flamengo-PI": "PI",
+   "Comercial-PI": "PI",
+   "Uberaba": "MG"
   }
  }
 };

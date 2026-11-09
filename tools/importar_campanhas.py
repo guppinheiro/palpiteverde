@@ -32,6 +32,8 @@ from collections import Counter, defaultdict
 FASES_LIB = {"Round of 16": "Oitavas de final", "Quarterfinal": "Quartas de final",
              "Semifinal": "Semifinal", "Final": "Final"}
 ORDEM_LIB = ["Fase de grupos", "Oitavas de final", "Quartas de final", "Semifinal", "Final"]
+ORDEM_FASES = ["Fase preliminar", "1ª fase", "2ª fase", "3ª fase", "4ª fase", "Fase de grupos",
+               "Oitavas de final", "Quartas de final", "Semifinal", "Final"]
 
 ALIAS_LIB = {
     "Guarani FC": "Guaraní",            # 2020: a fonte usa os dois nomes para o Guaraní (PAR)
@@ -61,13 +63,40 @@ PAIS_LIB = {
     "River Plate": "Argentina", "Rosario Central": "Argentina", "San Lorenzo": "Argentina",
     "Santos": "Brasil", "Sporting Cristal": "Peru", "São Paulo": "Brasil",
     "Tigre": "Argentina", "Universidad Católica": "Chile", "Universitario de Deportes": "Peru",
+    # adversários de 1994–2009 (RSSSF)
+    "Cruzeiro": "Brasil", "Vélez Sarsfield": "Argentina", "El Nacional": "Equador", "Corinthians": "Brasil",
+    "Olimpia": "Paraguai", "Vasco da Gama": "Brasil", "Deportivo Cali": "Colômbia", "The Strongest": "Bolívia",
+    "Juventude": "Brasil", "Atlas": "México", "Universidad de Chile": "Chile", "Sport Boys": "Peru",
+    "São Caetano": "Brasil", "Santo André": "Brasil", "Atlético Nacional": "Colômbia", "LDU Quito": "Equador",
+    "Sport": "Brasil",
 }
 # Mesmo nome, clube de outro país em certa edição
 PAIS_LIB_EDICAO = {("River Plate", "2016"): "Uruguai"}
 NOME_LIB_EDICAO = {("River Plate", "2016"): "River Plate (URU)"}
 
+# Nomes da RSSSF -> nomes usados no jogo
+ALIAS_RSSSF_LIB = {"São Paulo FC": "São Paulo", "Santo Andre": "Santo André", "LDU": "LDU Quito",
+                   "Barcelona": "Barcelona SC", "CA Mineiro": "Atlético Mineiro", "Deportivo Pereira FC": "Deportivo Pereira"}
+ALIAS_RSSSF_COPA = {  # (nome, UF) -> nome; UF None = qualquer
+    ("Sampaio Correa", None): "Sampaio Corrêa", ("Atlético", "PR"): "Athletico Paranaense",
+    ("Atlético", "GO"): "Atlético Goianiense", ("Atletico", "MG"): "Atlético Mineiro", ("Atlético", "MG"): "Atlético Mineiro",
+    ("Ceara", None): "Ceará", ("Parana", None): "Paraná", ("Flamengo", "PI"): "Flamengo-PI", ("River", "PI"): "River-PI",
+    ("Botafogo", "PB"): "Botafogo-PB", ("América", "MG"): "América Mineiro", ("Operário", "MT"): "Operário-MT",
+    ("Comercial", "PI"): "Comercial-PI", ("Central", None): "Central", ("Gremio", None): "Grêmio",
+}
+UF_COPA = {  # estado dos adversários quando a RSSSF não informa
+    "Sergipe": "SE", "Paraná": "PR", "Grêmio": "RS", "Cruzeiro": "MG", "Coritiba": "PR", "Ceará": "CE",
+    "Flamengo": "RJ", "Criciúma": "SC", "Vitória": "BA", "São Gabriel": "RS", "Goiás": "GO", "Santo André": "SP",
+    "Ipatinga": "MG", "Central": "PE", "Sport": "PE", "Paysandu": "PA", "Uberaba": "MG", "São Paulo": "SP",
+    "Fortaleza": "CE", "Sampaio Corrêa": "MA", "Avaí": "SC", "Internacional": "RS", "Fluminense": "RJ",
+    "Santos": "SP", "Bahia": "BA", "Athletico Paranaense": "PR", "Atlético Mineiro": "MG", "Atlético Goianiense": "GO",
+}
+# Confrontos cuja fase a página da RSSSF não deixa clara
+FASE_RSSSF = {("copa", "2000", "ABC"): "Oitavas de final", ("copa", "2000", "São Paulo"): "Quartas de final",
+              ("copa", "2002", "ASA"): "1ª fase"}
+
 # Campeões e decisões por pênaltis (a fonte não traz pênaltis)
-CAMPEAO = {"libertadores": {"2020", "2021"}, "copa": {"2012", "2015", "2020"}}
+CAMPEAO = {"libertadores": {"1999", "2020", "2021"}, "copa": {"1998", "2012", "2015", "2020"}}
 PENALTIS = {  # (competição, ano, adversário) -> "venceu" | "perdeu"
     ("libertadores", "2017", "Barcelona SC"): "perdeu",
     ("libertadores", "2022", "Atlético Mineiro"): "venceu",
@@ -112,8 +141,8 @@ def resultado_campanha(comp, ano, jogos, ordem):
         return "Campeão"
     if ultima == "Final":
         return "Vice-campeão"
-    if ultima.endswith("ª fase"):
-        return f"Caiu na {ultima}"
+    if ultima.endswith("ª fase") or ultima == "Fase preliminar":
+        return f"Caiu na {ultima.lower() if ultima == 'Fase preliminar' else ultima}"
     return {"Fase de grupos": "Caiu na fase de grupos",
             "Oitavas de final": "Caiu nas oitavas", "Quartas de final": "Caiu nas quartas",
             "Semifinal": "Caiu na semifinal"}[ultima]
@@ -176,7 +205,7 @@ def ler_libertadores(caminho):
     return {"nome": "Libertadores", "fases": ORDEM_LIB, "anos": anos, "times": sorted(times)}
 
 
-ORDEM_COPA = ["1ª fase", "2ª fase", "3ª fase", "4ª fase", "Oitavas de final", "Quartas de final", "Semifinal", "Final"]
+ORDEM_COPA = ["Fase preliminar", "1ª fase", "2ª fase", "3ª fase", "4ª fase", "Oitavas de final", "Quartas de final", "Semifinal", "Final"]
 # A fonte numera as rodadas antes das oitavas com uma a mais que a oficial em alguns anos
 # (ex.: 2015, Vitória da Conquista foi a 1ª fase e aparece como rodada 2).
 DESLOCAMENTO_FASE_COPA = {"2014": 1, "2015": 1}
@@ -253,18 +282,68 @@ def ler_copa(caminho):
             "times": sorted(times), "ufs": {t: u for t, u in times.items() if u}}
 
 
+def juntar_rsssf(dados, caminho):
+    """Acrescenta as edições que só existem na RSSSF (as do Kaggle têm prioridade)."""
+    rs = json.load(open(caminho, encoding="utf-8"))
+    for comp, ordem in (("libertadores", ORDEM_LIB), ("copa", ORDEM_COPA)):
+        destino = dados[comp]
+        for ano, jogos in rs[comp].items():
+            if ano in destino["anos"] or (comp == "libertadores" and int(ano) < 1988):
+                continue
+            novos = []
+            for j in jogos:
+                j = dict(j)
+                if comp == "libertadores":
+                    j["adv"] = ALIAS_RSSSF_LIB.get(j["adv"], j["adv"])
+                    j["pais"] = j.get("pais") or PAIS_LIB.get(j["adv"])
+                    if not j["pais"]:
+                        raise SystemExit(f"País desconhecido: {j['adv']} ({ano})")
+                    j.pop("uf", None)
+                else:
+                    uf = j.get("uf")
+                    j["adv"] = ALIAS_RSSSF_COPA.get((j["adv"], uf), ALIAS_RSSSF_COPA.get((j["adv"], None), j["adv"]))
+                    j["uf"] = uf or UF_COPA.get(j["adv"]) or destino.get("ufs", {}).get(j["adv"])
+                    if not j["uf"]:
+                        raise SystemExit(f"Estado desconhecido: {j['adv']} ({ano})")
+                    j.pop("pais", None)
+                j["fase"] = FASE_RSSSF.get((comp, ano, j["adv"]), j["fase"])
+                if not j.get("data"):
+                    j["data"] = None
+                novos.append(j)
+            # ordem: fase, depois data (sem data, mantém a ordem da fonte: ida antes da volta)
+            novos = [dict(j, _k=k) for k, j in enumerate(novos)]
+            novos.sort(key=lambda j: (ordem.index(j["fase"]), j["data"] or "", j["_k"]))
+            for j in novos:
+                j.pop("_k")
+            destino["anos"][ano] = {"resultado": resultado_campanha(comp, ano, novos, ordem), "jogos": novos,
+                                    "fonte": "RSSSF"}
+            for j in novos:
+                if j["adv"] not in destino["times"]:
+                    destino["times"].append(j["adv"])
+                if comp == "copa":
+                    destino.setdefault("ufs", {})[j["adv"]] = j["uf"]
+        destino["anos"] = dict(sorted(destino["anos"].items()))
+        destino["times"] = sorted(set(destino["times"]))
+        usadas = {j["fase"] for a in destino["anos"].values() for j in a["jogos"]}
+        destino["fases"] = [f for f in ORDEM_FASES if f in usadas]
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("libertadores")
     ap.add_argument("copa")
     raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     ap.add_argument("--saida", default=os.path.join(raiz, "js", "campanhas.js"))
+    ap.add_argument("--rsssf", help="JSON gerado por tools/importar_rsssf.py (edições mais antigas e recentes)")
     args = ap.parse_args()
     dados = {"libertadores": ler_libertadores(args.libertadores), "copa": ler_copa(args.copa)}
+    if args.rsssf:
+        juntar_rsssf(dados, args.rsssf)
     cab = f"""/*
  * Campanhas do Palmeiras — GERADO AUTOMATICAMENTE por tools/importar_campanhas.py em {time.strftime('%Y-%m-%d')}.
- * Fontes (Kaggle): ernestonlm/conmebol-libertadores-results-from-2011-to-2022 (CC0) e
- * ricardomattos05/jogos-do-campeonato-brasileiro (CC BY 4.0). Placares do ponto de vista do Palmeiras
+ * Fontes: Kaggle ernestonlm/conmebol-libertadores-results-from-2011-to-2022 (CC0) e
+ * ricardomattos05/jogos-do-campeonato-brasileiro (CC BY 4.0); edições sem dados no Kaggle: RSSSF
+ * (www.rsssf.org, com crédito à RSSSF e aos autores). Placares do ponto de vista do Palmeiras
  * (gp = gols do Palmeiras, gc = gols do adversário), sem pênaltis.
  */
 """

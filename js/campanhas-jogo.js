@@ -26,7 +26,8 @@
     ler(k, p) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : p; } catch { return p; } },
     gravar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* sem armazenamento */ } }
   };
-  const dataCurta = iso => { const [, m, d] = iso.split("-"); return `${d}/${m}`; };
+  // alguns jogos antigos não têm data na fonte: aí aparece só Casa/Fora
+  const dataCurta = iso => { if (!iso) return ""; const [, m, d] = iso.split("-"); return `${d}/${m}`; };
   // cor do placar pelo resultado do Palmeiras: vitória, empate ou derrota
   const classeResultado = j => j.gp > j.gc ? " placar--vitoria" : j.gp < j.gc ? " placar--derrota" : " placar--empate";
 
@@ -217,7 +218,8 @@
     const pernas = document.createElement("div");
     pernas.className = "pernas";
     box.append(topo, pernas);
-    for (const j of [...lista].sort((a, b) => a.data.localeCompare(b.data))) {
+    const ordenados = lista.every(j => j.data) ? [...lista].sort((a, b) => a.data.localeCompare(b.data)) : lista;
+    for (const j of ordenados) {
       const visivel = jogo.revelados.has(j.i) || jogo.fim;
       const linha = document.createElement("div");
       linha.className = "perna" + (jogo.revelados.has(j.i) ? " perna--certa" : visivel ? " perna--revelada" : "");
@@ -225,7 +227,7 @@
       rot.className = "perna__local";
       rot.innerHTML = "<b></b>";
       rot.firstChild.textContent = j.local === "casa" ? "Casa" : "Fora";
-      rot.append(" " + dataCurta(j.data));
+      if (j.data) rot.append(" " + dataCurta(j.data));
       const placar = document.createElement("span");
       placar.className = "jogo-linha__placar" + (visivel ? classeResultado(j) : "");
       placar.textContent = visivel ? `${j.gp} × ${j.gc}` : "– × –";
