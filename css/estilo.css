@@ -120,6 +120,9 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .dado--ok { background: var(--ok); }
 .dado--perto { background: var(--perto); color: #1e1a00; }
 .dado--longe { background: var(--longe); }
+.dado--sem { background: transparent; color: var(--suave); border: 1px dashed var(--borda); }
+.pin--sem { border: 1px dashed var(--suave); }
+.fim__wiki { color: var(--verde); font-size: .9rem; }
 @media (max-width: 520px) {
   .ficha__dados { grid-template-columns: repeat(3, 1fr); }
 }

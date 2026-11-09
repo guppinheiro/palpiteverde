@@ -25,8 +25,9 @@
 
     <div class="opcoes">
       <div class="segmento" role="radiogroup" aria-label="Nível">
-        <button class="seg ativo" data-nivel="facil" role="radio" aria-checked="true">Fácil <small>desde 2020</small></button>
-        <button class="seg" data-nivel="dificil" role="radio" aria-checked="false">Difícil <small>desde 1970</small></button>
+        <button class="seg ativo" data-nivel="facil" role="radio" aria-checked="true">Fácil <small>2020+</small></button>
+        <button class="seg" data-nivel="dificil" role="radio" aria-checked="false">Difícil <small>1970+</small></button>
+        <button class="seg" data-nivel="lendas" role="radio" aria-checked="false">Lendas <small>todas</small></button>
       </div>
       <button class="botao botao--leve" id="btn-novo" hidden>Pular</button>
     </div>
@@ -58,6 +59,7 @@
     <section class="fim" id="fim" hidden>
       <h2 id="fim-titulo"></h2>
       <p id="fim-texto"></p>
+      <p><a id="fim-wiki" class="fim__wiki" target="_blank" rel="noopener" hidden>Ver o jogador na Wikipédia ↗</a></p>
       <div class="fim__acoes">
         <button class="botao" id="btn-de-novo" hidden>Próximo jogador →</button>
         <button class="botao" id="btn-compartilhar">Compartilhar</button>
@@ -67,7 +69,7 @@
   </main>
 
   <footer class="rodape">
-    Projeto de fã, sem ligação oficial com a S.E. Palmeiras. Números aproximados.
+    Projeto de fã, sem ligação oficial com a S.E. Palmeiras. Dados das fichas da Wikipédia (podem estar incompletos).
   </footer>
 
   <dialog class="modal" id="modal-ajuda">
@@ -79,6 +81,7 @@
       <li><i class="pin pin--perto"></i><b>Amarelo</b>: chegou perto.</li>
       <li><i class="pin pin--longe"></i><b>Cinza</b>: longe.</li>
       <li><b>↑ / ↓</b>: o número do jogador secreto é maior / menor.</li>
+      <li><i class="pin pin--sem"></i><b>?</b>: a fonte não informa esse dado.</li>
     </ul>
     <h3>O que conta como “perto”</h3>
     <table class="tabela">
@@ -89,9 +92,9 @@
       <tr><th>Nascimento</th><td>mesma região do Brasil, ou ambos estrangeiros</td></tr>
     </table>
     <h3>Níveis</h3>
-    <p><b>Fácil</b>: só jogadores que atuaram pelo clube de 2020 para cá. <b>Difícil</b>: todos que atuaram de 1970 para cá.</p>
+    <p><b>Fácil</b>: só jogadores que atuaram pelo clube de 2020 para cá. <b>Difícil</b>: todos que atuaram de 1970 para cá. <b>Lendas</b>: todas as épocas, incluindo os grandes nomes de antes de 1970.</p>
     <p><b>Desafio do dia</b>: o mesmo jogador para todo mundo, um por nível, troca à meia-noite (horário de Brasília). <b>Treino ∞</b>: um jogador atrás do outro, sem fim. Acertou, vem o próximo; travou, pode pular (zera a sequência). Tente bater seu recorde!</p>
-    <p>O sorteio dá preferência a jogadores mais recentes.</p>
+    <p>O sorteio dá preferência a jogadores mais recentes e a quem tem mais jogos pelo clube.</p>
   </dialog>
 
   <dialog class="modal" id="modal-stats">

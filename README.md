@@ -28,16 +28,19 @@ Verde = igual, amarelo = perto, cinza = longe. As setas ↑/↓ dizem se o núme
 
 O nível vale para o Desafio do dia e para o Treino. Ele define quem pode ser sorteado e quem aparece na busca:
 
-| Nível   | Jogadores                                        |
-|---------|--------------------------------------------------|
-| Fácil   | atuaram pelo clube de **2020** em diante         |
-| Difícil | atuaram pelo clube de **1970** em diante         |
+| Nível   | Jogadores                                                     |
+|---------|---------------------------------------------------------------|
+| Fácil   | atuaram pelo clube de **2020** em diante                      |
+| Difícil | atuaram pelo clube de **1970** em diante                      |
+| Lendas  | **todas as épocas**, incluindo os grandes nomes antes de 1970 |
 
 O critério usa o ano do último jogo (`ultimo`); quem ainda está no elenco (`ultimo: null`) entra nos dois.
 
 ## Preferência por jogadores recentes
 
-O sorteio (do Desafio do dia e do Treino ∞) é ponderado pelo tempo desde o último jogo do jogador pelo clube:
+O sorteio (do Desafio do dia e do Treino ∞) é ponderado por **época** e por **história no clube**. Jogadores com menos de 10 jogos valem como palpite, mas não são sorteados.
+
+Época (tempo desde o último jogo pelo clube):
 
 | Último jogo        | Peso aprox. |
 |--------------------|-------------|
@@ -47,7 +50,7 @@ O sorteio (do Desafio do dia e do Treino ∞) é ponderado pelo tempo desde o ú
 | 2000               | 1,0         |
 | anos 1970          | 0,6         |
 
-Assim, um jogador atual sai cerca de 7 vezes mais que um dos anos 1970. Para não repetir, os últimos sorteados (até 15, ou metade do nível) ficam bloqueados. A fórmula está na função `peso()` em `js/jogo.js`.
+Assim, um jogador atual sai cerca de 7 vezes mais que um dos anos 1970. Esse peso é multiplicado pela história no clube: 200 jogos ou mais = 1; 50 jogos = 0,5; 10 jogos ≈ 0,22. Para não repetir, os últimos sorteados (até 15, ou metade do nível) ficam bloqueados. A fórmula está na função `peso()` em `js/jogo.js`.
 
 ## Rodar localmente
 
@@ -60,9 +63,35 @@ python3 -m http.server 8000
 
 Para publicar, basta servir os arquivos (por exemplo, GitHub Pages apontando para a raiz do repositório).
 
-## Editar os jogadores
+## De onde vêm os jogadores
 
-Todos os dados estão em `js/jogadores.js`. **Os números atuais são aproximados**: revise jogos, gols e anos com uma fonte confiável antes de divulgar.
+`js/jogadores.js` é **gerado automaticamente** a partir das fichas da Wikipédia em português (categoria *Futebolistas da Sociedade Esportiva Palmeiras*):
+
+```bash
+python3 tools/importar_wikipedia.py
+```
+
+O script soma todas as passagens de cada jogador pelo Palmeiras (anos, jogos e gols) e lê a posição e o local de nascimento. A API da Wikipédia limita as requisições, então ele vai devagar e guarda as respostas em `.cache-wikipedia/`: se for interrompido, é só rodar de novo.
+
+Regras da importação:
+- jogadores sem jogos pelo Palmeiras na ficha ficam de fora (o jogo precisa desses números);
+- antes de 1970, só entram jogadores com 100 jogos ou mais pelo clube (as "lendas");
+- se a ficha não informar o local de nascimento, o jogo mostra "?" nesse campo.
+
+Limites: só entram jogadores que têm artigo na Wikipédia, e os números são os das fichas, que podem estar desatualizados.
+
+### Corrigir um jogador
+
+Não edite `js/jogadores.js` à mão (ele é sobrescrito). Use `tools/correcoes.json`, com o título da página na Wikipédia como chave:
+
+```json
+{
+  "Marcos Roberto Silveira Reis": { "jogos": 532 },
+  "Título de uma página para excluir": null
+}
+```
+
+Depois, rode o importador de novo (com o cache, leva segundos).
 
 Ao incluir ou remover jogadores, a ordem do desafio do dia daquele nível muda a partir daquele momento. Os anos de corte dos níveis ficam em `NIVEIS`, no início de `js/jogo.js`.
 

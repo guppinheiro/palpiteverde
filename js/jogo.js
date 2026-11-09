@@ -52,20 +52,28 @@
   // Nível = ano mínimo em que o jogador ainda atuava pelo clube
   const NIVEIS = {
     facil:   { desde: 2020, rotulo: "fácil",   semente: 1914 },
-    dificil: { desde: 1970, rotulo: "difícil", semente: 1942 }
+    dificil: { desde: 1970, rotulo: "difícil", semente: 1942 },
+    lendas:  { desde: 0,    rotulo: "lendas",  semente: 1951 }
   };
+  // Quem tem poucos jogos pelo clube vale como palpite, mas não é sorteado
+  const JOGOS_MIN_SORTEIO = 10;
   const POOL = {};
+  const SORTEAVEIS = {};
   for (const [nivel, cfg] of Object.entries(NIVEIS)) {
     POOL[nivel] = JOGADORES.filter(j => (j.ultimo ?? ANO_ATUAL) >= cfg.desde)
       .sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
+    SORTEAVEIS[nivel] = POOL[nivel].filter(j => j.jogos >= JOGOS_MIN_SORTEIO);
   }
 
-  // Preferência por jogadores recentes: o peso cai conforme o tempo desde
-  // o último jogo pelo clube. Elenco atual ≈ 4,5; 2020 ≈ 3,5; 2010 ≈ 1,7;
-  // 2000 ≈ 1,0; anos 1970 ≈ 0,6 (o mais recente sai ~7x mais que o mais antigo).
+  // Peso no sorteio = época × história no clube.
+  // Época: o peso cai com o tempo desde o último jogo pelo clube. Elenco
+  // atual ≈ 4,5; 2020 ≈ 3,5; 2010 ≈ 1,7; 2000 ≈ 1,0; anos 1970 ≈ 0,6.
+  // História: quem jogou mais sai mais (200+ jogos = 1; 50 jogos = 0,5; 10 jogos ≈ 0,22).
   function peso(j) {
     const anos = ANO_ATUAL - (j.ultimo ?? ANO_ATUAL);
-    return 0.5 + 4 * Math.exp(-anos / 12);
+    const epoca = 0.5 + 4 * Math.exp(-anos / 12);
+    const historia = Math.sqrt(Math.min(j.jogos, 200) / 200);
+    return epoca * historia;
   }
 
   function sortearPonderado(lista, rnd) {
@@ -83,9 +91,9 @@
 
   // Desafio do dia: sorteio ponderado e determinístico (o mesmo para todos),
   // calculado dia a dia desde o dia 1 para não repetir jogadores recentes.
-  const SORTEIOS_DIARIOS = { facil: [], dificil: [] };
+  const SORTEIOS_DIARIOS = { facil: [], dificil: [], lendas: [] };
   function jogadorDoDia(dia, nivel) {
-    const pool = POOL[nivel];
+    const pool = SORTEAVEIS[nivel];
     const lista = SORTEIOS_DIARIOS[nivel];
     const bloqueio = semRepetir(pool);
     const alvo = Math.max(1, dia);
@@ -110,7 +118,9 @@
   function comparar(chute, certo) {
     const ult = j => j.ultimo ?? ANO_ATUAL;
     const pos = chute.pos === certo.pos ? "ok" : POS_VIZINHA[chute.pos] === certo.pos ? "perto" : "longe";
-    const nasc = chute.nasc === certo.nasc && (chute.nasc !== "EXT" || chute.pais === certo.pais) ? "ok"
+    // nasc null = a fonte não informa; aí não dá dica ("sem")
+    const nasc = !chute.nasc || !certo.nasc ? "sem"
+      : chute.nasc === certo.nasc && (chute.nasc !== "EXT" || chute.pais === certo.pais) ? "ok"
       : REGIAO[chute.nasc] === REGIAO[certo.nasc] ? "perto" : "longe";
     return [
       { rotulo: "Posição", valor: POS_CURTA[chute.pos], titulo: chute.pos, classe: pos, seta: "" },
@@ -118,7 +128,7 @@
       { rotulo: "Saída", valor: chute.ultimo ?? "Atual", ...compararNumero(ult(chute), ult(certo), 5) },
       { rotulo: "Jogos", valor: chute.jogos, ...compararNumero(chute.jogos, certo.jogos, 25) },
       { rotulo: "Gols", valor: chute.gols, ...compararNumero(chute.gols, certo.gols, 10) },
-      { rotulo: "Nasceu", valor: chute.nasc === "EXT" ? chute.pais : chute.nasc, classe: nasc, seta: "" }
+      { rotulo: "Nasceu", valor: !chute.nasc ? "?" : chute.nasc === "EXT" ? chute.pais : chute.nasc, classe: nasc, seta: "" }
     ];
   }
 
@@ -160,7 +170,7 @@
   }
 
   function proximoTreino() {
-    const pool = POOL[estado.nivel];
+    const pool = SORTEAVEIS[estado.nivel];
     const recentes = new Set(treino.recentes.slice(-semRepetir(pool)));
     const escolhido = sortearPonderado(pool.filter(j => !recentes.has(j.nome)), Math.random);
     treino.recentes = [...treino.recentes, escolhido.nome].slice(-15);
@@ -322,6 +332,9 @@
       $("fim-texto").textContent = venceu
         ? `Você descobriu ${estado.secreto.nome} em ${estado.palpites.length} palpite${estado.palpites.length === 1 ? "" : "s"}.`
         : `O jogador era ${estado.secreto.nome}.`;
+      const wiki = $("fim-wiki");
+      wiki.hidden = !estado.secreto.wiki;
+      if (estado.secreto.wiki) wiki.href = "https://pt.wikipedia.org/wiki/" + encodeURIComponent(estado.secreto.wiki.replace(/ /g, "_"));
       $("btn-de-novo").hidden = !emTreino;
       $("btn-de-novo").classList.toggle("botao--leve", !emTreino);
       $("btn-compartilhar").classList.toggle("botao--leve", emTreino);
@@ -403,7 +416,7 @@
   }
 
   function textoCompartilhar() {
-    const emoji = { ok: "🟩", perto: "🟨", longe: "⬜" };
+    const emoji = { ok: "🟩", perto: "🟨", longe: "⬜", sem: "⬛" };
     const venceu = estado.palpites.at(-1) === estado.secreto.nome;
     const rotulo = NIVEIS[estado.nivel].rotulo;
     if (estado.modo === "treino") {
