@@ -238,7 +238,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .fase__titulo { margin: 0 4px 8px; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .fase__titulo h3 { margin: 0; font-family: var(--f-titulo); font-weight: 800; font-size: 1.3rem; text-transform: uppercase; color: var(--verde); }
 .fase__titulo small { color: var(--suave); font-size: .75rem; }
-.confrontos { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 8px; }
+.confrontos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px; }
 .confronto { border-radius: 12px; background: var(--nevoa); padding: 6px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .confronto__agregado { font-size: .72rem; color: var(--suave); text-align: right; padding: 0 6px 2px; }
 .jogo-linha { display: grid; grid-template-columns: 52px 30px 1fr auto; align-items: center; gap: 8px; background: var(--branco); border-radius: 10px; padding: 7px 8px; min-width: 0; }
