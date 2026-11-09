@@ -270,3 +270,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .perna__local b { color: var(--tinta); text-transform: uppercase; letter-spacing: .05em; font-size: .72rem; }
 .perna--certa .jogo-linha__placar { background: var(--verde-vivo); color: var(--branco); }
 .perna--revelada .jogo-linha__placar { background: var(--linha); }
+
+/* ano em destaque no topo da campanha */
+.camp-cabecalho { margin: 0; display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.camp-cabecalho__ano { font-family: var(--f-titulo); font-weight: 800; font-size: clamp(3.2rem, 14vw, 4.6rem); line-height: .85; font-variant-numeric: tabular-nums; }
+.camp-cabecalho__comp { font-family: var(--f-titulo); font-weight: 700; font-size: 1.3rem; text-transform: uppercase; letter-spacing: .04em; color: var(--sobre-verde); }

@@ -263,6 +263,8 @@
   function renderJogo() {
     const comp = C[jogo.comp];
     $("camp-chip").textContent = `${comp.nome} ${jogo.ano} · ${MODOS[jogo.modo].nome}`;
+    $("camp-ano-titulo").textContent = jogo.ano;
+    $("camp-comp-titulo").textContent = `${comp.nome} · modo ${MODOS[jogo.modo].nome.toLowerCase()}`;
     $("camp-acertos").textContent = `${jogo.revelados.size}/${jogo.jogos.length}`;
     $("camp-chances").textContent = jogo.chances - jogo.usadas;
     $("camp-total").textContent = jogo.jogos.length;
