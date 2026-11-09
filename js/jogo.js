@@ -769,6 +769,7 @@
   $("btn-copiar-card").addEventListener("click", compartilhar);
   $("btn-ajuda").addEventListener("click", () => $("modal-ajuda").showModal());
   $("btn-stats").addEventListener("click", () => { renderStats(); $("modal-stats").showModal(); });
+  document.querySelectorAll("[data-fontes]").forEach(b => b.addEventListener("click", () => $("modal-fontes").showModal()));
   document.querySelectorAll("dialog").forEach(d => {
     d.addEventListener("click", e => { if (e.target === d || e.target.hasAttribute("data-fechar")) d.close(); });
   });
