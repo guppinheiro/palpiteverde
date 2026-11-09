@@ -498,10 +498,10 @@
   // Imagem 1080×1350 com o jogador secreto, o resultado, cada palpite (com as cores
   // das dicas), o palpite que chegou mais perto e a sequência.
   const COR = {
-    verde: "#006437", verdeFundo: "#00552f", vivo: "#1f9e55", agua: "#17a99a", longe: "#7d8a83",
+    verde: "#006437", verdeFundo: "#00552f", vivo: "#1f9e55", claro: "#b9ecc6", longe: "#7d8a83",
     branco: "#ffffff", tinta: "#0f2a1c", suave: "#5e7367", linha: "#d9e4dc", nevoa: "#eef5f0"
   };
-  const COR_CLASSE = { ok: COR.vivo, perto: COR.agua, longe: COR.longe, sem: COR.nevoa };
+  const COR_CLASSE = { ok: COR.vivo, perto: COR.claro, longe: COR.longe, sem: COR.nevoa };
   const F_TITULO = '"Barlow Condensed", "Arial Narrow", sans-serif';
   const F_TEXTO = 'Inter, system-ui, sans-serif';
 
@@ -628,7 +628,7 @@
         ctx.fillStyle = COR_CLASSE[d.classe]; retangulo(ctx, qx, cy, Q, Q, 8); ctx.fill();
         if (d.classe === "sem") { ctx.strokeStyle = COR.linha; ctx.lineWidth = 2; ctx.stroke(); }
         if (d.seta) {
-          ctx.fillStyle = COR.branco; ctx.font = `800 24px ${F_TEXTO}`; ctx.textAlign = "center";
+          ctx.fillStyle = d.classe === "perto" ? COR.tinta : COR.branco; ctx.font = `800 24px ${F_TEXTO}`; ctx.textAlign = "center";
           ctx.fillText(d.seta, qx + Q / 2, cy + Q / 2 + 9); ctx.textAlign = "left";
         }
       });

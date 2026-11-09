@@ -4,7 +4,7 @@
   --verde: #006437;          /* principal: fundo e destaques */
   --verde-fundo: #00552f;    /* faixas e sombras do fundo */
   --verde-vivo: #1f9e55;     /* "acertou" nas fichas */
-  --verde-agua: #17a99a;     /* "perto" */
+  --verde-claro: #b9ecc6;    /* "perto" */
   --branco: #ffffff;         /* secundária: painéis e texto sobre o verde */
   --tinta: #0f2a1c;          /* texto sobre branco */
   --suave: #5e7367;          /* texto secundário sobre branco */
@@ -140,7 +140,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .legenda span { display: inline-flex; align-items: center; gap: 5px; }
 .pin { display: inline-block; width: 12px; height: 12px; border-radius: 3px; }
 .pin--ok { background: var(--verde-vivo); box-shadow: 0 0 0 1px rgba(255, 255, 255, .6); }
-.pin--perto { background: var(--verde-agua); box-shadow: 0 0 0 1px rgba(255, 255, 255, .6); }
+.pin--perto { background: var(--verde-claro); box-shadow: 0 0 0 1px rgba(255, 255, 255, .6); }
+.regras .pin--perto { box-shadow: 0 0 0 1px var(--linha); }
 .pin--longe { background: var(--longe); box-shadow: 0 0 0 1px rgba(255, 255, 255, .6); }
 .pin--sem { border: 1px dashed var(--suave); }
 
@@ -157,7 +158,8 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .dado small { display: block; font-size: .62rem; text-transform: uppercase; letter-spacing: .06em; opacity: .9; }
 .dado img { width: 22px; height: auto; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .15); flex: none; }
 .dado--ok { background: var(--verde-vivo); }
-.dado--perto { background: var(--verde-agua); }
+.dado--perto { background: var(--verde-claro); color: var(--tinta); }
+.dado--perto img { box-shadow: 0 0 0 1px rgba(0, 0, 0, .2); }
 .dado--longe { background: var(--longe); }
 .dado--sem { background: transparent; color: var(--suave); box-shadow: inset 0 0 0 1px var(--linha); }
 @media (max-width: 560px) { .ficha__dados { grid-template-columns: repeat(3, 1fr); } }

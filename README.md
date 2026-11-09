@@ -16,7 +16,7 @@ A cada palpite aparece uma ficha que compara o jogador escolhido com o secreto:
 | Gols       | até 10 gols                                            |
 | Nascimento | outro estado da mesma região; país não tem "perto"     |
 
-Verde = igual, verde-água = perto, cinza = longe. O campo de nascimento mostra a bandeira do estado ou do país (imagens de domínio público do Wikimedia Commons, em `img/bandeiras/`). As setas ↑/↓ dizem se o número do jogador secreto é maior ou menor.
+Verde = igual, verde-claro = perto, cinza = longe. O campo de nascimento mostra a bandeira do estado ou do país (imagens de domínio público do Wikimedia Commons, em `img/bandeiras/`). As setas ↑/↓ dizem se o número do jogador secreto é maior ou menor.
 
 ## Telas
 
