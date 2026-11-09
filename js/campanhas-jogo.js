@@ -214,7 +214,9 @@
     adv.className = "jogo-linha__adv" + (algumVisivel ? "" : " oculto");
     adv.textContent = algumVisivel ? lista[0].adv : "? ? ?";
     topo.append(dica(lista[0]), adv);
-    box.append(topo);
+    const pernas = document.createElement("div");
+    pernas.className = "pernas";
+    box.append(topo, pernas);
     for (const j of [...lista].sort((a, b) => a.data.localeCompare(b.data))) {
       const visivel = jogo.revelados.has(j.i) || jogo.fim;
       const linha = document.createElement("div");
@@ -229,7 +231,7 @@
       placar.textContent = visivel ? `${j.gp} × ${j.gc}` : "– × –";
       placar.title = "Palmeiras × adversário";
       linha.append(rot, placar);
-      box.append(linha);
+      pernas.append(linha);
     }
     return box;
   }
