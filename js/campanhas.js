@@ -1811,6 +1811,129 @@ window.CAMPANHAS = {
       "pais": "Brasil"
      }
     ]
+   },
+   "2025": {
+    "resultado": "Vice-campeão",
+    "jogos": [
+     {
+      "fase": "Fase de grupos",
+      "data": "2025-04-03",
+      "local": "fora",
+      "adv": "Sporting Cristal",
+      "gp": 3,
+      "gc": 2,
+      "pais": "Peru"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2025-04-09",
+      "local": "casa",
+      "adv": "Cerro Porteño",
+      "gp": 1,
+      "gc": 0,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2025-04-24",
+      "local": "fora",
+      "adv": "Bolívar",
+      "gp": 3,
+      "gc": 2,
+      "pais": "Bolívia"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2025-05-07",
+      "local": "fora",
+      "adv": "Cerro Porteño",
+      "gp": 2,
+      "gc": 0,
+      "pais": "Paraguai"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2025-05-15",
+      "local": "casa",
+      "adv": "Bolívar",
+      "gp": 2,
+      "gc": 0,
+      "pais": "Bolívia"
+     },
+     {
+      "fase": "Fase de grupos",
+      "data": "2025-05-28",
+      "local": "casa",
+      "adv": "Sporting Cristal",
+      "gp": 6,
+      "gc": 0,
+      "pais": "Peru"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2025-08-14",
+      "local": "fora",
+      "adv": "Universitario de Deportes",
+      "gp": 4,
+      "gc": 0,
+      "pais": "Peru"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2025-08-21",
+      "local": "casa",
+      "adv": "Universitario de Deportes",
+      "gp": 0,
+      "gc": 0,
+      "pais": "Peru"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2025-09-17",
+      "local": "fora",
+      "adv": "River Plate",
+      "gp": 2,
+      "gc": 1,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Quartas de final",
+      "data": "2025-09-24",
+      "local": "casa",
+      "adv": "River Plate",
+      "gp": 3,
+      "gc": 1,
+      "pais": "Argentina"
+     },
+     {
+      "fase": "Semifinal",
+      "data": "2025-10-23",
+      "local": "fora",
+      "adv": "LDU Quito",
+      "gp": 0,
+      "gc": 3,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Semifinal",
+      "data": "2025-10-30",
+      "local": "casa",
+      "adv": "LDU Quito",
+      "gp": 4,
+      "gc": 0,
+      "pais": "Equador"
+     },
+     {
+      "fase": "Final",
+      "data": "2025-11-29",
+      "local": "neutro",
+      "adv": "Flamengo",
+      "gp": 0,
+      "gc": 1,
+      "pais": "Brasil"
+     }
+    ],
+    "fonte": "Wikipédia em inglês, artigo '2025 SE Palmeiras season' (conferido com ge/ESPN/CNN Brasil nas buscas). Placar do ponto de vista do Palmeiras."
    }
   },
   "times": [
@@ -1942,8 +2065,8 @@ window.CAMPANHAS = {
    "Universidad César Vallejo",
    "Universidad San Martín de Porres",
    "Universidad de Chile",
-   "Universitario",
    "Universitario de Deportes",
+   "Universitario de Sucre",
    "Unión Española",
    "Unión La Calera",
    "Vasco da Gama",
@@ -2568,10 +2691,10 @@ window.CAMPANHAS = {
     "fonte": "RSSSF"
    },
    "2000": {
-    "resultado": "Caiu nas quartas",
+    "resultado": "Vice-campeão",
     "jogos": [
      {
-      "fase": "Oitavas de final",
+      "fase": "Final",
       "data": "2000-06-01",
       "local": "fora",
       "adv": "ABC",
@@ -2580,7 +2703,7 @@ window.CAMPANHAS = {
       "gc": 3
      },
      {
-      "fase": "Oitavas de final",
+      "fase": "Final",
       "data": "2000-06-08",
       "local": "casa",
       "adv": "ABC",
@@ -2589,7 +2712,7 @@ window.CAMPANHAS = {
       "gc": 1
      },
      {
-      "fase": "Quartas de final",
+      "fase": "Final",
       "data": "2000-06-24",
       "local": "fora",
       "adv": "São Paulo",
@@ -2598,7 +2721,7 @@ window.CAMPANHAS = {
       "gc": 2
      },
      {
-      "fase": "Quartas de final",
+      "fase": "Final",
       "data": "2000-06-27",
       "local": "casa",
       "adv": "São Paulo",
@@ -3693,6 +3816,48 @@ window.CAMPANHAS = {
      }
     ],
     "fonte": "RSSSF"
+   },
+   "2025": {
+    "resultado": "Caiu nas oitavas",
+    "jogos": [
+     {
+      "fase": "3ª fase",
+      "data": "2025-04-30",
+      "local": "fora",
+      "adv": "Ceará",
+      "gp": 1,
+      "gc": 0,
+      "uf": "CE"
+     },
+     {
+      "fase": "3ª fase",
+      "data": "2025-05-22",
+      "local": "casa",
+      "adv": "Ceará",
+      "gp": 3,
+      "gc": 0,
+      "uf": "CE"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2025-07-30",
+      "local": "fora",
+      "adv": "Corinthians",
+      "gp": 0,
+      "gc": 1,
+      "uf": "SP"
+     },
+     {
+      "fase": "Oitavas de final",
+      "data": "2025-08-06",
+      "local": "casa",
+      "adv": "Corinthians",
+      "gp": 0,
+      "gc": 2,
+      "uf": "SP"
+     }
+    ],
+    "fonte": "Wikipédia em inglês, artigo '2025 SE Palmeiras season' (conferido com ge/ESPN/CNN Brasil nas buscas). Placar do ponto de vista do Palmeiras."
    }
   },
   "times": [

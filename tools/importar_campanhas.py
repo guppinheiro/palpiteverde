@@ -47,6 +47,7 @@ ALIAS_LIB = {
     "Godoy Cruz Antonio Tomba": "Godoy Cruz",
     "San Lorenzo de Almagro": "San Lorenzo",
     "Delfin SC": "Delfín",
+    "Universitario": "Universitario de Sucre",  # 2015: o boliviano (o peruano é "Universitario de Deportes")
 }
 
 # País de cada adversário do Palmeiras (bandeira usada como dica)
@@ -75,7 +76,7 @@ PAIS_LIB_EDICAO = {("River Plate", "2016"): "Uruguai"}
 NOME_LIB_EDICAO = {("River Plate", "2016"): "River Plate (URU)"}
 
 # Nomes da RSSSF -> nomes usados no jogo
-ALIAS_RSSSF_LIB = {"São Paulo FC": "São Paulo", "Santo Andre": "Santo André", "LDU": "LDU Quito",
+ALIAS_RSSSF_LIB = {"Universitario": "Universitario de Deportes", "São Paulo FC": "São Paulo", "Santo Andre": "Santo André", "LDU": "LDU Quito",
                    "Barcelona": "Barcelona SC", "CA Mineiro": "Atlético Mineiro", "Deportivo Pereira FC": "Deportivo Pereira"}
 ALIAS_RSSSF_COPA = {  # (nome, UF) -> nome; UF None = qualquer
     ("Sampaio Correa", None): "Sampaio Corrêa", ("Atlético", "PR"): "Athletico Paranaense",
@@ -92,12 +93,12 @@ UF_COPA = {  # estado dos adversários quando a RSSSF não informa
     "Santos": "SP", "Bahia": "BA", "Athletico Paranaense": "PR", "Atlético Mineiro": "MG", "Atlético Goianiense": "GO",
 }
 # Confrontos cuja fase a página da RSSSF não deixa clara
-FASE_RSSSF = {("copa", "2000", "ABC"): "Oitavas de final", ("copa", "2000", "São Paulo"): "Quartas de final",
+FASE_RSSSF = {  # (também vale para tools/campanhas_extras.json)("copa", "2000", "ABC"): "Oitavas de final", ("copa", "2000", "São Paulo"): "Quartas de final",
               ("copa", "2002", "ASA"): "1ª fase"}
 
 # Campeões e decisões por pênaltis (a fonte não traz pênaltis)
 CAMPEAO = {"libertadores": {"1999", "2020", "2021"}, "copa": {"1998", "2012", "2015", "2020"}}
-PENALTIS = {  # (competição, ano, adversário) -> "venceu" | "perdeu"
+PENALTIS = {  # (competição, ano, adversário) -> "venceu" | "perdeu"  (só para os dados do Kaggle)
     ("libertadores", "2017", "Barcelona SC"): "perdeu",
     ("libertadores", "2022", "Atlético Mineiro"): "venceu",
     ("libertadores", "2023", "Boca Juniors"): "perdeu",
@@ -285,9 +286,10 @@ def ler_copa(caminho):
 def juntar_rsssf(dados, caminho):
     """Acrescenta as edições que só existem na RSSSF (as do Kaggle têm prioridade)."""
     rs = json.load(open(caminho, encoding="utf-8"))
+    fonte = "RSSSF" if "_fonte" not in rs else rs["_fonte"]
     for comp, ordem in (("libertadores", ORDEM_LIB), ("copa", ORDEM_COPA)):
         destino = dados[comp]
-        for ano, jogos in rs[comp].items():
+        for ano, jogos in rs.get(comp, {}).items():
             if ano in destino["anos"] or (comp == "libertadores" and int(ano) < 1988):
                 continue
             novos = []
@@ -316,7 +318,7 @@ def juntar_rsssf(dados, caminho):
             for j in novos:
                 j.pop("_k")
             destino["anos"][ano] = {"resultado": resultado_campanha(comp, ano, novos, ordem), "jogos": novos,
-                                    "fonte": "RSSSF"}
+                                    "fonte": fonte}
             for j in novos:
                 if j["adv"] not in destino["times"]:
                     destino["times"].append(j["adv"])
@@ -339,6 +341,10 @@ def main():
     dados = {"libertadores": ler_libertadores(args.libertadores), "copa": ler_copa(args.copa)}
     if args.rsssf:
         juntar_rsssf(dados, args.rsssf)
+    # campanhas acrescentadas à mão a partir de outras fontes (ex.: 2025, ainda fora da RSSSF)
+    extras = os.path.join(raiz, "tools", "campanhas_extras.json")
+    if os.path.exists(extras):
+        juntar_rsssf(dados, extras)
     cab = f"""/*
  * Campanhas do Palmeiras — GERADO AUTOMATICAMENTE por tools/importar_campanhas.py em {time.strftime('%Y-%m-%d')}.
  * Fontes: Kaggle ernestonlm/conmebol-libertadores-results-from-2011-to-2022 (CC0) e

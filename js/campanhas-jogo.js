@@ -26,6 +26,7 @@
     ler(k, p) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : p; } catch { return p; } },
     gravar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* sem armazenamento */ } }
   };
+  const rotuloLocal = l => l === "casa" ? "Casa" : l === "neutro" ? "Neutro" : "Fora"; // finais em campo neutro
   // alguns jogos antigos não têm data na fonte: aí aparece só Casa/Fora
   const dataCurta = iso => { if (!iso) return ""; const [, m, d] = iso.split("-"); return `${d}/${m}`; };
   // cor do placar pelo resultado do Palmeiras: vitória, empate ou derrota
@@ -189,7 +190,7 @@
     const data = document.createElement("span");
     data.className = "jogo-linha__data";
     data.innerHTML = `<b></b>`;
-    data.firstChild.textContent = j.local === "casa" ? "Casa" : "Fora";
+    data.firstChild.textContent = rotuloLocal(j.local);
     data.append(dataCurta(j.data));
     const adv = document.createElement("span");
     adv.className = "jogo-linha__adv" + (visivel ? "" : " oculto");
@@ -226,7 +227,7 @@
       const rot = document.createElement("span");
       rot.className = "perna__local";
       rot.innerHTML = "<b></b>";
-      rot.firstChild.textContent = j.local === "casa" ? "Casa" : "Fora";
+      rot.firstChild.textContent = rotuloLocal(j.local);
       if (j.data) rot.append(" " + dataCurta(j.data));
       const placar = document.createElement("span");
       placar.className = "jogo-linha__placar" + (visivel ? classeResultado(j) : "");
