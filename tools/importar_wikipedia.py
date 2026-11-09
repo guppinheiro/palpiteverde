@@ -543,6 +543,17 @@ def main():
     so_wd = [j for j in (jogador_so_wikidata(wd, apelidos.get(q, set())) for q, wd in sem_artigo.items()) if j]
     print(f"{len(so_wd)} jogadores só do Wikidata (sem artigo em português)", file=sys.stderr)
     jogadores += so_wd
+
+    # jogadores de outras fontes (tools/jogadores_extras.json), se o nome ainda não existir
+    arq = os.path.join(raiz, "tools", "jogadores_extras.json")
+    if os.path.exists(arq):
+        with open(arq, encoding="utf-8") as f:
+            extras_manuais = json.load(f).get("jogadores", [])
+        existentes = {normal(j["nome"]) for j in jogadores}
+        novos = [{k: v for k, v in j.items() if k != "fonte"} for j in extras_manuais
+                 if normal(j["nome"]) not in existentes]
+        print(f"{len(novos)} jogadores de tools/jogadores_extras.json", file=sys.stderr)
+        jogadores += novos
     unicos = escrever(jogadores, args.saida)
 
     motivos = {}

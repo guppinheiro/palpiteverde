@@ -4,5 +4,5 @@
 Weverton
 Weverton Pereira da Silva
 ?Carlos Miguel goleiro
-?Naves zagueiro
+# Naves: sem artigo; entra por tools/jogadores_extras.json
 Marcelo Lomba
