@@ -278,3 +278,5 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .jogo-linha__placar.placar--empate { background: var(--longe); color: var(--branco); }
 .jogo-linha__placar.placar--derrota { background: var(--derrota); color: var(--branco); }
 .jogo-linha--revelado .jogo-linha__placar, .perna--revelada .jogo-linha__placar { opacity: .55; }
+/* fase de grupos: os 3 adversários lado a lado quando couber */
+.confrontos--grupos { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }

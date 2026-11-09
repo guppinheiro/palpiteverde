@@ -239,7 +239,8 @@
   }
 
   function blocoConfronto(lista, mataMata) {
-    const idaVolta = mataMata && lista.length === 2;
+    // dois jogos contra o mesmo time (ida e volta no mata-mata, casa e fora nos grupos): uma caixa só
+    const idaVolta = lista.length === 2;
     const box = idaVolta ? caixaIdaVolta(lista) : document.createElement("div");
     if (!idaVolta) {
       box.className = "confronto";
@@ -284,14 +285,11 @@
       tit.firstChild.textContent = fase;
       tit.lastChild.textContent = `${jogos.length} jogo${jogos.length === 1 ? "" : "s"}`;
       const grade = document.createElement("div");
-      grade.className = "confrontos";
-      if (fase === "Fase de grupos") {
-        grade.append(blocoConfronto(jogos, false));
-      } else {
-        const porAdv = new Map();
-        jogos.forEach(j => { if (!porAdv.has(j.adv)) porAdv.set(j.adv, []); porAdv.get(j.adv).push(j); });
-        porAdv.forEach(lista => grade.append(blocoConfronto(lista, true)));
-      }
+      grade.className = "confrontos" + (fase === "Fase de grupos" ? " confrontos--grupos" : "");
+      // uma caixa por adversário, na ordem do primeiro jogo; agregado só no mata-mata
+      const porAdv = new Map();
+      jogos.forEach(j => { if (!porAdv.has(j.adv)) porAdv.set(j.adv, []); porAdv.get(j.adv).push(j); });
+      porAdv.forEach(lista => grade.append(blocoConfronto(lista, fase !== "Fase de grupos")));
       sec.append(tit, grade);
       chave.append(sec);
     }
