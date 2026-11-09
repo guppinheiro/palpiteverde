@@ -107,6 +107,12 @@
   // Desafio do dia: sorteio ponderado e determinístico (o mesmo para todos),
   // calculado dia a dia desde o dia 1 para não repetir jogadores recentes.
   const SORTEIOS_DIARIOS = { facil: [], dificil: [], lendas: [] };
+
+  // Redefinições extraordinárias do desafio do dia: número do desafio → quantas vezes foi
+  // redefinido. Nesses dias o sorteio usa outra semente e evita o jogador que tinha saído,
+  // e o progresso salvo da versão anterior é descartado. Vale para todos os níveis.
+  const REDEFINICOES = { 313: 1 };
+  const versaoDoDia = dia => REDEFINICOES[dia] || 0;
   function jogadorDoDia(dia, nivel) {
     const pool = SORTEAVEIS[nivel];
     const lista = SORTEIOS_DIARIOS[nivel];
@@ -116,7 +122,12 @@
       const d = lista.length + 1;
       const recentes = new Set(lista.slice(-bloqueio));
       const candidatos = pool.filter(j => !recentes.has(j));
-      lista.push(sortearPonderado(candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d)));
+      let escolhido = sortearPonderado(candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d));
+      for (let v = 1; v <= versaoDoDia(d); v++) {
+        const outros = candidatos.filter(j => j !== escolhido);
+        escolhido = sortearPonderado(outros.length ? outros : candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d + v * 7919));
+      }
+      lista.push(escolhido);
     }
     return lista[alvo - 1];
   }
@@ -169,7 +180,7 @@
     estado.dia = numeroDoDia();
     estado.secreto = jogadorDoDia(estado.dia, estado.nivel);
     const salvo = armazenamento.ler(`pv:dia:${estado.nivel}`, null);
-    if (salvo && salvo.dia === estado.dia) {
+    if (salvo && salvo.dia === estado.dia && (salvo.versao || 0) === versaoDoDia(estado.dia)) {
       estado.palpites = salvo.palpites.filter(n => porNome.has(n));
       estado.fim = salvo.fim;
     } else {
@@ -244,7 +255,7 @@
 
   function salvarDia() {
     if (estado.modo === "treino") return salvarTreino();
-    armazenamento.gravar(`pv:dia:${estado.nivel}`, { dia: estado.dia, palpites: estado.palpites, fim: estado.fim });
+    armazenamento.gravar(`pv:dia:${estado.nivel}`, { dia: estado.dia, versao: versaoDoDia(estado.dia), palpites: estado.palpites, fim: estado.fim });
   }
 
   function lerStats() {
@@ -254,16 +265,20 @@
   function registrarResultado(venceu) {
     if (estado.modo === "treino") return encerrarRodadaTreino(venceu);
     const s = lerStats();
+    // Desafio redefinido e já jogado hoje na versão anterior: conta a partida,
+    // mas não mexe na sequência (nem para cima, nem para zerar).
+    const repeteDia = s.ultimoDiaJogado === estado.dia || s.ultimoDiaVencido === estado.dia;
     s.jogos++;
     if (venceu) {
       s.vitorias++;
-      s.seq = s.ultimoDiaVencido === estado.dia - 1 ? s.seq + 1 : 1;
+      if (!repeteDia) s.seq = s.ultimoDiaVencido === estado.dia - 1 ? s.seq + 1 : 1;
       s.melhor = Math.max(s.melhor, s.seq);
       s.dist[estado.palpites.length - 1]++;
-      s.ultimoDiaVencido = estado.dia;
-    } else {
+      if (!repeteDia || s.ultimoDiaVencido !== estado.dia) s.ultimoDiaVencido = estado.dia;
+    } else if (!repeteDia) {
       s.seq = 0;
     }
+    s.ultimoDiaJogado = estado.dia;
     armazenamento.gravar(`pv:stats:${estado.nivel}`, s);
   }
 
@@ -707,8 +722,9 @@
     // situação do desafio de hoje e do treino no nível escolhido
     const dia = numeroDoDia();
     const salvo = armazenamento.ler(`pv:dia:${escolha.nivel}`, null);
-    const hoje = salvo && salvo.dia === dia ? salvo : null;
-    $("op-dia-status").textContent = !hoje || !hoje.palpites.length ? `Desafio #${dia} esperando por você`
+    const hoje = salvo && salvo.dia === dia && (salvo.versao || 0) === versaoDoDia(dia) ? salvo : null;
+    $("op-dia-status").textContent = !hoje || !hoje.palpites.length
+      ? (versaoDoDia(dia) ? `Desafio #${dia} renovado: jogador novo hoje!` : `Desafio #${dia} esperando por você`)
       : !hoje.fim ? `Em andamento: ${hoje.palpites.length} palpite${hoje.palpites.length === 1 ? "" : "s"}`
       : hoje.palpites.at(-1) === jogadorDoDia(dia, escolha.nivel).nome ? `Feito hoje: acertou em ${hoje.palpites.length}`
       : "Feito hoje: não acertou";

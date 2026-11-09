@@ -57,6 +57,10 @@ O sorteio (do Desafio do dia e do Treino ∞) é ponderado por **época** e por 
 
 Assim, um jogador atual sai cerca de 7 vezes mais que um dos anos 1970. Esse peso é multiplicado pela história no clube: 200 jogos ou mais = 1; 50 jogos = 0,5; 10 jogos ≈ 0,22. Para não repetir, os últimos sorteados (até 15, ou metade do nível) ficam bloqueados. A fórmula está na função `peso()` em `js/jogo.js`.
 
+## Redefinir o desafio do dia
+
+Para trocar, de forma extraordinária, o jogador de um dia (em todos os níveis), acrescente o número do desafio em `REDEFINICOES`, no `js/jogo.js` (ex.: `{ 313: 1 }`; use 2 para redefinir de novo no mesmo dia). O sorteio desse dia passa a usar outra semente, evita o jogador anterior, e o progresso salvo da versão antiga é descartado. Quem já tinha jogado naquele dia joga de novo sem perder nem ganhar sequência.
+
 ## Rodar localmente
 
 É um site estático, sem build:
