@@ -17,10 +17,15 @@
     <header class="inicio__marca">
       <p class="inicio__sobre">Jogo de fã · Palmeiras</p>
       <h1 class="logo">Palpite <span>Verde</span></h1>
-      <p class="inicio__lema">Descubra o craque secreto em até 10 palpites.</p>
+      <p class="inicio__lema" id="lema">Descubra o craque secreto em até 10 palpites.</p>
     </header>
 
-    <section class="painel" aria-labelledby="t-modo">
+    <div class="jogos-abas" role="tablist" aria-label="Escolha o jogo">
+      <button class="jogos-aba" id="aba-craque" role="tab" aria-selected="true" aria-controls="painel-craque">Craque secreto</button>
+      <button class="jogos-aba" id="aba-campanhas" role="tab" aria-selected="false" aria-controls="painel-campanhas">Campanhas</button>
+    </div>
+
+    <section class="painel" id="painel-craque" role="tabpanel" aria-labelledby="t-modo">
       <h2 class="painel__titulo" id="t-modo">Como você quer jogar?</h2>
       <div class="opcoes-grandes" role="radiogroup" aria-labelledby="t-modo">
         <button class="opcao" id="op-dia" data-modo="dia" role="radio" aria-checked="true">
@@ -52,6 +57,43 @@
       <div class="inicio__links">
         <button class="link" id="btn-ajuda-inicio">Como jogar</button>
         <button class="link" id="btn-stats-inicio">Minhas estatísticas</button>
+      </div>
+    </section>
+
+    <section class="painel" id="painel-campanhas" role="tabpanel" aria-labelledby="t-camp" hidden>
+      <h2 class="painel__titulo" id="t-camp">Campeonato</h2>
+      <div class="opcoes-grandes" role="radiogroup" aria-labelledby="t-camp">
+        <button class="opcao camp-comp" id="cp-libertadores" data-comp="libertadores" role="radio" aria-checked="true">
+          <span class="opcao__nome">Libertadores</span>
+          <span class="opcao__texto">Da fase de grupos à final. A dica é a bandeira do país de cada adversário.</span>
+          <span class="opcao__extra" data-anos="libertadores"></span>
+        </button>
+        <button class="opcao camp-comp" id="cp-copa" data-comp="copa" role="radio" aria-checked="false">
+          <span class="opcao__nome">Copa do Brasil</span>
+          <span class="opcao__texto">A chave do mata-mata. A dica é o estado de cada adversário.</span>
+          <span class="opcao__extra" data-anos="copa"></span>
+        </button>
+      </div>
+
+      <h2 class="painel__titulo"><label for="camp-ano">Ano</label></h2>
+      <select class="seletor" id="camp-ano"></select>
+
+      <h2 class="painel__titulo" id="t-camp-modo">Modo</h2>
+      <div class="niveis" role="radiogroup" aria-labelledby="t-camp-modo">
+        <button class="nivel camp-modo" id="cm-normal" data-modo="normal" role="radio" aria-checked="true">
+          <span class="nivel__nome">Normal</span><span class="nivel__ano">2× os jogos em chances</span><span class="nivel__qtd">acerte os times</span>
+        </button>
+        <button class="nivel camp-modo" id="cm-dificil" data-modo="dificil" role="radio" aria-checked="false">
+          <span class="nivel__nome">Difícil</span><span class="nivel__ano">1,5× os jogos em chances</span><span class="nivel__qtd">acerte os times</span>
+        </button>
+        <button class="nivel camp-modo" id="cm-extremo" data-modo="extremo" role="radio" aria-checked="false">
+          <span class="nivel__nome">Extremo</span><span class="nivel__ano">1,5× os jogos em chances</span><span class="nivel__qtd">time e placar de cada jogo</span>
+        </button>
+      </div>
+
+      <button class="botao botao--grande" id="btn-jogar-camp">Jogar</button>
+      <div class="inicio__links">
+        <button class="link" id="btn-ajuda-camp-inicio">Como jogar</button>
       </div>
     </section>
 
@@ -114,7 +156,71 @@
     </main>
   </div>
 
+  <!-- ===================== JOGO DE CAMPANHAS ===================== -->
+  <div class="jogo" id="tela-campanha" hidden>
+    <header class="barra">
+      <button class="barra__voltar" id="btn-camp-inicio" aria-label="Voltar para o início">← Início</button>
+      <p class="barra__titulo"><span class="logo logo--mini">Palpite <span>Verde</span></span><span class="chip" id="camp-chip"></span></p>
+      <nav class="barra__acoes">
+        <button class="icone" id="btn-ajuda-camp" aria-label="Como jogar" title="Como jogar">?</button>
+      </nav>
+    </header>
+
+    <main class="palco">
+      <div class="placar" aria-label="Placar da campanha">
+        <div><b id="camp-acertos">0/0</b><small>Jogos descobertos</small></div>
+        <div><b id="camp-chances">0</b><small>Chances</small></div>
+        <div><b id="camp-total">0</b><small>Jogos na campanha</small></div>
+      </div>
+
+      <form class="busca busca--camp" id="form-camp" autocomplete="off">
+        <div class="busca__linha">
+          <div class="busca__time">
+            <label for="camp-campo" class="sr">Adversário</label>
+            <input id="camp-campo" class="busca__campo" type="text" placeholder="Digite um adversário"
+                   role="combobox" aria-expanded="false" aria-controls="camp-sugestoes" aria-autocomplete="list" spellcheck="false">
+            <ul class="sugestoes" id="camp-sugestoes" role="listbox" hidden></ul>
+          </div>
+          <div class="placar-palpite" id="camp-placar" hidden>
+            <label class="gol"><span>SEP</span><input id="camp-gp" type="number" inputmode="numeric" min="0" max="20" aria-label="Gols do Palmeiras"></label>
+            <span class="gol__x" aria-hidden="true">×</span>
+            <label class="gol"><span>RIVAL</span><input id="camp-gc" type="number" inputmode="numeric" min="0" max="20" aria-label="Gols do adversário"></label>
+          </div>
+          <button class="botao botao--chutar" id="btn-chutar" type="submit">Chutar</button>
+        </div>
+      </form>
+
+      <p class="camp-retorno" id="camp-retorno" aria-live="polite"></p>
+      <div class="camp-erros" id="camp-erros" aria-label="Palpites errados"></div>
+
+      <section class="fim" id="camp-fim" hidden>
+        <p class="fim__selo" id="camp-fim-selo"></p>
+        <h2 id="camp-fim-titulo"></h2>
+        <p id="camp-fim-texto"></p>
+        <div class="fim__acoes">
+          <button class="botao" id="btn-camp-outro">Jogar outra campanha</button>
+          <button class="botao botao--contorno" id="btn-camp-copiar">Copiar resultado</button>
+        </div>
+      </section>
+
+      <section class="chave" id="camp-chave" aria-label="Campanha do Palmeiras"></section>
+    </main>
+  </div>
+
   <!-- ===================== MODAIS ===================== -->
+  <dialog class="modal" id="modal-ajuda-camp">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Campanhas</h2>
+    <p>Escolha a Libertadores ou a Copa do Brasil e um ano. Aparece a campanha do Palmeiras jogo a jogo, com a fase, a data, o mando e uma dica de cada adversário: a <b>bandeira do país</b> na Libertadores, o <b>estado</b> na Copa do Brasil.</p>
+    <p>Descubra quem o Palmeiras enfrentou. Cada palpite gasta uma chance, certo ou errado.</p>
+    <table class="tabela">
+      <tr><th>Normal</th><td>chances = 2 × número de jogos. Acertou o time, aparecem todos os jogos contra ele.</td></tr>
+      <tr><th>Difícil</th><td>chances = 1,5 × número de jogos. Mesmas regras do Normal.</td></tr>
+      <tr><th>Extremo</th><td>chances = 1,5 × número de jogos. Cada palpite é time + placar (SEP × RIVAL) e revela um jogo por vez.</td></tr>
+    </table>
+    <p class="sub">Disponível: Libertadores 2013 e 2016–2024; Copa do Brasil 2012–2021. Placares no tempo normal, sem pênaltis. Na Copa do Brasil, as fases antes das oitavas aparecem juntas como “Fases iniciais”.</p>
+  </dialog>
+
   <dialog class="modal" id="modal-ajuda">
     <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
     <h2>Como jogar</h2>
@@ -163,5 +269,7 @@
 
   <script src="js/jogadores.js"></script>
   <script src="js/jogo.js"></script>
+  <script src="js/campanhas.js"></script>
+  <script src="js/campanhas-jogo.js"></script>
 </body>
 </html>

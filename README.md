@@ -23,6 +23,18 @@ Verde = igual, verde-claro = perto, cinza = longe. O campo de nascimento mostra 
 - **Início**: escolhe o modo (Desafio do dia ou Treino ∞) e o nível, e mostra a situação do desafio de hoje e o recorde do treino.
 - **Jogo**: a busca, as fichas de dicas e, no fim, o resultado com o **card do resultado**: uma imagem 1080×1350 com o jogador secreto, o resultado, todos os palpites com as cores das dicas, o palpite que chegou mais perto e a sequência. Ela pode ser salva para postar.
 
+## Jogo de campanhas
+
+Na tela inicial, a aba **Campanhas** abre o segundo jogo: escolha a **Libertadores** (da fase de grupos em diante) ou a **Copa do Brasil**, um ano (ou sorteado) e o modo. A campanha do Palmeiras aparece jogo a jogo, com fase, data, mando e uma dica de cada adversário: a bandeira do país (Libertadores) ou o estado (Copa do Brasil). Cada palpite gasta uma chance.
+
+| Modo    | Chances            | Palpite                                                    |
+|---------|--------------------|------------------------------------------------------------|
+| Normal  | 2 × nº de jogos    | o time; revela todos os jogos contra ele                   |
+| Difícil | 1,5 × nº de jogos  | o time; revela todos os jogos contra ele                   |
+| Extremo | 1,5 × nº de jogos  | time + placar (SEP × RIVAL); revela um jogo por vez        |
+
+Os dados estão em `js/campanhas.js`, gerado por `tools/importar_campanhas.py` a partir de dois conjuntos do Kaggle: [ernestonlm/conmebol-libertadores-results-from-2011-to-2022](https://www.kaggle.com/datasets/ernestonlm/conmebol-libertadores-results-from-2011-to-2022) (CC0) e [ricardomattos05/jogos-do-campeonato-brasileiro](https://www.kaggle.com/datasets/ricardomattos05/jogos-do-campeonato-brasileiro) (CC BY 4.0). Cobertura: Libertadores 2013 e 2016–2024; Copa do Brasil 2012–2021. O importador remove jogos duplicados, unifica nomes de clubes, corrige a fase dos jogos de ida e marca decisões por pênaltis (que a fonte não traz). Na Copa do Brasil, as fases antes das oitavas aparecem juntas como "Fases iniciais", porque a numeração da fonte não bate com a oficial em alguns anos.
+
 ## Modos
 
 - **Desafio do dia**: o mesmo jogador para todos, trocado à meia-noite de Brasília. O desafio #1 foi em 9/11/2026. Há um desafio diário para cada nível.
