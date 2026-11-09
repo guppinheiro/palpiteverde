@@ -1,0 +1,8 @@
+# Páginas da Wikipédia que o importador busca mesmo fora da categoria e do Wikidata.
+# Um título por linha (redirecionamentos funcionam). Linhas com # são ignoradas.
+Weverton
+Weverton Pereira da Silva
+Carlos Miguel (futebolista)
+Carlos Miguel dos Santos Pereira
+Naves (futebolista)
+Marcelo Lomba

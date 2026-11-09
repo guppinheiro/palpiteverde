@@ -65,7 +65,11 @@ Para publicar, basta servir os arquivos (por exemplo, GitHub Pages apontando par
 
 ## De onde vêm os jogadores
 
-`js/jogadores.js` é **gerado automaticamente** a partir das fichas da Wikipédia em português (categoria *Futebolistas da Sociedade Esportiva Palmeiras*):
+`js/jogadores.js` é **gerado automaticamente** a partir das fichas da Wikipédia em português. A lista de jogadores junta três fontes:
+
+1. a categoria *Futebolistas da Sociedade Esportiva Palmeiras*;
+2. o **Wikidata** (uma consulta só traz todos com passagem pelo clube e artigo em português, inclusive quem falta na categoria, como Prass e Leão); ele também cobre posição, nascimento e jogos quando a ficha não tem;
+3. `tools/paginas_extras.txt`, para incluir páginas à mão (ex.: Weverton).
 
 ```bash
 python3 tools/importar_wikipedia.py

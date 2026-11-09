@@ -2,8 +2,9 @@
 """
 Importa os jogadores do Palmeiras da Wikipédia em português e gera js/jogadores.js.
 
-Fonte: Categoria:Futebolistas da Sociedade Esportiva Palmeiras (API pública da
-Wikipédia). Para cada jogador, lê a ficha (infobox) e soma as passagens pelo
+Fontes: Categoria:Futebolistas da Sociedade Esportiva Palmeiras (API pública da
+Wikipédia) mais a lista do Wikidata (todos com passagem pelo clube e artigo em
+português). Para cada jogador, lê a ficha (infobox) e soma as passagens pelo
 Palmeiras: anos, jogos e gols. Também lê posição e local de nascimento.
 
 Uso:
@@ -64,31 +65,38 @@ PAISES_PT = {
 
 
 # ---------------------------------------------------------------- rede / cache
-def baixar(params, cache_dir):
-    params = {**params, "format": "json", "formatversion": "2", "maxlag": "5"}
-    chave = hashlib.sha1(json.dumps(params, sort_keys=True).encode()).hexdigest()
-    arq = os.path.join(cache_dir, chave + ".json")
+def requisitar(url, cache_dir, chave, dados_post=None, cabecalhos=None, pausa=5):
+    arq = os.path.join(cache_dir, hashlib.sha1(chave.encode()).hexdigest() + ".json")
     if os.path.exists(arq):
         with open(arq, encoding="utf-8") as f:
             return json.load(f)
-    url = API + "?" + urllib.parse.urlencode(params)
     espera = 5
-    for tentativa in range(20):
+    for _ in range(20):
         try:
-            req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-            with urllib.request.urlopen(req, timeout=60) as r:
+            req = urllib.request.Request(url, data=dados_post,
+                                         headers={"User-Agent": USER_AGENT, **(cabecalhos or {})})
+            with urllib.request.urlopen(req, timeout=120) as r:
                 dados = json.loads(r.read().decode("utf-8"))
-            if "error" in dados and dados["error"].get("code") == "maxlag":
+            if isinstance(dados, dict) and dados.get("error", {}).get("code") == "maxlag":
                 raise urllib.error.HTTPError(url, 503, "maxlag", None, None)
             with open(arq, "w", encoding="utf-8") as f:
                 json.dump(dados, f, ensure_ascii=False)
-            time.sleep(5)  # gentileza com a API
+            time.sleep(pausa)  # gentileza com a API
             return dados
         except (urllib.error.HTTPError, urllib.error.URLError, json.JSONDecodeError, TimeoutError) as e:
             print(f"  aviso: {e}; nova tentativa em {espera}s", file=sys.stderr)
             time.sleep(espera)
             espera = min(espera * 2, 300)
-    raise SystemExit("A API da Wikipédia não respondeu. Tente de novo mais tarde.")
+    raise SystemExit("A API não respondeu. Tente de novo mais tarde.")
+
+
+def baixar(params, cache_dir):
+    params = {**params, "format": "json", "formatversion": "2", "maxlag": "5"}
+    # a chave do cache é a mesma de versões anteriores do script
+    chave = json.dumps(params, sort_keys=True)
+    arq_antigo = os.path.join(cache_dir, hashlib.sha1(chave.encode()).hexdigest() + ".json")
+    return requisitar(API + "?" + urllib.parse.urlencode(params), cache_dir, chave) if not os.path.exists(arq_antigo) \
+        else json.load(open(arq_antigo, encoding="utf-8"))
 
 
 def listar_categoria(cache_dir):
@@ -100,6 +108,57 @@ def listar_categoria(cache_dir):
         if "continue" not in d:
             return titulos
         cont = {"cmcontinue": d["continue"]["cmcontinue"]}
+
+
+WIKIDATA = "https://query.wikidata.org/sparql"
+PALMEIRAS_WD = "Q80964"
+CONSULTA_WD = """
+SELECT ?p ?artigo ?ini ?fim ?jogos ?gols ?posLabel ?ufLabel ?paisLabel WHERE {
+  ?p p:P54 ?st . ?st ps:P54 wd:%s .
+  ?artigo schema:about ?p ; schema:isPartOf <https://pt.wikipedia.org/> .
+  OPTIONAL { ?st pq:P580 ?ini } OPTIONAL { ?st pq:P582 ?fim }
+  OPTIONAL { ?st pq:P1350 ?jogos } OPTIONAL { ?st pq:P1351 ?gols }
+  OPTIONAL { ?p wdt:P413 ?pos }
+  OPTIONAL { ?p wdt:P19 ?nasc . OPTIONAL { ?nasc wdt:P17 ?pais }
+             OPTIONAL { ?nasc wdt:P131* ?uf . ?uf wdt:P31 wd:Q485258 } }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "pt,en". }
+}""" % PALMEIRAS_WD
+
+
+def consultar_wikidata(cache_dir):
+    """A categoria da Wikipédia não tem todo mundo (ex.: Weverton, Prass, Leão).
+    O Wikidata lista, numa consulta só, todos com passagem pelo Palmeiras e artigo
+    em português. Também serve de reserva quando a ficha não tem um dado."""
+    corpo = urllib.parse.urlencode({"query": CONSULTA_WD}).encode()
+    d = requisitar(WIKIDATA, cache_dir, "wikidata:" + CONSULTA_WD, dados_post=corpo,
+                   cabecalhos={"Accept": "application/sparql-results+json"}, pausa=1)
+    g = lambda r, k: r.get(k, {}).get("value")
+    info = {}
+    for r in d["results"]["bindings"]:
+        titulo = urllib.parse.unquote(g(r, "artigo").rsplit("/wiki/", 1)[1]).replace("_", " ")
+        i = info.setdefault(titulo, {"passagens": {}, "pos": None, "uf": None, "pais": None})
+        chave = (g(r, "ini"), g(r, "fim"))
+        i["passagens"][chave] = (g(r, "jogos"), g(r, "gols"))
+        i["pos"] = i["pos"] or g(r, "posLabel")
+        i["uf"] = i["uf"] or g(r, "ufLabel")
+        i["pais"] = i["pais"] or g(r, "paisLabel")
+    return info
+
+
+def reserva_wikidata(wd):
+    """Converte o registro do Wikidata nos campos do jogo (quando faltam na ficha)."""
+    ano = lambda v: int(v[:4]) if v and v[:4].isdigit() else None
+    ps = []
+    for (ini, fim), (jogos, gols) in wd["passagens"].items():
+        a, b = ano(ini), ano(fim)
+        if a or b:
+            ps.append((a or b, b, int(float(jogos)) if jogos else None, int(float(gols)) if gols else None))
+    pos = posicao_texto(wd["pos"] or "")
+    if wd["pais"] and wd["pais"] != "Brasil":
+        nasc, pais = "EXT", wd["pais"]
+    else:
+        nasc, pais = ESTADOS.get(wd["uf"] or ""), None
+    return ps, pos, nasc, pais
 
 
 def baixar_textos(titulos, cache_dir):
@@ -296,21 +355,26 @@ def nome_curto(campos, titulo):
     return n.strip()
 
 
-def jogador(titulo, texto):
-    campos = extrair_infobox(texto)
-    if not campos:
+def jogador(titulo, texto, wd=None):
+    campos = extrair_infobox(texto) or {}
+    ps_wd, pos_wd, nasc_wd, pais_wd = reserva_wikidata(wd) if wd else ([], None, None, None)
+    if not campos and not ps_wd:
         return None, "sem ficha"
     ps = passagens(campos)
+    if not [p for p in ps if p[2] is not None] and [p for p in ps_wd if p[2] is not None]:
+        ps = ps_wd  # a ficha não tem os números, o Wikidata tem
     if not ps:
         return None, "Palmeiras não aparece na ficha"
     # passagens sem números na ficha não entram na soma (só as que têm)
     com_numeros = [p for p in ps if p[2] is not None]
     if not com_numeros:
         return None, "sem jogos pelo Palmeiras na ficha"
-    pos = posicao(campos) or posicao_no_texto(texto)
+    pos = posicao(campos) or posicao_no_texto(texto) or pos_wd
     if not pos:
         return None, "posição não reconhecida"
     nasc, pais = nascimento(campos)  # None = desconhecido; o jogo mostra "?"
+    if not nasc and nasc_wd:
+        nasc, pais = nasc_wd, pais_wd
     ultimo = None if any(p[1] is None for p in ps) else max(p[1] for p in ps)
     j = {
         "nome": nome_curto(campos, titulo),
@@ -374,7 +438,18 @@ def main():
     print("Listando a categoria…", file=sys.stderr)
     titulos = listar_categoria(args.cache)
     print(f"{len(titulos)} páginas na categoria", file=sys.stderr)
+    print("Consultando o Wikidata…", file=sys.stderr)
+    wikidata = consultar_wikidata(args.cache)
+    manuais = set()
+    arq_extras = os.path.join(raiz, "tools", "paginas_extras.txt")
+    if os.path.exists(arq_extras):
+        with open(arq_extras, encoding="utf-8") as f:
+            manuais = {l.strip() for l in f if l.strip() and not l.startswith("#")}
+    extras = sorted((set(wikidata) | manuais) - set(titulos))
+    print(f"{len(wikidata)} jogadores no Wikidata; {len(extras)} fora da categoria", file=sys.stderr)
+    # categoria primeiro, extras depois: os lotes da categoria continuam batendo com o cache
     textos = baixar_textos(titulos, args.cache)
+    textos.update(baixar_textos(extras, args.cache))
 
     correcoes_arq = os.path.join(raiz, "tools", "correcoes.json")
     correcoes = {}
@@ -384,7 +459,7 @@ def main():
 
     jogadores, descartes = [], {}
     for titulo, texto in textos.items():
-        j, motivo = jogador(titulo, texto)
+        j, motivo = jogador(titulo, texto, wikidata.get(titulo))
         if titulo in correcoes:
             c = correcoes[titulo]
             if c is None:
