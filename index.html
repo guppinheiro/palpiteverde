@@ -20,7 +20,7 @@
   <main class="palco">
     <div class="modos" role="tablist" aria-label="Modo de jogo">
       <button role="tab" class="modo ativo" data-modo="dia" aria-selected="true">Desafio do dia</button>
-      <button role="tab" class="modo" data-modo="treino" aria-selected="false">Treino</button>
+      <button role="tab" class="modo" data-modo="treino" aria-selected="false">Treino ∞</button>
     </div>
 
     <div class="opcoes">
@@ -28,7 +28,13 @@
         <button class="seg ativo" data-nivel="facil" role="radio" aria-checked="true">Fácil <small>desde 2020</small></button>
         <button class="seg" data-nivel="dificil" role="radio" aria-checked="false">Difícil <small>desde 1970</small></button>
       </div>
-      <button class="botao botao--leve" id="btn-novo" hidden>Novo jogador</button>
+      <button class="botao botao--leve" id="btn-novo" hidden>Pular</button>
+    </div>
+
+    <div class="placar" id="placar" hidden aria-label="Placar do treino infinito">
+      <div><b id="placar-acertos">0/0</b><small>Acertos</small></div>
+      <div><b id="placar-seq">0</b><small>Sequência</small></div>
+      <div><b id="placar-recorde">0</b><small>Recorde</small></div>
     </div>
 
     <p class="status" id="status" aria-live="polite"></p>
@@ -53,8 +59,8 @@
       <h2 id="fim-titulo"></h2>
       <p id="fim-texto"></p>
       <div class="fim__acoes">
+        <button class="botao" id="btn-de-novo" hidden>Próximo jogador →</button>
         <button class="botao" id="btn-compartilhar">Compartilhar</button>
-        <button class="botao botao--leve" id="btn-de-novo" hidden>Jogar outro</button>
       </div>
       <p class="fim__proximo" id="fim-proximo"></p>
     </section>
@@ -84,7 +90,8 @@
     </table>
     <h3>Níveis</h3>
     <p><b>Fácil</b>: só jogadores que atuaram pelo clube de 2020 para cá. <b>Difícil</b>: todos que atuaram de 1970 para cá.</p>
-    <p><b>Desafio do dia</b>: o mesmo jogador para todo mundo, um por nível, troca à meia-noite (horário de Brasília). <b>Treino</b>: jogue quantas vezes quiser.</p>
+    <p><b>Desafio do dia</b>: o mesmo jogador para todo mundo, um por nível, troca à meia-noite (horário de Brasília). <b>Treino ∞</b>: um jogador atrás do outro, sem fim. Acertou, vem o próximo; travou, pode pular (zera a sequência). Tente bater seu recorde!</p>
+    <p>O sorteio dá preferência a jogadores mais recentes.</p>
   </dialog>
 
   <dialog class="modal" id="modal-stats">

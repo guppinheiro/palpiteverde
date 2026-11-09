@@ -49,31 +49,53 @@
     };
   }
 
-  function embaralhar(lista, rnd) {
-    const a = lista.slice();
-    for (let i = a.length - 1; i > 0; i--) {
-      const j = Math.floor(rnd() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
-  }
-
   // Nível = ano mínimo em que o jogador ainda atuava pelo clube
   const NIVEIS = {
     facil:   { desde: 2020, rotulo: "fácil",   semente: 1914 },
     dificil: { desde: 1970, rotulo: "difícil", semente: 1942 }
   };
   const POOL = {};
-  const ORDEM_DIARIA = {};
   for (const [nivel, cfg] of Object.entries(NIVEIS)) {
-    POOL[nivel] = JOGADORES.filter(j => (j.ultimo ?? ANO_ATUAL) >= cfg.desde);
-    ORDEM_DIARIA[nivel] = embaralhar(POOL[nivel].map(j => j.nome).sort(), aleatorioComSemente(cfg.semente));
+    POOL[nivel] = JOGADORES.filter(j => (j.ultimo ?? ANO_ATUAL) >= cfg.desde)
+      .sort((a, b) => a.nome.localeCompare(b.nome, "pt"));
   }
 
+  // Preferência por jogadores recentes: o peso cai conforme o tempo desde
+  // o último jogo pelo clube. Elenco atual ≈ 4,5; 2020 ≈ 3,5; 2010 ≈ 1,7;
+  // 2000 ≈ 1,0; anos 1970 ≈ 0,6 (o mais recente sai ~7x mais que o mais antigo).
+  function peso(j) {
+    const anos = ANO_ATUAL - (j.ultimo ?? ANO_ATUAL);
+    return 0.5 + 4 * Math.exp(-anos / 12);
+  }
+
+  function sortearPonderado(lista, rnd) {
+    const total = lista.reduce((s, j) => s + peso(j), 0);
+    let r = rnd() * total;
+    for (const j of lista) {
+      r -= peso(j);
+      if (r < 0) return j;
+    }
+    return lista[lista.length - 1];
+  }
+
+  // Quantos sorteios recentes ficam bloqueados para não repetir jogador
+  const semRepetir = pool => Math.min(15, Math.floor(pool.length / 2));
+
+  // Desafio do dia: sorteio ponderado e determinístico (o mesmo para todos),
+  // calculado dia a dia desde o dia 1 para não repetir jogadores recentes.
+  const SORTEIOS_DIARIOS = { facil: [], dificil: [] };
   function jogadorDoDia(dia, nivel) {
-    const ordem = ORDEM_DIARIA[nivel];
-    const n = ordem.length;
-    return porNome.get(ordem[(((dia - 1) % n) + n) % n]);
+    const pool = POOL[nivel];
+    const lista = SORTEIOS_DIARIOS[nivel];
+    const bloqueio = semRepetir(pool);
+    const alvo = Math.max(1, dia);
+    while (lista.length < alvo) {
+      const d = lista.length + 1;
+      const recentes = new Set(lista.slice(-bloqueio));
+      const candidatos = pool.filter(j => !recentes.has(j));
+      lista.push(sortearPonderado(candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d)));
+    }
+    return lista[alvo - 1];
   }
 
   // ---------- comparação ----------
@@ -125,19 +147,72 @@
     }
   }
 
-  function novoTreino() {
-    estado.modo = "treino";
+  // ---------- treino infinito ----------
+  // Uma rodada atrás da outra, sem fim. Fica salvo por nível, então a
+  // sequência continua mesmo recarregando a página.
+  const treinoVazio = () => ({ secreto: null, palpites: [], fim: false, jogados: 0, acertos: 0, seq: 0, recorde: 0, recentes: [] });
+  let treino = treinoVazio();
+
+  function salvarTreino() {
+    armazenamento.gravar(`pv:treino:${estado.nivel}`, {
+      ...treino, secreto: estado.secreto?.nome ?? null, palpites: estado.palpites, fim: estado.fim
+    });
+  }
+
+  function proximoTreino() {
     const pool = POOL[estado.nivel];
-    let escolhido;
-    do { escolhido = pool[Math.floor(Math.random() * pool.length)]; }
-    while (pool.length > 1 && estado.secreto && escolhido === estado.secreto);
+    const recentes = new Set(treino.recentes.slice(-semRepetir(pool)));
+    const escolhido = sortearPonderado(pool.filter(j => !recentes.has(j.nome)), Math.random);
+    treino.recentes = [...treino.recentes, escolhido.nome].slice(-15);
     estado.secreto = escolhido;
     estado.palpites = [];
     estado.fim = false;
+    salvarTreino();
+  }
+
+  function carregarTreino() {
+    estado.modo = "treino";
+    const salvo = armazenamento.ler(`pv:treino:${estado.nivel}`, null);
+    treino = { ...treinoVazio(), ...(salvo || {}) };
+    const secreto = salvo && porNome.get(salvo.secreto);
+    if (secreto && POOL[estado.nivel].includes(secreto)) {
+      estado.secreto = secreto;
+      estado.palpites = (salvo.palpites || []).filter(n => porNome.has(n));
+      estado.fim = !!salvo.fim;
+    } else {
+      proximoTreino();
+    }
+  }
+
+  function encerrarRodadaTreino(acertou) {
+    treino.jogados++;
+    if (acertou) {
+      treino.acertos++;
+      treino.seq++;
+      treino.recorde = Math.max(treino.recorde, treino.seq);
+    } else {
+      treino.seq = 0;
+    }
+  }
+
+  function pularTreino() {
+    if (estado.modo !== "treino" || estado.fim) return;
+    estado.fim = true;
+    estado.pulou = true;
+    encerrarRodadaTreino(false);
+    salvarTreino();
+    renderizar();
+  }
+
+  function avancarTreino() {
+    estado.pulou = false;
+    proximoTreino();
+    renderizar();
+    $("campo").focus();
   }
 
   function salvarDia() {
-    if (estado.modo !== "dia") return;
+    if (estado.modo === "treino") return salvarTreino();
     armazenamento.gravar(`pv:dia:${estado.nivel}`, { dia: estado.dia, palpites: estado.palpites, fim: estado.fim });
   }
 
@@ -146,7 +221,7 @@
   }
 
   function registrarResultado(venceu) {
-    if (estado.modo !== "dia") return;
+    if (estado.modo === "treino") return encerrarRodadaTreino(venceu);
     const s = lerStats();
     s.jogos++;
     if (venceu) {
@@ -213,13 +288,21 @@
     const rotulo = NIVEIS[estado.nivel].rotulo;
     $("status").textContent = estado.fim ? ""
       : estado.modo === "dia" ? `Desafio #${estado.dia} (${rotulo}) · ${restantes} palpite${plural} restante${plural}`
-      : `Treino (${rotulo}) · ${restantes} palpite${plural} restante${plural}`;
+      : `Treino infinito (${rotulo}) · jogador ${treino.jogados + 1} · ${restantes} palpite${plural} restante${plural}`;
 
+    const emTreino = estado.modo === "treino";
     const campo = $("campo");
     campo.disabled = estado.fim;
-    campo.placeholder = estado.fim ? "Fim de jogo" : "Digite o nome de um jogador";
+    campo.placeholder = !estado.fim ? "Digite o nome de um jogador"
+      : emTreino ? "Aperte Enter para o próximo" : "Fim de jogo";
 
-    $("btn-novo").hidden = estado.modo !== "treino";
+    $("btn-novo").hidden = !emTreino || estado.fim;
+    $("placar").hidden = !emTreino;
+    if (emTreino) {
+      $("placar-acertos").textContent = `${treino.acertos}/${treino.jogados}`;
+      $("placar-seq").textContent = treino.seq;
+      $("placar-recorde").textContent = treino.recorde;
+    }
     document.querySelectorAll(".seg").forEach(x => {
       const ativo = x.dataset.nivel === estado.nivel;
       x.classList.toggle("ativo", ativo);
@@ -235,12 +318,16 @@
     fim.hidden = !estado.fim;
     if (estado.fim) {
       const venceu = estado.palpites.at(-1) === estado.secreto.nome;
-      $("fim-titulo").textContent = venceu ? "Golaço! ⚽" : "Não foi dessa vez";
+      $("fim-titulo").textContent = venceu ? "Golaço! ⚽" : estado.pulou ? "Pulou!" : "Não foi dessa vez";
       $("fim-texto").textContent = venceu
         ? `Você descobriu ${estado.secreto.nome} em ${estado.palpites.length} palpite${estado.palpites.length === 1 ? "" : "s"}.`
         : `O jogador era ${estado.secreto.nome}.`;
-      $("btn-de-novo").hidden = estado.modo !== "treino";
-      $("fim-proximo").textContent = estado.modo === "dia" ? "Novo desafio à meia-noite (horário de Brasília). Enquanto isso, vá para o Treino." : "";
+      $("btn-de-novo").hidden = !emTreino;
+      $("btn-de-novo").classList.toggle("botao--leve", !emTreino);
+      $("btn-compartilhar").classList.toggle("botao--leve", emTreino);
+      $("fim-proximo").textContent = emTreino
+        ? (venceu ? `Sequência de ${treino.seq}${treino.seq === treino.recorde && treino.seq > 1 ? " — novo recorde!" : ""}` : "Sequência zerada. Bora de novo!")
+        : "Novo desafio à meia-noite (horário de Brasília). Enquanto isso, jogue o Treino infinito.";
     }
     fecharSugestoes();
   }
@@ -319,6 +406,9 @@
     const emoji = { ok: "🟩", perto: "🟨", longe: "⬜" };
     const venceu = estado.palpites.at(-1) === estado.secreto.nome;
     const rotulo = NIVEIS[estado.nivel].rotulo;
+    if (estado.modo === "treino") {
+      return `Palpite Verde · treino infinito (${rotulo})\n⚽ ${treino.acertos} acertos em ${treino.jogados} jogadores\n🔥 Recorde de sequência: ${treino.recorde}\n${location.href.split("?")[0]}`;
+    }
     const placar = `${venceu ? estado.palpites.length : "X"}/${MAX_PALPITES}`;
     const titulo = estado.modo === "dia"
       ? `Palpite Verde #${estado.dia} (${rotulo}) ${placar}`
@@ -370,18 +460,28 @@
 
   document.querySelectorAll(".modo").forEach(b => b.addEventListener("click", () => {
     if (b.dataset.modo === estado.modo) return;
-    if (b.dataset.modo === "dia") carregarDia(); else novoTreino();
+    estado.pulou = false;
+    if (b.dataset.modo === "dia") carregarDia(); else carregarTreino();
+    armazenamento.gravar("pv:modo", estado.modo);
     renderizar();
   }));
+  document.addEventListener("keydown", e => {
+    if (e.key === "Enter" && estado.modo === "treino" && estado.fim && !document.querySelector("dialog[open]")
+        && !(e.target instanceof HTMLButtonElement)) {
+      e.preventDefault();
+      avancarTreino();
+    }
+  });
   document.querySelectorAll(".seg").forEach(b => b.addEventListener("click", () => {
     if (b.dataset.nivel === estado.nivel) return;
     estado.nivel = b.dataset.nivel;
     armazenamento.gravar("pv:nivel", estado.nivel);
-    if (estado.modo === "dia") carregarDia(); else novoTreino();
+    estado.pulou = false;
+    if (estado.modo === "dia") carregarDia(); else carregarTreino();
     renderizar();
   }));
-  $("btn-novo").addEventListener("click", () => { novoTreino(); renderizar(); });
-  $("btn-de-novo").addEventListener("click", () => { novoTreino(); renderizar(); campo.focus(); });
+  $("btn-novo").addEventListener("click", pularTreino);
+  $("btn-de-novo").addEventListener("click", avancarTreino);
   $("btn-compartilhar").addEventListener("click", compartilhar);
   $("btn-ajuda").addEventListener("click", () => $("modal-ajuda").showModal());
   $("btn-stats").addEventListener("click", () => { renderStats(); $("modal-stats").showModal(); });
@@ -390,7 +490,7 @@
   });
 
   // ---------- início ----------
-  carregarDia();
+  if (armazenamento.ler("pv:modo", "dia") === "treino") carregarTreino(); else carregarDia();
   renderizar();
   if (!armazenamento.ler("pv:visitou", false)) {
     armazenamento.gravar("pv:visitou", true);

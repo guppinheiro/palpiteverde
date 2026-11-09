@@ -68,6 +68,12 @@ button { font: inherit; color: inherit; cursor: pointer; }
 .seg small { font-size: .72rem; opacity: .8; }
 .seg.ativo { background: var(--verde); color: #fff; }
 
+.placar {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; text-align: center;
+}
+.placar div { background: var(--cartao); border: 1px solid var(--borda); border-radius: var(--raio); padding: 8px 4px; }
+.placar b { display: block; font-size: 1.3rem; color: var(--verde); }
+.placar small { font-size: .7rem; color: var(--suave); text-transform: uppercase; letter-spacing: .03em; }
 .status { text-align: center; color: var(--suave); margin: 14px 0 10px; min-height: 1.2em; }
 
 .busca { position: relative; }
