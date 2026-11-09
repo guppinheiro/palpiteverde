@@ -113,9 +113,9 @@ def listar_categoria(cache_dir):
 WIKIDATA = "https://query.wikidata.org/sparql"
 PALMEIRAS_WD = "Q80964"
 CONSULTA_WD = """
-SELECT ?p ?artigo ?ini ?fim ?jogos ?gols ?posLabel ?ufLabel ?paisLabel WHERE {
+SELECT ?p ?pLabel ?artigo ?ini ?fim ?jogos ?gols ?posLabel ?ufLabel ?paisLabel WHERE {
   ?p p:P54 ?st . ?st ps:P54 wd:%s .
-  ?artigo schema:about ?p ; schema:isPartOf <https://pt.wikipedia.org/> .
+  OPTIONAL { ?artigo schema:about ?p ; schema:isPartOf <https://pt.wikipedia.org/> . }
   OPTIONAL { ?st pq:P580 ?ini } OPTIONAL { ?st pq:P582 ?fim }
   OPTIONAL { ?st pq:P1350 ?jogos } OPTIONAL { ?st pq:P1351 ?gols }
   OPTIONAL { ?p wdt:P413 ?pos }
@@ -133,16 +133,72 @@ def consultar_wikidata(cache_dir):
     d = requisitar(WIKIDATA, cache_dir, "wikidata:" + CONSULTA_WD, dados_post=corpo,
                    cabecalhos={"Accept": "application/sparql-results+json"}, pausa=1)
     g = lambda r, k: r.get(k, {}).get("value")
-    info = {}
+    info, sem_artigo = {}, {}
     for r in d["results"]["bindings"]:
-        titulo = urllib.parse.unquote(g(r, "artigo").rsplit("/wiki/", 1)[1]).replace("_", " ")
-        i = info.setdefault(titulo, {"passagens": {}, "pos": None, "uf": None, "pais": None})
+        qid = g(r, "p").rsplit("/", 1)[1]
+        if g(r, "artigo"):
+            titulo = urllib.parse.unquote(g(r, "artigo").rsplit("/wiki/", 1)[1]).replace("_", " ")
+            i = info.setdefault(titulo, {"passagens": {}, "pos": None, "uf": None, "pais": None})
+        else:
+            i = sem_artigo.setdefault(qid, {"passagens": {}, "pos": None, "uf": None, "pais": None,
+                                            "nome": g(r, "pLabel"), "qid": qid})
         chave = (g(r, "ini"), g(r, "fim"))
         i["passagens"][chave] = (g(r, "jogos"), g(r, "gols"))
         i["pos"] = i["pos"] or g(r, "posLabel")
         i["uf"] = i["uf"] or g(r, "ufLabel")
         i["pais"] = i["pais"] or g(r, "paisLabel")
-    return info
+    return info, sem_artigo
+
+
+def apelidos_wikidata(qids, cache_dir):
+    """Nome completo é difícil de adivinhar: pega os apelidos (rótulos alternativos)."""
+    if not qids:
+        return {}
+    consulta = """SELECT ?p ?apelido WHERE { VALUES ?p { %s }
+      ?p skos:altLabel ?apelido . FILTER(lang(?apelido) = "pt" || lang(?apelido) = "en") }""" % " ".join(
+        "wd:" + q for q in sorted(qids))
+    corpo = urllib.parse.urlencode({"query": consulta}).encode()
+    d = requisitar(WIKIDATA, cache_dir, "wikidata:" + consulta, dados_post=corpo,
+                   cabecalhos={"Accept": "application/sparql-results+json"}, pausa=1)
+    res = {}
+    for r in d["results"]["bindings"]:
+        res.setdefault(r["p"]["value"].rsplit("/", 1)[1], set()).add(r["apelido"]["value"])
+    return res
+
+
+def jogador_so_wikidata(wd, apelidos):
+    """Jogador sem artigo em português: monta tudo com os dados do Wikidata."""
+    ps, pos, nasc, pais = reserva_wikidata(wd)
+    com_numeros = [p for p in ps if p[2]]
+    if not com_numeros or not pos or not wd["nome"] or re.fullmatch(r"Q\d+", wd["nome"]):
+        return None
+    nome = wd["nome"]
+    # apelido curto (até 2 palavras) costuma ser como o jogador é conhecido
+    curtos = sorted((a for a in apelidos if len(a.split()) <= 2 and len(a) < len(nome)), key=len)
+    if curtos and len(nome.split()) > 2:
+        nome = curtos[0]
+    j = {"nome": nome, "pos": pos, "estreia": min(p[0] for p in ps),
+         "ultimo": None if any(p[1] is None for p in ps) else max(p[1] for p in ps),
+         "jogos": sum(p[2] for p in com_numeros), "gols": sum(p[3] or 0 for p in com_numeros),
+         "nasc": nasc, "wd": wd["qid"]}
+    if pais:
+        j["pais"] = pais
+    fim = j["ultimo"] or ANO_ATUAL
+    if fim < ANO_LENDAS and j["jogos"] < JOGOS_MIN_LENDA:
+        return None
+    return j
+
+
+def resolver_buscas(consultas, cache_dir):
+    """Linhas "?nome" em paginas_extras.txt: busca artigos de futebolista com esse nome."""
+    titulos = set()
+    for q in consultas:
+        d = baixar({"action": "query", "list": "search", "srlimit": "10", "srprop": "", "srnamespace": "0",
+                    "srsearch": f'{q} Palmeiras hastemplate:"Info/Futebol"'}, cache_dir)
+        achados = [r["title"] for r in d["query"]["search"]]
+        print(f"  busca {q!r}: {achados[:5]}", file=sys.stderr)
+        titulos |= set(achados)
+    return titulos
 
 
 def reserva_wikidata(wd):
@@ -231,8 +287,10 @@ def eh_palmeiras(clube):
     c = limpar(clube)
     if re.search(r"Palmeiras\s*(B|Sub|II)\b|sub-\d|Palmeiras B\b", c, re.I):
         return False
-    return bool(re.search(
-        r"\{\{\s*Futebol Palmeiras\s*\}\}|\[\[\s*((Sociedade Esportiva|SE|S\.\s?E\.)\s*)?Palmeiras\s*[|\]]", c))
+    if re.search(r"\{\{\s*Futebol Palmeiras\s*\}\}|\[\[\s*((Sociedade Esportiva|SE|S\.\s?E\.)\s*)?Palmeiras\s*[|\]]", c):
+        return True
+    # texto simples, sem link nem modelo: "Palmeiras" ou "S.E. Palmeiras"
+    return bool(re.fullmatch(r"\s*((Sociedade Esportiva|SE|S\.\s?E\.)\s*)?Palmeiras\s*", texto_visivel(c)))
 
 
 def anos(v):
@@ -281,7 +339,8 @@ def passagens(campos):
             j = g = None
             if i < len(jg):
                 t = texto_visivel(jg[i])
-                m = re.search(r"(\d+)\s*\(\s*([−–-]?)\s*(\d+)\s*\)", t)
+                m = (re.search(r"(\d+)\s*\(\s*([−–-]?)\s*(\d+)\s*\)", t)
+                     or re.fullmatch(r"\s*(\d+)\s+([−–-]?)\s*(\d+)\s*", t))
                 if m:
                     j, g = int(m.group(1)), (0 if m.group(2) else int(m.group(3)))
             if a:
@@ -439,12 +498,18 @@ def main():
     titulos = listar_categoria(args.cache)
     print(f"{len(titulos)} páginas na categoria", file=sys.stderr)
     print("Consultando o Wikidata…", file=sys.stderr)
-    wikidata = consultar_wikidata(args.cache)
-    manuais = set()
+    wikidata, sem_artigo = consultar_wikidata(args.cache)
+    manuais, buscas = set(), []
     arq_extras = os.path.join(raiz, "tools", "paginas_extras.txt")
     if os.path.exists(arq_extras):
         with open(arq_extras, encoding="utf-8") as f:
-            manuais = {l.strip() for l in f if l.strip() and not l.startswith("#")}
+            for l in f:
+                l = l.strip()
+                if l.startswith("?"):
+                    buscas.append(l[1:].strip())
+                elif l and not l.startswith("#"):
+                    manuais.add(l)
+    manuais |= resolver_buscas(buscas, args.cache)
     extras = sorted((set(wikidata) | manuais) - set(titulos))
     print(f"{len(wikidata)} jogadores no Wikidata; {len(extras)} fora da categoria", file=sys.stderr)
     # categoria primeiro, extras depois: os lotes da categoria continuam batendo com o cache
@@ -472,6 +537,12 @@ def main():
             jogadores.append(j)
         else:
             descartes[titulo] = motivo
+
+    # quem só existe no Wikidata (sem artigo em português)
+    apelidos = apelidos_wikidata(list(sem_artigo), args.cache)
+    so_wd = [j for j in (jogador_so_wikidata(wd, apelidos.get(q, set())) for q, wd in sem_artigo.items()) if j]
+    print(f"{len(so_wd)} jogadores só do Wikidata (sem artigo em português)", file=sys.stderr)
+    jogadores += so_wd
     unicos = escrever(jogadores, args.saida)
 
     motivos = {}

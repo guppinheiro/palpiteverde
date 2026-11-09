@@ -333,8 +333,15 @@
         ? `Você descobriu ${estado.secreto.nome} em ${estado.palpites.length} palpite${estado.palpites.length === 1 ? "" : "s"}.`
         : `O jogador era ${estado.secreto.nome}.`;
       const wiki = $("fim-wiki");
-      wiki.hidden = !estado.secreto.wiki;
-      if (estado.secreto.wiki) wiki.href = "https://pt.wikipedia.org/wiki/" + encodeURIComponent(estado.secreto.wiki.replace(/ /g, "_"));
+      const { wiki: artigo, wd } = estado.secreto;
+      wiki.hidden = !artigo && !wd;
+      if (artigo) {
+        wiki.href = "https://pt.wikipedia.org/wiki/" + encodeURIComponent(artigo.replace(/ /g, "_"));
+        wiki.textContent = "Ver o jogador na Wikipédia ↗";
+      } else if (wd) {
+        wiki.href = "https://www.wikidata.org/wiki/" + wd;
+        wiki.textContent = "Ver o jogador no Wikidata ↗";
+      }
       $("btn-de-novo").hidden = !emTreino;
       $("btn-de-novo").classList.toggle("botao--leve", !emTreino);
       $("btn-compartilhar").classList.toggle("botao--leve", emTreino);
