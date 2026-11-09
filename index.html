@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Palpite Verde</title>
+  <meta name="description" content="Adivinhe o jogador do Palmeiras em 10 palpites. Projeto de fã, não oficial.">
+  <meta name="theme-color" content="#0b5d3b">
+  <link rel="stylesheet" href="css/estilo.css">
+</head>
+<body>
+  <header class="topo">
+    <h1 class="marca">Palpite<span>Verde</span></h1>
+    <nav class="topo__acoes">
+      <button class="icone" id="btn-stats" aria-label="Estatísticas" title="Estatísticas">📊</button>
+      <button class="icone" id="btn-ajuda" aria-label="Como jogar" title="Como jogar">?</button>
+    </nav>
+  </header>
+
+  <main class="palco">
+    <div class="modos" role="tablist" aria-label="Modo de jogo">
+      <button role="tab" class="modo ativo" data-modo="dia" aria-selected="true">Desafio do dia</button>
+      <button role="tab" class="modo" data-modo="treino" aria-selected="false">Treino</button>
+    </div>
+
+    <div class="treino-opcoes" id="treino-opcoes" hidden>
+      <div class="segmento" role="radiogroup" aria-label="Nível">
+        <button class="seg ativo" data-nivel="facil" role="radio" aria-checked="true">Fácil</button>
+        <button class="seg" data-nivel="dificil" role="radio" aria-checked="false">Difícil</button>
+      </div>
+      <button class="botao botao--leve" id="btn-novo">Novo jogador</button>
+    </div>
+
+    <p class="status" id="status" aria-live="polite"></p>
+
+    <form class="busca" id="form-palpite" autocomplete="off">
+      <label for="campo" class="sr">Seu palpite</label>
+      <input id="campo" class="busca__campo" type="text" placeholder="Digite o nome de um jogador"
+             role="combobox" aria-expanded="false" aria-controls="sugestoes" aria-autocomplete="list" spellcheck="false">
+      <ul class="sugestoes" id="sugestoes" role="listbox" hidden></ul>
+    </form>
+
+    <div class="legenda" aria-hidden="true">
+      <span><i class="pin pin--ok"></i>Acertou</span>
+      <span><i class="pin pin--perto"></i>Perto</span>
+      <span><i class="pin pin--longe"></i>Longe</span>
+      <span>↑↓ o certo é maior/menor</span>
+    </div>
+
+    <section class="palpites" id="palpites" aria-label="Seus palpites"></section>
+
+    <section class="fim" id="fim" hidden>
+      <h2 id="fim-titulo"></h2>
+      <p id="fim-texto"></p>
+      <div class="fim__acoes">
+        <button class="botao" id="btn-compartilhar">Compartilhar</button>
+        <button class="botao botao--leve" id="btn-de-novo" hidden>Jogar outro</button>
+      </div>
+      <p class="fim__proximo" id="fim-proximo"></p>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    Projeto de fã, sem ligação oficial com a S.E. Palmeiras. Números aproximados.
+  </footer>
+
+  <dialog class="modal" id="modal-ajuda">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Como jogar</h2>
+    <p>Descubra o jogador secreto do Palmeiras em até <strong>10 palpites</strong>. Cada palpite mostra uma ficha que compara o jogador que você chutou com o secreto:</p>
+    <ul class="regras">
+      <li><i class="pin pin--ok"></i><b>Verde</b>: igual ao jogador secreto.</li>
+      <li><i class="pin pin--perto"></i><b>Amarelo</b>: chegou perto.</li>
+      <li><i class="pin pin--longe"></i><b>Cinza</b>: longe.</li>
+      <li><b>↑ / ↓</b>: o número do jogador secreto é maior / menor.</li>
+    </ul>
+    <h3>O que conta como “perto”</h3>
+    <table class="tabela">
+      <tr><th>Estreia / Saída</th><td>até 5 anos de diferença</td></tr>
+      <tr><th>Jogos</th><td>até 25 jogos</td></tr>
+      <tr><th>Gols</th><td>até 10 gols</td></tr>
+      <tr><th>Posição</th><td>zagueiro ↔ lateral, meio-campo ↔ atacante</td></tr>
+      <tr><th>Nascimento</th><td>mesma região do Brasil, ou ambos estrangeiros</td></tr>
+    </table>
+    <p><b>Desafio do dia</b>: o mesmo jogador para todo mundo, troca à meia-noite (horário de Brasília). <b>Treino</b>: jogue quantas vezes quiser.</p>
+  </dialog>
+
+  <dialog class="modal" id="modal-stats">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Suas estatísticas</h2>
+    <p class="sub">Desafio do dia</p>
+    <div class="numeros" id="numeros"></div>
+    <h3>Palpites por vitória</h3>
+    <div class="barras" id="barras"></div>
+  </dialog>
+
+  <div class="aviso" id="aviso" role="status" hidden></div>
+
+  <script src="js/jogadores.js"></script>
+  <script src="js/jogo.js"></script>
+</body>
+</html>
