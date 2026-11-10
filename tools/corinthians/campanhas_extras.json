@@ -1,0 +1,18 @@
+{
+ "_fonte": "Wikipédia em inglês, artigo '2025 Sport Club Corinthians Paulista season'. Placar do ponto de vista do Corinthians. Substitui a edição de 2025 da RSSSF, que começa nas quartas.",
+ "_substitui": true,
+ "copa": {
+  "2025": [
+   {"fase": "3ª fase", "data": "2025-04-30", "local": "fora", "adv": "Novorizontino", "uf": "SP", "gp": 1, "gc": 0},
+   {"fase": "3ª fase", "data": "2025-05-21", "local": "casa", "adv": "Novorizontino", "uf": "SP", "gp": 1, "gc": 0},
+   {"fase": "Oitavas de final", "data": "2025-07-30", "local": "casa", "adv": "Palmeiras", "uf": "SP", "gp": 1, "gc": 0},
+   {"fase": "Oitavas de final", "data": "2025-08-06", "local": "fora", "adv": "Palmeiras", "uf": "SP", "gp": 2, "gc": 0},
+   {"fase": "Quartas de final", "data": "2025-08-27", "local": "fora", "adv": "Athletico Paranaense", "uf": "PR", "gp": 1, "gc": 0},
+   {"fase": "Quartas de final", "data": "2025-09-10", "local": "casa", "adv": "Athletico Paranaense", "uf": "PR", "gp": 2, "gc": 0},
+   {"fase": "Semifinal", "data": "2025-12-10", "local": "fora", "adv": "Cruzeiro", "uf": "MG", "gp": 1, "gc": 0, "penaltis": "venceu"},
+   {"fase": "Semifinal", "data": "2025-12-14", "local": "casa", "adv": "Cruzeiro", "uf": "MG", "gp": 1, "gc": 2, "penaltis": "venceu"},
+   {"fase": "Final", "data": "2025-12-17", "local": "casa", "adv": "Vasco da Gama", "uf": "RJ", "gp": 0, "gc": 0},
+   {"fase": "Final", "data": "2025-12-21", "local": "fora", "adv": "Vasco da Gama", "uf": "RJ", "gp": 2, "gc": 1}
+  ]
+ }
+}

@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Palpite Alvinegro</title>
+  <meta name="description" content="Adivinhe o jogador do Corinthians em 10 palpites. Projeto de fã, não oficial.">
+  <meta name="theme-color" content="#111111">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/estilo.css">
+  <link rel="stylesheet" href="css/tema.css">
+</head>
+<body>
+  <!-- ===================== TELA INICIAL ===================== -->
+  <main class="inicio" id="tela-inicio">
+    <header class="inicio__marca">
+      <p class="inicio__sobre">Jogo de fã · Corinthians</p>
+      <h1 class="logo">Palpite <span>Alvinegro</span></h1>
+      <p class="inicio__lema" id="lema">Descubra o craque secreto em até 10 palpites.</p>
+    </header>
+
+    <div class="jogos-abas" role="tablist" aria-label="Escolha o jogo">
+      <button class="jogos-aba" id="aba-craque" role="tab" aria-selected="true" aria-controls="painel-craque">Craque secreto</button>
+      <button class="jogos-aba" id="aba-campanhas" role="tab" aria-selected="false" aria-controls="painel-campanhas">Campanhas</button>
+    </div>
+
+    <section class="painel" id="painel-craque" role="tabpanel" aria-labelledby="t-modo">
+      <h2 class="painel__titulo" id="t-modo">Como você quer jogar?</h2>
+      <div class="opcoes-grandes" role="radiogroup" aria-labelledby="t-modo">
+        <button class="opcao" id="op-dia" data-modo="dia" role="radio" aria-checked="true">
+          <span class="opcao__nome">Desafio do dia</span>
+          <span class="opcao__texto">Um jogador por dia, o mesmo para todo mundo. Troca à meia-noite.</span>
+          <span class="opcao__extra" id="op-dia-status"></span>
+        </button>
+        <button class="opcao" id="op-treino" data-modo="treino" role="radio" aria-checked="false">
+          <span class="opcao__nome">Treino ∞</span>
+          <span class="opcao__texto">Um jogador atrás do outro, sem fim. Bata seu recorde de sequência.</span>
+          <span class="opcao__extra" id="op-treino-status"></span>
+        </button>
+      </div>
+
+      <h2 class="painel__titulo" id="t-nivel">Nível</h2>
+      <div class="niveis" role="radiogroup" aria-labelledby="t-nivel">
+        <button class="nivel" id="nv-facil" data-nivel="facil" role="radio" aria-checked="false">
+          <span class="nivel__nome">Fácil</span><span class="nivel__ano">mais conhecidos</span><span class="nivel__qtd" data-qtd="facil"></span>
+        </button>
+        <button class="nivel" id="nv-dificil" data-nivel="dificil" role="radio" aria-checked="true">
+          <span class="nivel__nome">Normal</span><span class="nivel__ano">todos desde 1970</span><span class="nivel__qtd" data-qtd="dificil"></span>
+        </button>
+        <button class="nivel" id="nv-lendas" data-nivel="lendas" role="radio" aria-checked="false">
+          <span class="nivel__nome">Lendas</span><span class="nivel__ano">todas as épocas</span><span class="nivel__qtd" data-qtd="lendas"></span>
+        </button>
+      </div>
+
+      <button class="botao botao--grande" id="btn-jogar">Jogar</button>
+      <div class="inicio__links">
+        <button class="link" id="btn-ajuda-inicio">Como jogar</button>
+        <button class="link" id="btn-stats-inicio">Minhas estatísticas</button>
+      </div>
+    </section>
+
+    <section class="painel" id="painel-campanhas" role="tabpanel" aria-labelledby="t-camp" hidden>
+      <h2 class="painel__titulo" id="t-camp">Campeonato</h2>
+      <div class="opcoes-grandes" role="radiogroup" aria-labelledby="t-camp">
+        <button class="opcao camp-comp" id="cp-libertadores" data-comp="libertadores" role="radio" aria-checked="true">
+          <span class="opcao__nome">Libertadores</span>
+          <span class="opcao__texto">Da fase de grupos à final. A dica é a bandeira do país de cada adversário.</span>
+          <span class="opcao__extra" data-anos="libertadores"></span>
+        </button>
+        <button class="opcao camp-comp" id="cp-copa" data-comp="copa" role="radio" aria-checked="false">
+          <span class="opcao__nome">Copa do Brasil</span>
+          <span class="opcao__texto">A chave do mata-mata. A dica é o estado de cada adversário.</span>
+          <span class="opcao__extra" data-anos="copa"></span>
+        </button>
+      </div>
+
+      <h2 class="painel__titulo" id="t-camp-modo">Modo</h2>
+      <div class="niveis" role="radiogroup" aria-labelledby="t-camp-modo">
+        <button class="nivel camp-modo" id="cm-normal" data-modo="normal" role="radio" aria-checked="true">
+          <span class="nivel__nome">Normal</span>
+        </button>
+        <button class="nivel camp-modo" id="cm-dificil" data-modo="dificil" role="radio" aria-checked="false">
+          <span class="nivel__nome">Difícil</span>
+        </button>
+        <button class="nivel camp-modo" id="cm-extremo" data-modo="extremo" role="radio" aria-checked="false">
+          <span class="nivel__nome">Extremo</span>
+        </button>
+      </div>
+
+      <button class="botao botao--grande" id="btn-jogar-camp">Jogar</button>
+      <div class="inicio__links">
+        <button class="link" id="btn-ajuda-camp-inicio">Como jogar</button>
+      </div>
+    </section>
+
+    <p class="rodape">Projeto de fã, sem ligação oficial com o S.C. Corinthians Paulista.</p>
+    <button class="botao-fontes" data-fontes>Fontes</button>
+  </main>
+
+  <!-- ===================== TELA DE JOGO ===================== -->
+  <div class="jogo" id="tela-jogo" hidden>
+    <header class="barra">
+      <button class="barra__voltar" id="btn-inicio" aria-label="Voltar para o início">← Início</button>
+      <p class="barra__titulo"><span class="logo logo--mini">Palpite <span>Alvinegro</span></span><span class="chip" id="chip-modo"></span></p>
+      <nav class="barra__acoes">
+        <button class="icone" id="btn-stats" aria-label="Estatísticas" title="Estatísticas">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="10" width="3" height="7" rx="1"/><rect x="8.5" y="6" width="3" height="11" rx="1"/><rect x="14" y="3" width="3" height="14" rx="1"/></svg>
+        </button>
+        <button class="icone" id="btn-ajuda" aria-label="Como jogar" title="Como jogar">?</button>
+      </nav>
+    </header>
+
+    <main class="palco">
+      <div class="placar" id="placar" hidden aria-label="Placar do treino infinito">
+        <div><b id="placar-acertos">0/0</b><small>Acertos</small></div>
+        <div><b id="placar-seq">0</b><small>Sequência</small></div>
+        <div><b id="placar-recorde">0</b><small>Recorde</small></div>
+      </div>
+
+      <div class="linha-status">
+        <p class="status" id="status" aria-live="polite"></p>
+        <button class="botao botao--contorno botao--pequeno" id="btn-novo" hidden>Pular</button>
+      </div>
+
+      <form class="busca" id="form-palpite" autocomplete="off">
+        <label for="campo" class="sr">Seu palpite</label>
+        <input id="campo" class="busca__campo" type="text" placeholder="Digite o nome de um jogador"
+               role="combobox" aria-expanded="false" aria-controls="sugestoes" aria-autocomplete="list" spellcheck="false">
+        <ul class="sugestoes" id="sugestoes" role="listbox" hidden></ul>
+      </form>
+
+      <div class="legenda" aria-hidden="true">
+        <span><i class="pin pin--ok"></i>Acertou</span>
+        <span><i class="pin pin--perto"></i>Perto</span>
+        <span><i class="pin pin--longe"></i>Longe</span>
+        <span>↑↓ o certo é maior/menor</span>
+      </div>
+
+      <section class="fim" id="fim" hidden>
+        <p class="fim__selo" id="fim-selo"></p>
+        <h2 id="fim-titulo"></h2>
+        <p id="fim-texto"></p>
+        <div class="fim__acoes">
+          <button class="botao" id="btn-de-novo" hidden>Próximo jogador →</button>
+          <button class="botao" id="btn-card">Criar card do resultado</button>
+          <button class="botao botao--contorno" id="btn-compartilhar">Copiar resultado</button>
+        </div>
+        <p class="fim__proximo" id="fim-proximo"></p>
+        <p><a id="fim-wiki" class="fim__wiki" target="_blank" rel="noopener" hidden>Ver o jogador na Wikipédia ↗</a></p>
+      </section>
+
+      <section class="palpites" id="palpites" aria-label="Seus palpites"></section>
+      <button class="botao-fontes" data-fontes>Fontes</button>
+    </main>
+  </div>
+
+  <!-- ===================== JOGO DE CAMPANHAS ===================== -->
+  <div class="jogo" id="tela-campanha" hidden>
+    <header class="barra">
+      <button class="barra__voltar" id="btn-camp-inicio" aria-label="Voltar para o início">← Início</button>
+      <p class="barra__titulo"><span class="logo logo--mini">Palpite <span>Alvinegro</span></span><span class="chip" id="camp-chip"></span></p>
+      <nav class="barra__acoes">
+        <button class="icone" id="btn-ajuda-camp" aria-label="Como jogar" title="Como jogar">?</button>
+      </nav>
+    </header>
+
+    <main class="palco">
+      <h2 class="camp-cabecalho"><span class="camp-cabecalho__ano" id="camp-ano-titulo"></span><span class="camp-cabecalho__comp" id="camp-comp-titulo"></span></h2>
+      <div class="placar" aria-label="Placar da campanha">
+        <div><b id="camp-acertos">0/0</b><small>Jogos descobertos</small></div>
+        <div><b id="camp-chances">0</b><small>Chances</small></div>
+        <div><b id="camp-total">0</b><small>Jogos na campanha</small></div>
+      </div>
+
+      <form class="busca busca--camp" id="form-camp" autocomplete="off">
+        <div class="busca__linha">
+          <div class="busca__time">
+            <label for="camp-campo" class="sr">Adversário</label>
+            <input id="camp-campo" class="busca__campo" type="text" placeholder="Digite um adversário"
+                   role="combobox" aria-expanded="false" aria-controls="camp-sugestoes" aria-autocomplete="list" spellcheck="false">
+            <ul class="sugestoes" id="camp-sugestoes" role="listbox" hidden></ul>
+          </div>
+          <div class="placar-palpite" id="camp-placar" hidden>
+            <label class="gol"><span>COR</span><input id="camp-gp" type="number" inputmode="numeric" min="0" max="20" aria-label="Gols do Corinthians"></label>
+            <span class="gol__x" aria-hidden="true">×</span>
+            <label class="gol"><span>RIVAL</span><input id="camp-gc" type="number" inputmode="numeric" min="0" max="20" aria-label="Gols do adversário"></label>
+          </div>
+          <button class="botao botao--chutar" id="btn-chutar" type="submit">Chutar</button>
+        </div>
+      </form>
+
+      <p class="camp-retorno" id="camp-retorno" aria-live="polite"></p>
+      <div class="camp-erros" id="camp-erros" aria-label="Palpites errados"></div>
+
+      <section class="fim" id="camp-fim" hidden>
+        <p class="fim__selo" id="camp-fim-selo"></p>
+        <h2 id="camp-fim-titulo"></h2>
+        <p id="camp-fim-texto"></p>
+        <div class="fim__acoes">
+          <button class="botao" id="btn-camp-outro">Jogar outra campanha</button>
+          <button class="botao" id="btn-camp-card">Criar card do resultado</button>
+          <button class="botao botao--contorno" id="btn-camp-copiar">Copiar resultado</button>
+        </div>
+      </section>
+
+      <section class="chave" id="camp-chave" aria-label="Campanha do Corinthians"></section>
+      <button class="botao-fontes" data-fontes>Fontes</button>
+    </main>
+  </div>
+
+  <!-- ===================== MODAIS ===================== -->
+  <dialog class="modal modal--fontes" id="modal-fontes">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Fontes</h2>
+    <p class="sub">Projeto de fã, sem ligação oficial com o Sport Club Corinthians Paulista. Os dados podem conter erros; correções são bem-vindas.</p>
+
+    <h3>Craque secreto: jogadores</h3>
+    <ul class="fontes">
+      <li><a href="https://pt.wikipedia.org/wiki/Categoria:Futebolistas_do_Sport_Club_Corinthians_Paulista" target="_blank" rel="noopener">Wikipédia em português</a>: fichas dos jogadores (jogos, gols, anos, posição e nascimento). Licença CC BY-SA 4.0.</li>
+      <li><a href="https://www.wikidata.org" target="_blank" rel="noopener">Wikidata</a>: lista de quem passou pelo clube e dados que faltam nas fichas. Licença CC0.</li>
+      <li><a href="https://www.kaggle.com/datasets/felipesembay/sofascore-and-transfermarkt-football-data" target="_blank" rel="noopener">Kaggle: Sofascore and Transfermarkt Football Data</a> (felipesembay): jogadores de 2024 sem artigo na Wikipédia. Licença DbCL 1.0.</li>
+    </ul>
+
+    <h3>Campanhas: Libertadores e Copa do Brasil</h3>
+    <ul class="fontes">
+      <li><a href="https://www.kaggle.com/datasets/ernestonlm/conmebol-libertadores-results-from-2011-to-2022" target="_blank" rel="noopener">Kaggle: Conmebol Libertadores results</a> (ernestonlm): Libertadores 2013 e 2016–2024. Licença CC0.</li>
+      <li><a href="https://www.kaggle.com/datasets/ricardomattos05/jogos-do-campeonato-brasileiro" target="_blank" rel="noopener">Kaggle: Brazilian Soccer Database</a> (ricardomattos05): Copa do Brasil 2012–2021. Licença CC BY 4.0.</li>
+      <li><a href="https://www.rsssf.org" target="_blank" rel="noopener">RSSSF – Rec.Sport.Soccer Statistics Foundation</a> e RSSSF Brasil: Libertadores 1994–2009 e Copa do Brasil 1992–2011 e 2022–2024. Dados usados com crédito à RSSSF e aos autores das páginas.</li>
+      <li><a href="https://en.wikipedia.org/wiki/2025_SE_Palmeiras_season" target="_blank" rel="noopener">Wikipédia em inglês: 2025 SE Palmeiras season</a>: campanhas de 2025. Licença CC BY-SA 4.0.</li>
+    </ul>
+
+    <h3>Imagens e letras</h3>
+    <ul class="fontes">
+      <li><a href="https://commons.wikimedia.org" target="_blank" rel="noopener">Wikimedia Commons</a>: bandeiras dos estados e países (domínio público).</li>
+      <li><a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a>: Barlow Condensed e Inter (licença SIL Open Font).</li>
+    </ul>
+  </dialog>
+
+  <dialog class="modal" id="modal-ajuda-camp">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Campanhas</h2>
+    <p>Escolha a Libertadores ou a Copa do Brasil; o ano é sorteado a cada partida. Aparece a campanha do Corinthians jogo a jogo, com a fase, a data, o mando e uma dica de cada adversário: a <b>bandeira do país</b> na Libertadores, o <b>estado</b> na Copa do Brasil.</p>
+    <p>Descubra quem o Corinthians enfrentou. Cada palpite gasta uma chance, certo ou errado. Para calcular as chances, os jogos contra o mesmo adversário numa fase contam como um só (ida e volta no mata-mata, casa e fora nos grupos).</p>
+    <table class="tabela">
+      <tr><th>Normal</th><td>chances = 2 × número de jogos. Acertou o time, aparecem todos os jogos contra ele.</td></tr>
+      <tr><th>Difícil</th><td>chances = 1,5 × número de jogos. Mesmas regras do Normal.</td></tr>
+      <tr><th>Extremo</th><td>chances = 1,5 × número de jogos. Cada palpite é time + placar (COR × RIVAL; caixa vazia vale 0) e revela um jogo por vez: no ida e volta, é preciso acertar os dois placares. O ano só aparece no fim.</td></tr>
+    </table>
+    <p class="sub">Disponível: Libertadores 1994–2025 (as edições disputadas pelo Palmeiras desde o formato com mata-mata) e Copa do Brasil 1992–2025. Placares no tempo normal; pênaltis indicados no agregado. Em alguns jogos antigos a fonte não traz a data.</p>
+  </dialog>
+
+  <dialog class="modal" id="modal-ajuda">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Como jogar</h2>
+    <p>Descubra o jogador secreto do Corinthians em até <strong>10 palpites</strong>. Cada palpite mostra uma ficha que compara o jogador que você chutou com o secreto:</p>
+    <ul class="regras">
+      <li><i class="pin pin--ok"></i><b>Preto</b>: igual ao jogador secreto.</li>
+      <li><i class="pin pin--perto"></i><b>Cinza-claro</b>: chegou perto.</li>
+      <li><i class="pin pin--longe"></i><b>Cinza</b>: longe.</li>
+      <li><b>↑ / ↓</b>: o número do jogador secreto é maior / menor.</li>
+      <li><i class="pin pin--sem"></i><b>?</b>: a fonte não informa esse dado.</li>
+    </ul>
+    <h3>O que conta como “perto”</h3>
+    <table class="tabela">
+      <tr><th>Estreia / Último jogo</th><td>até 5 anos de diferença</td></tr>
+      <tr><th>Jogos</th><td>até 25 jogos</td></tr>
+      <tr><th>Gols</th><td>até 10 gols</td></tr>
+      <tr><th>Nascimento</th><td>outro estado da mesma região do Brasil</td></tr>
+      <tr><th>Posição e país</th><td>não têm “perto”: ou acertou, ou está longe</td></tr>
+    </table>
+    <h3>Níveis</h3>
+    <p><b>Fácil</b> e <b>Normal</b>: valem jogadores que atuaram pelo clube de 1970 para cá. No Fácil, o jogador sorteado é de 2010 em diante em 95% das vezes; no Normal, é de 2000 em diante em 75% das vezes. <b>Lendas</b>: todas as épocas, incluindo os grandes nomes de antes de 1970.</p>
+    <p>O sorteio dá preferência a jogadores mais recentes e a quem tem mais jogos pelo clube. Quem ainda está no elenco aparece com último jogo em 2026.</p>
+  </dialog>
+
+  <dialog class="modal" id="modal-stats">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Suas estatísticas</h2>
+    <p class="sub" id="stats-sub">Desafio do dia</p>
+    <div class="numeros" id="numeros"></div>
+    <h3>Palpites por vitória</h3>
+    <div class="barras" id="barras"></div>
+  </dialog>
+
+  <dialog class="modal modal--card" id="modal-card">
+    <button class="modal__fechar" data-fechar aria-label="Fechar">×</button>
+    <h2>Card do resultado</h2>
+    <img class="card-previa" id="card-img" alt="Card com o resultado da partida">
+    <p class="sub" id="card-dica">Mande para os amigos no WhatsApp ou salve a imagem para postar.</p>
+    <div class="fim__acoes">
+      <button class="botao botao--whatsapp" id="btn-whatsapp-card">Enviar no WhatsApp</button>
+      <button class="botao" id="btn-salvar-card">Salvar imagem</button>
+      <button class="botao botao--contorno" id="btn-copiar-card">Copiar texto</button>
+    </div>
+  </dialog>
+
+  <div class="aviso" id="aviso" role="status" hidden></div>
+
+  <script src="js/site.js"></script>
+  <script src="js/jogadores.js"></script>
+  <script src="../js/jogo.js"></script>
+  <script src="js/campanhas.js"></script>
+  <script src="../js/campanhas-jogo.js"></script>
+</body>
+</html>

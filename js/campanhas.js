@@ -1,5 +1,5 @@
 /*
- * Campanhas do Palmeiras — GERADO AUTOMATICAMENTE por tools/importar_campanhas.py em 2026-11-09.
+ * Campanhas do Palmeiras — GERADO AUTOMATICAMENTE por tools/importar_campanhas.py em 2026-11-10.
  * Fontes: Kaggle ernestonlm/conmebol-libertadores-results-from-2011-to-2022 (CC0) e
  * ricardomattos05/jogos-do-campeonato-brasileiro (CC BY 4.0); edições sem dados no Kaggle: RSSSF
  * (www.rsssf.org, com crédito à RSSSF e aos autores). Placares do ponto de vista do Palmeiras
@@ -2691,10 +2691,10 @@ window.CAMPANHAS = {
     "fonte": "RSSSF"
    },
    "2000": {
-    "resultado": "Vice-campeão",
+    "resultado": "Caiu nas quartas",
     "jogos": [
      {
-      "fase": "Final",
+      "fase": "Oitavas de final",
       "data": "2000-06-01",
       "local": "fora",
       "adv": "ABC",
@@ -2703,7 +2703,7 @@ window.CAMPANHAS = {
       "gc": 3
      },
      {
-      "fase": "Final",
+      "fase": "Oitavas de final",
       "data": "2000-06-08",
       "local": "casa",
       "adv": "ABC",
@@ -2712,7 +2712,7 @@ window.CAMPANHAS = {
       "gc": 1
      },
      {
-      "fase": "Final",
+      "fase": "Quartas de final",
       "data": "2000-06-24",
       "local": "fora",
       "adv": "São Paulo",
@@ -2721,7 +2721,7 @@ window.CAMPANHAS = {
       "gc": 2
      },
      {
-      "fase": "Final",
+      "fase": "Quartas de final",
       "data": "2000-06-27",
       "local": "casa",
       "adv": "São Paulo",

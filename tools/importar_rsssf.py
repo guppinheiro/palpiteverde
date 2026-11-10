@@ -5,7 +5,7 @@ do Palmeiras na Libertadores (formato com mata-mata, a partir de 1988) e na Copa
 Gera um JSON intermediário usado por tools/importar_campanhas.py.
 
 Uso:
-    python3 tools/importar_rsssf.py PASTA_LIB PASTA_COPA SAIDA.json
+    python3 tools/importar_rsssf.py PASTA_LIB PASTA_COPA SAIDA.json [CLUBE]
       PASTA_LIB/AAAA.html  = https://www.rsssf.org/sacups/copaAA.html (até 2009) ou copaAAAA.html
       PASTA_COPA/AAAA.html = https://www.rsssf.org/tablesb/brazcupAA.html (até 2009) ou brazAAAA.html (#cb)
 
@@ -43,8 +43,18 @@ def texto(caminho, so_copa=False):
     return html.unescape(re.sub(r"<[^>]+>", "", t))
 
 
-def eh_palmeiras(nome):
-    return "palmeiras" in normal(nome)
+# clube escolhido em main(): palmeiras (padrão) ou corinthians
+CLUBE = "palmeiras"
+# outros clubes com o mesmo nome que aparecem nas páginas
+HOMONIMOS = {"corinthians": ("alagoano", "paranaense", "casuals", "prudente", "(al)", "(pr)")}
+
+
+def eh_clube(nome):
+    n = normal(nome)
+    return CLUBE in n and not any(h in n for h in HOMONIMOS.get(CLUBE, ()))
+
+
+eh_palmeiras = eh_clube  # nome antigo
 
 
 # ---------------------------------------------------------------- datas
@@ -87,7 +97,7 @@ CAB_LIB = re.compile(r"^\s*(group stage|first stage|first round|second round|sec
                      r"eighth[- ]finals|1/8 finals|quarter[- ]?finals|semi[- ]?finals|finals?)\b", re.I)
 GRUPO = re.compile(r"^\s*group\s+\d+", re.I)
 JOGO_GRUPO = re.compile(r"^\s*([A-Z][a-z]{2})\s+(\d{1,2}):\s+(.+?)\s+-\s+(.+?)\s{2,}(\d+)-(\d+)")
-IDA_VOLTA_LIB = re.compile(r"^\s*(.+?)\s{2,}([A-Z][a-z]{2})\s+(.+?)\s{2,}([A-Z][a-z]{2})\s+(\d+)-(\d+)[a-z]?(?:\s+(\d+)-(\d+)[a-z]?)?(.*)$")
+IDA_VOLTA_LIB = re.compile(r"^\s*(.+?)(?:\s{2,}|(?<=\))\s)([A-Z][a-z]{2})\s+(.+?)\s{2,}([A-Z][a-z]{2})\s+(\d+)-(\d+)[a-z]?(?:\s+(\d+)-(\d+)[a-z]?)?(.*)$")
 NOME_CIDADE = re.compile(r"\s*\(.*?\)\s*")
 
 
@@ -178,13 +188,21 @@ F2 = re.compile(r"^\s*(?:\d+|[A-Z])?\s+(.+?)" + UF + r"\s+(?:-|x)\s+(.+?)" + UF 
 F3 = re.compile(r"^\s*([^\d]+?)\s+(\d+)-(\d+)\s+([^\d]+?)\s*$")
 
 
+F4 = re.compile(r"^\s*(\d{2})/(\d{2})/(\d{4})\s+([^\d]+?)\s+(\d+)-(\d+)\s+([^\d]+?)\s*$")
+
+
 def limpar_nome(n):
     return re.sub(r"\s+", " ", n).strip(" -")
+
+
+def fase_final(fases):
+    return next((f for f in reversed(fases) if f == "final"), fases[-1])
 
 
 def ler_copa(caminho, ano):
     t = texto(caminho, so_copa=ano >= 2010)
     fases, fase, datas, jogos = [], None, [], []
+    finais_soltas = []
     linhas = t.split("\n")
     for l in linhas:
         s = l.strip()
@@ -193,12 +211,21 @@ def ler_copa(caminho, ano):
             nome = c.group(1).lower()
             if "1/8" in s or "round of 16" in nome:
                 nome = "oitavas"
+            # tabela de outra competição antes da Copa (ex.: 2001): recomeça a lista de fases
+            if nome.startswith("first") and not jogos and any("preliminary" not in f for f in fases):
+                fases = [f for f in fases if "preliminary" in f]
             fase = nome
             if fase not in fases:
                 fases.append(fase)
             datas = datas_cabecalho(re.sub(r"from .*", "", s, flags=re.I), ano) if "/" not in s else []
             continue
-        if not fase or "palmeiras" not in normal(l):
+        if not fase or CLUBE not in normal(l):
+            continue
+        # final sem linha de confronto, só os jogos com data (ex.: 1995): "14/06/1995 Corinthians 2-1 Grêmio"
+        m4 = F4.match(l)
+        if m4:
+            if not any(j["fase"] == fase for j in jogos):
+                finais_soltas.append(m4)
             continue
         m2 = F2.match(l)
         if m2:
@@ -223,11 +250,20 @@ def ler_copa(caminho, ano):
                 if not m3 or ano < 2012:
                     continue
                 a, b = limpar_nome(m3.group(1)), limpar_nome(m3.group(4))
+                if not (eh_clube(a) or eh_clube(b)):
+                    continue
                 pa = eh_palmeiras(a)
                 jogos.append({"fase": fase, "data": None, "local": "casa" if pa else "fora", "adv": b if pa else a,
                               "uf": None, "gp": int(m3.group(2)) if pa else int(m3.group(3)),
                               "gc": int(m3.group(3)) if pa else int(m3.group(2))})
                 continue
+        # homônimo de outro estado (ex.: "Corinthians (AL)" em 2003) não conta
+        if eh_clube(a) and ua and ua != "SP":
+            a = a + " (" + ua + ")"
+        if eh_clube(b) and ub and ub != "SP":
+            b = b + " (" + ub + ")"
+        if not (eh_clube(a) or eh_clube(b)):  # homônimo (ex.: Corinthians Alagoano)
+            continue
         if re.search(r"\d{2}/\d{2}/\d{4}", a):  # linhas de detalhe de final já cobertas pela linha do confronto
             continue
         pa = eh_palmeiras(a)
@@ -240,17 +276,34 @@ def ler_copa(caminho, ano):
             if pen:
                 j["penaltis"] = "venceu" if (pen[0] > pen[1]) == pa else "perdeu"
             jogos.append(j)
+    for m4 in finais_soltas:
+        a, b = limpar_nome(m4.group(4)), limpar_nome(m4.group(7))
+        if not (eh_clube(a) or eh_clube(b)):
+            continue
+        pa = eh_clube(a)
+        jogos.append({"fase": fase_final(fases), "data": f"{m4.group(3)}-{m4.group(2)}-{m4.group(1)}",
+                      "local": "casa" if pa else "fora", "adv": b if pa else a, "uf": None,
+                      "gp": int(m4.group(5)) if pa else int(m4.group(6)), "gc": int(m4.group(6)) if pa else int(m4.group(5))})
     rotulo = {f: "Fase preliminar" for f in fases if "preliminary" in f}
     numeradas = [f for f in fases if f not in rotulo]
-    for k, f in enumerate(reversed(numeradas)):
-        rotulo[f] = ["Final", "Semifinal", "Quartas de final", "Oitavas de final"][k] if k < 4 else f"{len(numeradas) - k}ª fase"
+    if "oitavas" in numeradas and len(numeradas) - numeradas.index("oitavas") < 4:
+        # a página termina antes da final (ex.: 2000): as fases seguem a partir das oitavas
+        i = numeradas.index("oitavas")
+        for k, f in enumerate(numeradas):
+            rotulo[f] = f"{k + 1}ª fase" if k < i else ["Oitavas de final", "Quartas de final", "Semifinal", "Final"][k - i]
+    else:
+        for k, f in enumerate(reversed(numeradas)):
+            rotulo[f] = ["Final", "Semifinal", "Quartas de final", "Oitavas de final"][k] if k < 4 else f"{len(numeradas) - k}ª fase"
     for j in jogos:
         j["fase"] = rotulo[j["fase"]]
     return jogos
 
 
 def main():
+    global CLUBE
     pasta_lib, pasta_copa, saida = sys.argv[1:4]
+    if len(sys.argv) > 4:  # 4º argumento opcional: clube (padrão: palmeiras)
+        CLUBE = sys.argv[4].lower()
     import os
     res = {"libertadores": {}, "copa": {}}
     for arq in sorted(os.listdir(pasta_lib)):

@@ -1,0 +1,15 @@
+/* Palpite Alvinegro: o mesmo layout do Palpite Verde (../css/estilo.css),
+   com preto como cor principal e branco como secundária. */
+:root {
+  --verde: #111111;          /* principal: fundo e destaques */
+  --verde-fundo: #000000;
+  --verde-vivo: #111111;     /* "acertou" */
+  --verde-claro: #d4d4d4;    /* "perto" */
+  --tinta: #111111;
+  --suave: #5f5f5f;
+  --linha: #dadada;
+  --nevoa: #f2f2f2;
+  --longe: #8c8c8c;          /* "longe" */
+  --sombra: 0 2px 0 rgba(0, 0, 0, .08), 0 10px 30px rgba(0, 0, 0, .35);
+}
+.botao--whatsapp { background: #1f8f4d; }
