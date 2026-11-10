@@ -6,7 +6,9 @@ window.SITE = {
   endereco: "https://guppinheiro.github.io/palpiteverde/corinthians/",
   inicio: [2026, 11, 10], // desafio #1 = 10/11/2026
   sementes: { facil: 1910, dificil: 1977, lendas: 1954 },
-  redefinicoes: {}, fixados: {},
+  redefinicoes: {},
+  // jogadores do dia fixados (número do desafio → nível → nome), para não mudarem se a base mudar
+  fixados: { 1: { facil: "Alessandro", dificil: "Ángel Romero", lendas: "Uendel" } },
   // cores do card (canvas): preto principal, branco secundário
   cor: {
     verde: "#111111", verdeFundo: "#000000", vivo: "#111111", claro: "#d4d4d4", longe: "#8c8c8c",

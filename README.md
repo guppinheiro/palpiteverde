@@ -127,11 +127,22 @@ Depois, rode o importador de novo (com o cache, leva segundos).
 
 Ao incluir ou remover jogadores, a ordem do desafio do dia daquele nível muda a partir daquele momento. Os anos de corte dos níveis ficam em `NIVEIS`, no início de `js/jogo.js`.
 
+## Palpite Alvinegro (Corinthians)
+
+A pasta `corinthians/` é a mesma ideia para o Corinthians, em preto e branco: https://guppinheiro.github.io/palpiteverde/corinthians/
+
+- Usa os mesmos scripts do jogo (`js/jogo.js`, `js/campanhas-jogo.js`) e o mesmo `css/estilo.css`. O que muda fica em `corinthians/js/site.js` (nome, cores do card, prefixo dos dados salvos `pa:`, data do desafio #1 = 10/11/2026, sementes do sorteio, jogadores fixados) e `corinthians/css/tema.css` (cores). Sem `window.SITE`, os scripts valem para o Palmeiras.
+- Jogadores: `python3 tools/importar_wikipedia.py --clube corinthians` (categoria *Futebolistas do Sport Club Corinthians Paulista*, Wikidata Q35933 e `tools/corinthians/paginas_extras.txt`) gera `corinthians/js/jogadores.js`.
+- Campanhas: `python3 tools/importar_rsssf.py LIB COPA saida.json corinthians` e `python3 tools/importar_campanhas.py LIB.csv COPA.csv --rsssf saida.json --clube corinthians` geram `corinthians/js/campanhas.js` (Libertadores 1996–2023, só as edições com fase de grupos; Copa do Brasil 1989–2025). A Copa do Brasil 2025 vem de `tools/corinthians/campanhas_extras.json`. Nos anos do Kaggle, os pênaltis vêm da RSSSF, e o lado vencedor sai da própria campanha (quem seguiu adiante venceu).
+- No Extremo, o placar é COR × RIVAL.
+
 ## Estrutura
 
 ```
 index.html          página e modais
 css/estilo.css      visual (tema claro e escuro)
 js/jogadores.js     base de dados
-js/jogo.js          regras, sorteio diário, autocompletar, estatísticas
+js/jogo.js          regras, sorteio diário, autocompletar, estatísticas, card
+js/campanhas*.js    jogo de campanhas (dados e regras)
+corinthians/        Palpite Alvinegro (página, tema, configuração e dados)
 ```

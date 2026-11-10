@@ -1,11 +1,11 @@
-# Publica o Palpite Verde no GitHub Pages a cada push.
+# Publica o Palpite Verde (e o Palpite Alvinegro, em /corinthians/) no GitHub Pages a cada push.
 # Requer, uma única vez: Settings → Pages → Source: "GitHub Actions".
 name: Publicar site
 
 on:
   push:
     branches: [main, claude/nossotime-site-analysis-r0hoip]
-    paths: ["index.html", "css/**", "js/**", "img/**", ".github/workflows/pages.yml"]
+    paths: ["index.html", "css/**", "js/**", "img/**", "corinthians/**", ".github/workflows/pages.yml"]
   workflow_dispatch:
 
 permissions:
@@ -29,6 +29,9 @@ jobs:
         run: |
           mkdir _site
           cp -r index.html css js img _site/
+          # Palpite Alvinegro (Corinthians): usa ../css, ../js e ../img do site principal
+          mkdir _site/corinthians
+          cp -r corinthians/index.html corinthians/css corinthians/js _site/corinthians/
           touch _site/.nojekyll
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3

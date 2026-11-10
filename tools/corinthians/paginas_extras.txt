@@ -1,0 +1,5 @@
+# Páginas da Wikipédia em português que faltam na categoria e no Wikidata (uma por linha).
+# Linhas com "?" fazem uma busca: "?nome" procura artigos de futebolista com esse nome e "Corinthians".
+?Tevez
+?Vágner Love
+?João Victor zagueiro
