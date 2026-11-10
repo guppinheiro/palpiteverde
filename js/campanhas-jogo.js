@@ -71,10 +71,10 @@
   // Para as chances, os jogos contra o mesmo adversário numa fase valem um só:
   // ida e volta no mata-mata, casa e fora na fase de grupos.
   // Base das chances: jogos contra o mesmo adversário numa fase contam como um só.
-  // No Extremo, cada jogo da fase de grupos conta separado (casa e fora = 2); o mata-mata segue 1 por confronto.
+  // No Extremo, cada palpite revela um jogo: todo jogo conta (casa e fora nos grupos = 2, ida e volta = 2).
   function unidades(jogos, modo) {
-    const extremo = MODOS[modo]?.placar;
-    return new Set(jogos.map((j, i) => extremo && j.fase === "Fase de grupos" ? `g|${i}` : `${j.fase}|${j.adv}`)).size;
+    if (MODOS[modo]?.placar) return jogos.length;
+    return new Set(jogos.map(j => `${j.fase}|${j.adv}`)).size;
   }
 
   function comecar() {
