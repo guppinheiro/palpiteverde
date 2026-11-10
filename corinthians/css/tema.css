@@ -13,3 +13,4 @@
   --sombra: 0 2px 0 rgba(0, 0, 0, .08), 0 10px 30px rgba(0, 0, 0, .35);
 }
 .botao--whatsapp { background: #1f8f4d; }
+.pin--ok { box-shadow: 0 0 0 2px #fff; }
