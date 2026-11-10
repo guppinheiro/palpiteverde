@@ -1,9 +1,21 @@
 (() => {
   "use strict";
 
+  // Configuração do site. Sem window.SITE, vale o Palpite Verde (Palmeiras); outra
+  // versão (ex.: corinthians/) define window.SITE antes de carregar este arquivo.
+  const SITE = {
+    jogo: "Palpite Verde", logo: ["PALPITE", "VERDE"], clube: "Palmeiras", arquivo: "palpite-verde",
+    chave: "pv:", raiz: "", endereco: "https://guppinheiro.github.io/palpiteverde/",
+    inicio: [2026, 11, 9], sementes: { facil: 1914, dificil: 1942, lendas: 1951 },
+    redefinicoes: { 1: 2 }, // #1 redefinido 2x: testes e novas regras de sorteio dos níveis
+    fixados: { 1: { facil: "Ramires", dificil: "Carlos Gamarra", lendas: "Estêvão" } },
+    cor: {}, ...(window.SITE || {})
+  };
+  window.SITE = SITE;
+
   const MAX_PALPITES = 10;
   const ANO_ATUAL = 2026; // usado para quem ainda está no elenco (ultimo: null)
-  const INICIO = Date.UTC(2026, 10, 9); // desafio #1 = 9 de novembro de 2026 (horário de Brasília)
+  const INICIO = Date.UTC(SITE.inicio[0], SITE.inicio[1] - 1, SITE.inicio[2]); // desafio #1 (horário de Brasília)
   const FUSO = "America/Sao_Paulo";
 
   const REGIAO = {
@@ -34,7 +46,7 @@
   function bandeira(j) {
     if (!j.nasc) return null;
     const arq = j.nasc === "EXT" ? normalizar(j.pais || "").replace(/ /g, "-") : j.nasc;
-    return arq ? `img/bandeiras/${arq}.png` : null;
+    return arq ? `${SITE.raiz}img/bandeiras/${arq}.png` : null;
   }
   // nome como aparece no jogo (homônimos têm "nome" único com o ano de estreia e "exibe" sem ele)
   const exibir = j => j.exibe || j.nome;
@@ -42,13 +54,18 @@
   const localNascimento = j => !j.nasc ? "?" : j.nasc === "EXT" ? j.pais : j.nasc;
   const localNascimentoExtenso = j => !j.nasc ? "local desconhecido" : j.nasc === "EXT" ? j.pais : UF_NOME[j.nasc] || j.nasc;
 
+  // cada site guarda com o próprio prefixo (o Palmeiras usa "pv:"), já que dividem o endereço
+  const chaveSite = chave => SITE.chave + chave.replace(/^pv:/, "");
   const armazenamento = {
     ler(chave, padrao) {
-      try { const v = localStorage.getItem(chave); return v ? JSON.parse(v) : padrao; }
+      try { const v = localStorage.getItem(chaveSite(chave)); return v ? JSON.parse(v) : padrao; }
       catch { return padrao; }
     },
     gravar(chave, valor) {
-      try { localStorage.setItem(chave, JSON.stringify(valor)); } catch { /* sem armazenamento: segue sem salvar */ }
+      try { localStorage.setItem(chaveSite(chave), JSON.stringify(valor)); } catch { /* sem armazenamento: segue sem salvar */ }
+    },
+    apagar(chave) {
+      try { localStorage.removeItem(chaveSite(chave)); } catch { /* sem armazenamento */ }
     }
   };
 
@@ -72,9 +89,9 @@
   // recorte/chance: no sorteio, "chance" das vezes sai alguém com último jogo a partir de "recorte".
   const NIVEIS = {
     // jogos: quanto o número de jogos pelo clube pesa no sorteio (expoente; teto de "tetoJogos")
-    facil:   { desde: 1970, recorte: 2010, chance: 0.95, jogos: 0.9,   tetoJogos: 300, rotulo: "fácil",  nome: "Fácil",  semente: 1914 },
-    dificil: { desde: 1970, recorte: 2000, chance: 0.75, jogos: 1.3, tetoJogos: 300, rotulo: "normal", nome: "Normal", semente: 1942 },
-    lendas:  { desde: 0,                                 jogos: 0.5, tetoJogos: 200, rotulo: "lendas", nome: "Lendas", semente: 1951 }
+    facil:   { desde: 1970, recorte: 2010, chance: 0.95, jogos: 0.9,   tetoJogos: 300, rotulo: "fácil",  nome: "Fácil",  semente: SITE.sementes.facil },
+    dificil: { desde: 1970, recorte: 2000, chance: 0.75, jogos: 1.3, tetoJogos: 300, rotulo: "normal", nome: "Normal", semente: SITE.sementes.dificil },
+    lendas:  { desde: 0,                                 jogos: 0.5, tetoJogos: 200, rotulo: "lendas", nome: "Lendas", semente: SITE.sementes.lendas }
   };
   // Quem tem poucos jogos pelo clube vale como palpite, mas não é sorteado
   const JOGOS_MIN_SORTEIO = 10;
@@ -131,12 +148,12 @@
   // redefinido. Nesses dias o sorteio usa outra semente e evita o jogador que tinha saído,
   // e o progresso salvo da versão anterior é descartado. Vale para todos os níveis.
   // O #1 foi redefinido para não repetir jogadores do período de testes.
-  const REDEFINICOES = { 1: 2 }; // #1 redefinido 2x: testes e novas regras de sorteio dos níveis
+  const REDEFINICOES = SITE.redefinicoes;
   const versaoDoDia = dia => REDEFINICOES[dia] || 0;
 
   // Jogadores do dia fixados: quando a base muda no meio de um dia, o sorteio daquele dia
   // poderia trocar de jogador; aqui ele fica como estava. (número do desafio → nível → nome)
-  const FIXADOS = { 1: { facil: "Ramires", dificil: "Carlos Gamarra", lendas: "Estêvão" } };
+  const FIXADOS = SITE.fixados;
   function jogadorDoDia(dia, nivel) {
     const pool = SORTEAVEIS[nivel];
     const lista = SORTEIOS_DIARIOS[nivel];
@@ -485,12 +502,12 @@
     const venceu = estado.palpites.at(-1) === estado.secreto.nome;
     const rotulo = NIVEIS[estado.nivel].rotulo;
     if (estado.modo === "treino") {
-      return `Palpite Verde · treino infinito (${rotulo})\n⚽ ${treino.acertos} acertos em ${treino.jogados} jogadores\n🔥 Recorde de sequência: ${treino.recorde}\n${ENDERECO}`;
+      return `${SITE.jogo} · treino infinito (${rotulo})\n⚽ ${treino.acertos} acertos em ${treino.jogados} jogadores\n🔥 Recorde de sequência: ${treino.recorde}\n${ENDERECO}`;
     }
     const placar = `${venceu ? estado.palpites.length : "X"}/${MAX_PALPITES}`;
     const titulo = estado.modo === "dia"
-      ? `Palpite Verde #${estado.dia} (${rotulo}) ${placar}`
-      : `Palpite Verde (treino ${rotulo}) ${placar}`;
+      ? `${SITE.jogo} #${estado.dia} (${rotulo}) ${placar}`
+      : `${SITE.jogo} (treino ${rotulo}) ${placar}`;
     const linhas = estado.palpites.map(n => comparar(porNome.get(n), estado.secreto).map(d => emoji[d.classe]).join(""));
     return `${titulo}\n${linhas.join("\n")}\n${ENDERECO}`;
   }
@@ -524,7 +541,8 @@
   // das dicas), o palpite que chegou mais perto e a sequência.
   const COR = {
     verde: "#006437", verdeFundo: "#00552f", vivo: "#1f9e55", claro: "#b9ecc6", longe: "#7d8a83",
-    branco: "#ffffff", tinta: "#0f2a1c", suave: "#5e7367", linha: "#d9e4dc", nevoa: "#eef5f0"
+    branco: "#ffffff", tinta: "#0f2a1c", suave: "#5e7367", linha: "#d9e4dc", nevoa: "#eef5f0",
+    ...SITE.cor
   };
   const COR_CLASSE = { ok: COR.vivo, perto: COR.claro, longe: COR.longe, sem: COR.nevoa };
   const F_TITULO = '"Barlow Condensed", "Arial Narrow", sans-serif';
@@ -554,6 +572,17 @@
     let t = tamanho;
     do { ctx.font = `${peso} ${t}px ${fonte}`; t -= 2; } while (ctx.measureText(texto).width > larguraMax && t > 20);
     return t + 2;
+  }
+
+  // "PALPITE [VERDE]": a segunda palavra numa etiqueta branca
+  function desenharLogo(ctx, M) {
+    const [a, b] = SITE.logo;
+    ctx.font = `800 64px ${F_TITULO}`; ctx.fillStyle = COR.branco;
+    ctx.fillText(a, M, 104);
+    const wP = ctx.measureText(a + " ").width;
+    const wV = ctx.measureText(b).width;
+    retangulo(ctx, M + wP - 6, 52, wV + 20, 66, 8); ctx.fill();
+    ctx.fillStyle = COR.verde; ctx.fillText(b, M + wP + 4, 104);
   }
 
   function resumoResultado() {
@@ -588,11 +617,7 @@
     // cabeçalho: logo e contexto
     ctx.textBaseline = "alphabetic";
     ctx.font = `800 64px ${F_TITULO}`; ctx.fillStyle = COR.branco;
-    ctx.fillText("PALPITE", M, 104);
-    const wP = ctx.measureText("PALPITE ").width;
-    const wV = ctx.measureText("VERDE").width;
-    retangulo(ctx, M + wP - 6, 52, wV + 20, 66, 8); ctx.fill();
-    ctx.fillStyle = COR.verde; ctx.fillText("VERDE", M + wP + 4, 104);
+    desenharLogo(ctx, M);
     const data = new Intl.DateTimeFormat("pt-BR", { timeZone: FUSO }).format(new Date());
     const contexto = estado.modo === "treino" ? `TREINO ∞ · ${NIVEIS[estado.nivel].nome.toUpperCase()}`
       : `DESAFIO #${estado.dia} · ${NIVEIS[estado.nivel].nome.toUpperCase()} · ${data}`;
@@ -621,7 +646,7 @@
     ctx.fillText(`${j.pos} · ${localNascimentoExtenso(j)} · ${anos}`, x, y);
     y += 44;
     ctx.font = `500 26px ${F_TEXTO}`; ctx.fillStyle = COR.suave;
-    ctx.fillText(`${j.jogos} jogos e ${j.gols} gols pelo Palmeiras`, IX, y);
+    ctx.fillText(`${j.jogos} jogos e ${j.gols} gols pelo ${SITE.clube}`, IX, y);
 
     // faixa do resultado
     y += 34;
@@ -672,15 +697,15 @@
 
     // assinatura
     ctx.font = `500 22px ${F_TEXTO}`; ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.textAlign = "center";
-    ctx.fillText("Palpite Verde · jogo de fã, sem ligação oficial com o clube", W / 2, H - 38);
+    ctx.fillText(`${SITE.jogo} · jogo de fã, sem ligação oficial com o clube`, W / 2, H - 38);
     ctx.textAlign = "left";
     return cv;
   }
 
   // ---------- janela do card (usada pelos dois jogos) ----------
   // mostrarCard(canvas, nomeDoArquivo, texto): exibe a imagem e guarda o que os botões usam.
-  let cardAtual = null, cardNome = "palpite-verde.png", cardTexto = "";
-  const ENDERECO = "https://guppinheiro.github.io/palpiteverde/";
+  let cardAtual = null, cardNome = `${SITE.arquivo}.png`, cardTexto = "";
+  const ENDERECO = SITE.endereco;
 
   async function mostrarCard(cv, nome, texto) {
     cardAtual = await new Promise(res => cv.toBlob(res, "image/png"));
@@ -695,8 +720,8 @@
     try {
       const cv = await desenharCard();
       const nome = estado.modo === "treino"
-        ? `palpite-verde-treino-${normalizar(estado.secreto.nome).replace(/[^a-z0-9]+/g, "-")}.png`
-        : `palpite-verde-desafio-${estado.dia}-${estado.nivel}.png`;
+        ? `${SITE.arquivo}-treino-${normalizar(estado.secreto.nome).replace(/[^a-z0-9]+/g, "-")}.png`
+        : `${SITE.arquivo}-desafio-${estado.dia}-${estado.nivel}.png`;
       await mostrarCard(cv, nome, textoCompartilhar());
     } catch (e) {
       avisar("Não foi possível criar o card");
@@ -746,7 +771,7 @@
   }
 
   // ferramentas de desenho e a janela do card, para o jogo de Campanhas
-  window.PalpiteCard = { mostrar: mostrarCard, retangulo, caber, carregarImagem, COR, F_TITULO, F_TEXTO, ENDERECO };
+  window.PalpiteCard = { mostrar: mostrarCard, retangulo, caber, carregarImagem, COR, F_TITULO, F_TEXTO, ENDERECO, desenharLogo, armazenamento };
 
   // ---------- eventos ----------
   const campo = $("campo");
@@ -843,7 +868,7 @@
   // de referência, mantendo os totais de jogos e vitórias.
   if (armazenamento.ler("pv:epoca", 1) < 2) {
     for (const nivel of Object.keys(NIVEIS)) {
-      try { localStorage.removeItem(`pv:dia:${nivel}`); } catch { /* sem armazenamento */ }
+      armazenamento.apagar(`pv:dia:${nivel}`);
       const st = armazenamento.ler(`pv:stats:${nivel}`, null);
       if (st) {
         delete st.ultimoDiaVencido; delete st.ultimoDiaJogado; st.seq = 0;

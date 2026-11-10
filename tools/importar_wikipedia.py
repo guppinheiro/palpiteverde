@@ -30,9 +30,36 @@ import urllib.parse
 import urllib.request
 
 API = "https://pt.wikipedia.org/w/api.php"
-CATEGORIA = "Categoria:Futebolistas da Sociedade Esportiva Palmeiras"
 USER_AGENT = "PalpiteVerdeImporter/1.0 (fan game data import; low volume)"
 ANO_ATUAL = 2026
+
+# Um bloco por clube. --clube escolhe qual; o padrão é o Palmeiras (Palpite Verde).
+CLUBES = {
+    "palmeiras": {
+        "nome": "Palmeiras", "jogo": "Palpite Verde",
+        "categoria": "Categoria:Futebolistas da Sociedade Esportiva Palmeiras",
+        "subcategorias": ["Categoria:Goleiros da Sociedade Esportiva Palmeiras"],
+        "wd": "Q80964",
+        # times B, sub-XX e afins ficam de fora
+        "excluir": r"Palmeiras\s*(B|Sub|II)\b|sub-\d|Palmeiras B\b",
+        "link": r"\{\{\s*Futebol Palmeiras\s*\}\}|\[\[\s*((Sociedade Esportiva|SE|S\.\s?E\.)\s*)?Palmeiras\s*[|\]]",
+        "texto": r"\s*((Sociedade Esportiva|SE|S\.\s?E\.)\s*)?Palmeiras\s*",
+        "pasta": "",  # saída em js/, arquivos de apoio em tools/
+    },
+    "corinthians": {
+        "nome": "Corinthians", "jogo": "Palpite Alvinegro",
+        "categoria": "Categoria:Futebolistas do Sport Club Corinthians Paulista",
+        "subcategorias": ["Categoria:Goleiros do Sport Club Corinthians Paulista"],
+        "wd": "Q35933",
+        # outros "Corinthians" (Alagoano, Paranaense, Casuals, de Presidente Prudente...) e times B
+        "excluir": r"Corinthians\s*(B|Sub|II)\b|sub-\d|Corinthians[- ](Alagoano|Paranaense|Casuals|de Presidente|Prudente|Santa|Caicoense|FC|Futebol)",
+        "link": r"\{\{\s*Futebol Corinthians\s*\}\}|\[\[\s*(Sport Club Corinthians Paulista|S\.\s?C\.\s?Corinthians( Paulista)?|SC Corinthians( Paulista)?|Corinthians|Corinthians Paulista)\s*[|\]]",
+        "texto": r"\s*((Sport Club|SC|S\.\s?C\.)\s*)?Corinthians( Paulista)?\s*",
+        "pasta": "corinthians",  # saída em corinthians/js/, apoio em tools/corinthians/
+    },
+}
+CLUBE = CLUBES["palmeiras"]
+CATEGORIA = CLUBE["categoria"]
 
 # Corte das lendas: antes de 1970 só entram jogadores com bastante história no clube
 ANO_LENDAS = 1970
@@ -100,7 +127,7 @@ def baixar(params, cache_dir):
 
 
 # subcategorias com jogadores do time masculino (a do feminino fica de fora)
-SUBCATEGORIAS = ["Categoria:Goleiros da Sociedade Esportiva Palmeiras"]
+SUBCATEGORIAS = CLUBE["subcategorias"]
 
 
 def listar_categoria(cache_dir):
@@ -118,10 +145,9 @@ def listar_categoria(cache_dir):
 
 
 WIKIDATA = "https://query.wikidata.org/sparql"
-PALMEIRAS_WD = "Q80964"
 CONSULTA_WD = """
 SELECT ?p ?pLabel ?artigo ?ini ?fim ?jogos ?gols ?posLabel ?ufLabel ?paisLabel ?dn WHERE {
-  ?p p:P54 ?st . ?st ps:P54 wd:%s .
+  ?p p:P54 ?st . ?st ps:P54 wd:CLUBE_WD .
   OPTIONAL { ?artigo schema:about ?p ; schema:isPartOf <https://pt.wikipedia.org/> . }
   OPTIONAL { ?st pq:P580 ?ini } OPTIONAL { ?st pq:P582 ?fim }
   OPTIONAL { ?st pq:P1350 ?jogos } OPTIONAL { ?st pq:P1351 ?gols }
@@ -130,15 +156,16 @@ SELECT ?p ?pLabel ?artigo ?ini ?fim ?jogos ?gols ?posLabel ?ufLabel ?paisLabel ?
   OPTIONAL { ?p wdt:P19 ?nasc . OPTIONAL { ?nasc wdt:P17 ?pais }
              OPTIONAL { ?nasc wdt:P131* ?uf . ?uf wdt:P31 wd:Q485258 } }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "pt,en". }
-}""" % PALMEIRAS_WD
+}"""
 
 
 def consultar_wikidata(cache_dir):
     """A categoria da Wikipédia não tem todo mundo (ex.: Weverton, Prass, Leão).
     O Wikidata lista, numa consulta só, todos com passagem pelo Palmeiras e artigo
     em português. Também serve de reserva quando a ficha não tem um dado."""
-    corpo = urllib.parse.urlencode({"query": CONSULTA_WD}).encode()
-    d = requisitar(WIKIDATA, cache_dir, "wikidata:" + CONSULTA_WD, dados_post=corpo,
+    consulta = CONSULTA_WD.replace("CLUBE_WD", CLUBE["wd"])
+    corpo = urllib.parse.urlencode({"query": consulta}).encode()
+    d = requisitar(WIKIDATA, cache_dir, "wikidata:" + consulta, dados_post=corpo,
                    cabecalhos={"Accept": "application/sparql-results+json"}, pausa=1)
     g = lambda r, k: r.get(k, {}).get("value")
     info, sem_artigo = {}, {}
@@ -207,7 +234,7 @@ def resolver_buscas(consultas, cache_dir):
     titulos = set()
     for q in consultas:
         d = baixar({"action": "query", "list": "search", "srlimit": "10", "srprop": "", "srnamespace": "0",
-                    "srsearch": f'{q} Palmeiras hastemplate:"Info/Futebol"'}, cache_dir)
+                    "srsearch": f'{q} {CLUBE["nome"]} hastemplate:"Info/Futebol"'}, cache_dir)
         achados = [r["title"] for r in d["query"]["search"]]
         print(f"  busca {q!r}: {achados[:5]}", file=sys.stderr)
         titulos |= set(achados)
@@ -296,14 +323,14 @@ def texto_visivel(v):
     return re.sub(r"\s+", " ", v.replace("''", "")).strip()
 
 
-def eh_palmeiras(clube):
+def eh_clube(clube):
     c = limpar(clube)
-    if re.search(r"Palmeiras\s*(B|Sub|II)\b|sub-\d|Palmeiras B\b", c, re.I):
+    if re.search(CLUBE["excluir"], c, re.I):
         return False
-    if re.search(r"\{\{\s*Futebol Palmeiras\s*\}\}|\[\[\s*((Sociedade Esportiva|SE|S\.\s?E\.)\s*)?Palmeiras\s*[|\]]", c):
+    if re.search(CLUBE["link"], c):
         return True
     # texto simples, sem link nem modelo: "Palmeiras" ou "S.E. Palmeiras"
-    return bool(re.fullmatch(r"\s*((Sociedade Esportiva|SE|S\.\s?E\.)\s*)?Palmeiras\s*", texto_visivel(c)))
+    return bool(re.fullmatch(CLUBE["texto"], texto_visivel(c)))
 
 
 def anos(v):
@@ -330,7 +357,7 @@ def passagens(campos):
     # formato numerado: ano1/clube1/jogos1/gols1
     for chave, clube in campos.items():
         m = re.fullmatch(r"clube(\d+)", chave)
-        if not m or not eh_palmeiras(clube):
+        if not m or not eh_clube(clube):
             continue
         n = m.group(1)
         a = anos(campos.get(f"ano{n}", ""))
@@ -346,7 +373,7 @@ def passagens(campos):
         jg = sep.split(next((campos[k] for k in ("jogos(golos)", "jogos(gols)", "jogos (golos)", "jogos (gols)")
                              if k in campos), ""))
         for i, clube in enumerate(clubes):
-            if not eh_palmeiras(clube) or i >= len(anos_l):
+            if not eh_clube(clube) or i >= len(anos_l):
                 continue
             a = anos(anos_l[i])
             j = g = None
@@ -452,11 +479,11 @@ def jogador(titulo, texto, wd=None):
     if not [p for p in ps if p[2] is not None] and [p for p in ps_wd if p[2] is not None]:
         ps = ps_wd  # a ficha não tem os números, o Wikidata tem
     if not ps:
-        return None, "Palmeiras não aparece na ficha"
+        return None, f"{CLUBE['nome']} não aparece na ficha"
     # passagens sem números na ficha não entram na soma (só as que têm)
     com_numeros = [p for p in ps if p[2] is not None]
     if not com_numeros:
-        return None, "sem jogos pelo Palmeiras na ficha"
+        return None, f"sem jogos pelo {CLUBE['nome']} na ficha"
     pos = posicao(campos) or posicao_no_texto(texto) or pos_wd
     if not pos:
         return None, "posição não reconhecida"
@@ -505,10 +532,10 @@ def escrever(jogadores, saida):
             vistos.add(j["nome"]); unicos.append(j)
     linhas = [json.dumps(j, ensure_ascii=False) for j in unicos]
     cabecalho = f"""/*
- * Base de jogadores do Palpite Verde — GERADA AUTOMATICAMENTE.
+ * Base de jogadores do {CLUBE['jogo']} — GERADA AUTOMATICAMENTE.
  * Fonte: fichas da Wikipédia em português ({CATEGORIA}).
  * Gerada por tools/importar_wikipedia.py em {time.strftime('%Y-%m-%d')}. Não edite à mão:
- * para corrigir um jogador, use tools/correcoes.json e rode o importador de novo.
+ * para corrigir um jogador, use {os.path.join('tools', CLUBE['pasta'], 'correcoes.json')} e rode o importador de novo.
  *
  * Campos: nome, pos, estreia, ultimo (null = ainda no clube), jogos, gols,
  * nasc (UF ou "EXT"), pais (estrangeiros), wiki (página de origem).
@@ -522,10 +549,17 @@ def escrever(jogadores, saida):
 def main():
     ap = argparse.ArgumentParser()
     raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ap.add_argument("--clube", default="palmeiras", choices=sorted(CLUBES))
     ap.add_argument("--cache", default=os.path.join(raiz, ".cache-wikipedia"))
-    ap.add_argument("--saida", default=os.path.join(raiz, "js", "jogadores.js"))
+    ap.add_argument("--saida", default=None)
     ap.add_argument("--relatorio", default=None, help="arquivo JSON com os descartados e o motivo")
     args = ap.parse_args()
+    global CLUBE, CATEGORIA, SUBCATEGORIAS
+    CLUBE = CLUBES[args.clube]
+    CATEGORIA, SUBCATEGORIAS = CLUBE["categoria"], CLUBE["subcategorias"]
+    apoio = os.path.join(raiz, "tools", CLUBE["pasta"])
+    if not args.saida:
+        args.saida = os.path.join(raiz, CLUBE["pasta"], "js", "jogadores.js")
     os.makedirs(args.cache, exist_ok=True)
 
     print("Listando a categoria…", file=sys.stderr)
@@ -534,7 +568,7 @@ def main():
     print("Consultando o Wikidata…", file=sys.stderr)
     wikidata, sem_artigo = consultar_wikidata(args.cache)
     manuais, buscas = set(), []
-    arq_extras = os.path.join(raiz, "tools", "paginas_extras.txt")
+    arq_extras = os.path.join(apoio, "paginas_extras.txt")
     if os.path.exists(arq_extras):
         with open(arq_extras, encoding="utf-8") as f:
             for l in f:
@@ -550,7 +584,7 @@ def main():
     textos = baixar_textos(titulos, args.cache)
     textos.update(baixar_textos(extras, args.cache))
 
-    correcoes_arq = os.path.join(raiz, "tools", "correcoes.json")
+    correcoes_arq = os.path.join(apoio, "correcoes.json")
     correcoes = {}
     if os.path.exists(correcoes_arq):
         with open(correcoes_arq, encoding="utf-8") as f:
@@ -592,7 +626,7 @@ def main():
     jogadores += so_wd
 
     # jogadores de outras fontes (tools/jogadores_extras.json), se o nome ainda não existir
-    arq = os.path.join(raiz, "tools", "jogadores_extras.json")
+    arq = os.path.join(apoio, "jogadores_extras.json")
     if os.path.exists(arq):
         with open(arq, encoding="utf-8") as f:
             extras_manuais = json.load(f).get("jogadores", [])

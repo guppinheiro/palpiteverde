@@ -22,9 +22,12 @@
 
   const normalizar = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
   const slug = s => normalizar(s).replace(/ /g, "-");
+  const SITE = window.SITE || { clube: "Palmeiras", sigla: "SEP", jogo: "Palpite Verde", arquivo: "palpite-verde", chave: "pv:", raiz: "" };
+  const CLUBE = SITE.clube;
+  const chaveSite = k => (SITE.chave || "pv:") + k.replace(/^pv:/, "");
   const armazenamento = {
-    ler(k, p) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : p; } catch { return p; } },
-    gravar(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* sem armazenamento */ } }
+    ler(k, p) { try { const v = localStorage.getItem(chaveSite(k)); return v ? JSON.parse(v) : p; } catch { return p; } },
+    gravar(k, v) { try { localStorage.setItem(chaveSite(k), JSON.stringify(v)); } catch { /* sem armazenamento */ } }
   };
   const rotuloLocal = l => l === "casa" ? "Casa" : l === "neutro" ? "Neutro" : "Fora"; // finais em campo neutro
   // alguns jogos antigos não têm data na fonte: aí aparece só Casa/Fora
@@ -49,7 +52,7 @@
     $("aba-campanhas").setAttribute("aria-selected", camp);
     $("painel-craque").hidden = camp;
     $("painel-campanhas").hidden = !camp;
-    $("lema").textContent = camp ? "Lembre quem o Palmeiras enfrentou em cada campanha."
+    $("lema").textContent = camp ? `Lembre quem o ${CLUBE} enfrentou em cada campanha.`
       : "Descubra o craque secreto em até 10 palpites.";
     armazenamento.gravar("pv:aba", qual);
     if (camp) renderPainel();
@@ -90,8 +93,8 @@
     $("camp-placar").hidden = !MODOS[jogo.modo].placar;
     $("camp-campo").value = ""; $("camp-gp").value = ""; $("camp-gc").value = "";
     $("camp-retorno").textContent = MODOS[jogo.modo].placar
-      ? "Digite o adversário e o placar de um jogo (gols do Palmeiras × gols do rival). Caixa vazia vale 0."
-      : "Digite um adversário que o Palmeiras enfrentou nesta campanha.";
+      ? `Digite o adversário e o placar de um jogo (gols do ${CLUBE} × gols do rival). Caixa vazia vale 0.`
+      : `Digite um adversário que o ${CLUBE} enfrentou nesta campanha.`;
     renderJogo();
     window.scrollTo(0, 0);
     $("camp-campo").focus();
@@ -124,13 +127,13 @@
         retorno(`Isso! ${abertos.length === 1 ? "1 jogo" : `${abertos.length} jogos`} contra ${time}.`);
       } else {
         jogo.erros.push({ time });
-        retorno(`${time} não enfrentou o Palmeiras nesta campanha.`);
+        retorno(`${time} não enfrentou o ${CLUBE} nesta campanha.`);
       }
     } else {
       const certo = abertos.find(j => j.gp === Number(gp) && j.gc === Number(gc));
       if (certo) {
         jogo.revelados.add(certo.i); jogo.novos.add(certo.i);
-        retorno(`Na mosca! Palmeiras ${gp} × ${gc} ${time}.`);
+        retorno(`Na mosca! ${CLUBE} ${gp} × ${gc} ${time}.`);
       } else if (abertos.length) {
         jogo.erros.push({ time, gp, gc, quase: true });
         retorno(`Time certo, placar errado: ${time} está na campanha.`);
@@ -139,7 +142,7 @@
         retorno(`Todos os jogos contra ${time} já foram descobertos.`);
       } else {
         jogo.erros.push({ time, gp, gc });
-        retorno(`${time} não enfrentou o Palmeiras nesta campanha.`);
+        retorno(`${time} não enfrentou o ${CLUBE} nesta campanha.`);
       }
     }
     const venceu = jogo.revelados.size === jogo.jogos.length;
@@ -170,11 +173,11 @@
     const img = document.createElement("img");
     img.alt = "";
     if (jogo.comp === "libertadores") {
-      img.src = `img/bandeiras/${slug(j.pais)}.png`;
+      img.src = `${SITE.raiz || ""}img/bandeiras/${slug(j.pais)}.png`;
       d.title = j.pais;
       d.append(img, j.pais === "Brasil" ? "BRA" : j.pais.slice(0, 3).toUpperCase());
     } else {
-      img.src = `img/bandeiras/${j.uf}.png`;
+      img.src = `${SITE.raiz || ""}img/bandeiras/${j.uf}.png`;
       d.title = UF_NOME[j.uf] || j.uf;
       d.append(img, j.uf || "?");
     }
@@ -198,7 +201,7 @@
     const placar = document.createElement("span");
     placar.className = "jogo-linha__placar" + (visivel ? classeResultado(j) : "");
     placar.textContent = visivel ? `${j.gp} × ${j.gc}` : "– × –";
-    placar.title = "Palmeiras × adversário";
+    placar.title = `${CLUBE} × adversário`;
     el.append(data, dica(j), adv, placar);
     return el;
   }
@@ -232,7 +235,7 @@
       const placar = document.createElement("span");
       placar.className = "jogo-linha__placar" + (visivel ? classeResultado(j) : "");
       placar.textContent = visivel ? `${j.gp} × ${j.gc}` : "– × –";
-      placar.title = "Palmeiras × adversário";
+      placar.title = `${CLUBE} × adversário`;
       linha.append(rot, placar);
       pernas.append(linha);
     }
@@ -253,12 +256,12 @@
       const pen = lista[0].penaltis;
       const ag = document.createElement("p");
       ag.className = "confronto__agregado";
-      ag.textContent = `Agregado ${gp} × ${gc}` + (pen ? ` · ${pen === "venceu" ? "Palmeiras venceu" : "Palmeiras perdeu"} nos pênaltis` : "");
+      ag.textContent = `Agregado ${gp} × ${gc}` + (pen ? ` · ${pen === "venceu" ? `${CLUBE} venceu` : `${CLUBE} perdeu`} nos pênaltis` : "");
       box.append(ag);
     } else if (mataMata && lista.length === 1 && lista[0].penaltis && todosVisiveis) {
       const ag = document.createElement("p");
       ag.className = "confronto__agregado";
-      ag.textContent = `Decidido nos pênaltis · ${lista[0].penaltis === "venceu" ? "Palmeiras venceu" : "Palmeiras perdeu"}`;
+      ag.textContent = `Decidido nos pênaltis · ${lista[0].penaltis === "venceu" ? `${CLUBE} venceu` : `${CLUBE} perdeu`}`;
       box.append(ag);
     }
     return box;
@@ -379,7 +382,7 @@
     const comp = C[jogo.comp];
     const venceu = jogo.revelados.size === jogo.jogos.length;
     const end = window.PalpiteCard?.ENDERECO || location.href.split("?")[0];
-    return `Palpite Verde · Campanhas\n${comp.nome} ${jogo.ano} · ${MODOS[jogo.modo].nome}\n`
+    return `${SITE.jogo} · Campanhas\n${comp.nome} ${jogo.ano} · ${MODOS[jogo.modo].nome}\n`
       + `${venceu ? "✅" : "⚽"} ${jogo.revelados.size}/${jogo.jogos.length} jogos em ${jogo.usadas} de ${jogo.chances} chances\n`
       + `${jogo.resultado === "Campeão" ? "🏆 " : ""}${jogo.resultado}\n${end}`;
   }
@@ -396,17 +399,13 @@
     const W = 1080, H = 1350, M = 56;
     const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
     const ctx = cv.getContext("2d");
-    const VERM = "#c8352e";
+    const VERM = COR.derrota || "#c8352e";
 
     ctx.fillStyle = COR.verde; ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = "rgba(255,255,255,.04)";
     for (let x = 72; x < W; x += 144) ctx.fillRect(x, 0, 72, H);
 
-    ctx.font = `800 64px ${F_TITULO}`; ctx.fillStyle = COR.branco;
-    ctx.fillText("PALPITE", M, 104);
-    const wP = ctx.measureText("PALPITE ").width, wV = ctx.measureText("VERDE").width;
-    retangulo(ctx, M + wP - 6, 52, wV + 20, 66, 8); ctx.fill();
-    ctx.fillStyle = COR.verde; ctx.fillText("VERDE", M + wP + 4, 104);
+    P.desenharLogo(ctx, M);
     ctx.font = `600 26px ${F_TEXTO}`; ctx.fillStyle = "rgba(255,255,255,.8)";
     ctx.fillText(`CAMPANHAS · MODO ${MODOS[jogo.modo].nome.toUpperCase()}`, M, 152);
 
@@ -478,10 +477,10 @@
     }
 
     ctx.font = `500 20px ${F_TEXTO}`; ctx.fillStyle = COR.suave;
-    ctx.fillText("Placar do Palmeiras primeiro · cheio = descoberto · contorno = faltou", IX, PY + PH - 26);
+    ctx.fillText(`Placar do ${CLUBE} primeiro · cheio = descoberto · contorno = faltou`, IX, PY + PH - 26);
 
     ctx.font = `500 22px ${F_TEXTO}`; ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.textAlign = "center";
-    ctx.fillText("Palpite Verde · jogo de fã, sem ligação oficial com o clube", W / 2, H - 38);
+    ctx.fillText(`${SITE.jogo} · jogo de fã, sem ligação oficial com o clube`, W / 2, H - 38);
     ctx.textAlign = "left";
     return cv;
   }
@@ -492,7 +491,7 @@
     btn.disabled = true;
     try {
       const cv = await desenharCardCampanha();
-      await window.PalpiteCard.mostrar(cv, `palpite-verde-${slug(jogo.comp)}-${jogo.ano}-${jogo.modo}.png`, textoResultado());
+      await window.PalpiteCard.mostrar(cv, `${SITE.arquivo}-${slug(jogo.comp)}-${jogo.ano}-${jogo.modo}.png`, textoResultado());
     } catch (e) {
       retorno("Não foi possível criar o card.");
     } finally {
