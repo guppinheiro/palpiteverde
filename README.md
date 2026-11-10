@@ -75,6 +75,8 @@ Assim, um jogador atual sai cerca de 7 vezes mais que um dos anos 1970. Esse pes
 
 Para trocar, de forma extraordinária, o jogador de um dia (em todos os níveis), acrescente o número do desafio em `REDEFINICOES`, no `js/jogo.js` (ex.: `{ 1: 1 }`; use 2 para redefinir de novo no mesmo dia). O sorteio desse dia passa a usar outra semente, evita o jogador anterior, e o progresso salvo da versão antiga é descartado. Quem já tinha jogado naquele dia joga de novo sem perder nem ganhar sequência.
 
+Se a base de jogadores mudar no meio de um dia, o sorteio daquele dia pode trocar de jogador. Para evitar, fixe o jogador do dia em `FIXADOS`, no `js/jogo.js` (número do desafio → nível → nome).
+
 ## Rodar localmente
 
 É um site estático, sem build:

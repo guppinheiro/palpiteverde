@@ -130,6 +130,10 @@
   // O #1 foi redefinido para não repetir jogadores do período de testes.
   const REDEFINICOES = { 1: 2 }; // #1 redefinido 2x: testes e novas regras de sorteio dos níveis
   const versaoDoDia = dia => REDEFINICOES[dia] || 0;
+
+  // Jogadores do dia fixados: quando a base muda no meio de um dia, o sorteio daquele dia
+  // poderia trocar de jogador; aqui ele fica como estava. (número do desafio → nível → nome)
+  const FIXADOS = { 1: { facil: "Ramires", dificil: "Carlos Gamarra", lendas: "Estêvão" } };
   function jogadorDoDia(dia, nivel) {
     const pool = SORTEAVEIS[nivel];
     const lista = SORTEIOS_DIARIOS[nivel];
@@ -144,7 +148,8 @@
         const outros = candidatos.filter(j => j !== escolhido);
         escolhido = sortearNivel(outros.length ? outros : candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d + v * 7919), nivel);
       }
-      lista.push(escolhido);
+      const fixo = FIXADOS[d] && porNome.get(FIXADOS[d][nivel]);
+      lista.push(fixo || escolhido);
     }
     return lista[alvo - 1];
   }

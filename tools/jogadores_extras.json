@@ -1,5 +1,5 @@
 {
- "_sobre": "Jogadores que não estão na Wikipédia nem no Wikidata. Entram na base se o nome ainda não existir. Fonte de cada um em 'fonte'.",
+ "_sobre": "Jogadores que não entram pela Wikipédia em português nem pelo Wikidata. Entram se não houver jogador com o mesmo nome e estreia próxima. Fonte de cada um em 'fonte'.",
  "jogadores": [
   {
    "nome": "Naves",
@@ -33,6 +33,183 @@
    "nasc": "RS",
    "nasceu": 2005,
    "fonte": "Wikipédia em inglês, 'Larson (footballer)': 5 jogos emprestado em 2025 e 9 em 2026 (só campeonato nacional; pode estar abaixo do total); nascido em Pelotas-RS em 2005"
+  },
+  {
+   "nome": "Miguel Bianconi",
+   "pos": "Atacante",
+   "estreia": 2014,
+   "ultimo": 2017,
+   "jogos": 7,
+   "gols": 1,
+   "nasc": "SP",
+   "nasceu": 1992,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Miguel Bianconi'"
+  },
+  {
+   "nome": "João Denoni",
+   "pos": "Meio-campo",
+   "estreia": 2013,
+   "ultimo": 2017,
+   "jogos": 13,
+   "gols": 0,
+   "nasc": "SP",
+   "nasceu": 1994,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'João Denoni'"
+  },
+  {
+   "nome": "Rodolfo",
+   "pos": "Atacante",
+   "estreia": 2014,
+   "ultimo": 2018,
+   "jogos": 2,
+   "gols": 0,
+   "nasc": "SP",
+   "nasceu": 1993,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Rodolfo (footballer, born October 1993)'"
+  },
+  {
+   "nome": "Renato Augusto",
+   "pos": "Meio-campo",
+   "estreia": 2014,
+   "ultimo": 2018,
+   "jogos": 27,
+   "gols": 1,
+   "nasc": "SP",
+   "nasceu": 1992,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Renato Augusto (footballer, born 1992)'"
+  },
+  {
+   "nome": "Rodrigo",
+   "pos": "Meio-campo",
+   "estreia": 2016,
+   "ultimo": 2016,
+   "jogos": 1,
+   "gols": 0,
+   "nasc": "MG",
+   "nasceu": 1994,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Rodrigo (footballer, born 1994)'"
+  },
+  {
+   "nome": "Lucas Taylor",
+   "pos": "Lateral",
+   "estreia": 2015,
+   "ultimo": 2019,
+   "jogos": 3,
+   "gols": 0,
+   "nasc": "SP",
+   "nasceu": 1995,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Lucas Taylor'"
+  },
+  {
+   "nome": "Luan Silva",
+   "pos": "Atacante",
+   "estreia": 2020,
+   "ultimo": 2021,
+   "jogos": 1,
+   "gols": 0,
+   "nasc": "BA",
+   "nasceu": 1999,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Luan Silva (footballer, born 1999)'"
+  },
+  {
+   "nome": "Rafael Papagaio",
+   "pos": "Atacante",
+   "estreia": 2021,
+   "ultimo": 2023,
+   "jogos": 14,
+   "gols": 2,
+   "nasc": "SP",
+   "nasceu": 1999,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Rafael Elias'"
+  },
+  {
+   "nome": "Gabriel Silva",
+   "pos": "Atacante",
+   "estreia": 2020,
+   "ultimo": 2023,
+   "jogos": 24,
+   "gols": 2,
+   "nasc": "SP",
+   "nasceu": 2002,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Gabriel Silva (footballer, born March 2002)'"
+  },
+  {
+   "nome": "Newton Williams",
+   "pos": "Atacante",
+   "estreia": 2021,
+   "ultimo": 2021,
+   "jogos": 4,
+   "gols": 1,
+   "nasc": "EXT",
+   "nasceu": 2001,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Newton Williams (footballer)'",
+   "pais": "Panamá"
+  },
+  {
+   "nome": "Giovani",
+   "pos": "Atacante",
+   "estreia": 2020,
+   "ultimo": 2023,
+   "jogos": 31,
+   "gols": 2,
+   "nasc": "SP",
+   "nasceu": 2004,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Giovani (footballer, born 2004)'"
+  },
+  {
+   "nome": "Vitor Hugo",
+   "pos": "Atacante",
+   "estreia": 2021,
+   "ultimo": 2026,
+   "jogos": 2,
+   "gols": 0,
+   "nasc": "MG",
+   "nasceu": 2003,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Vitor Hugo (footballer, born 2003)'"
+  },
+  {
+   "nome": "Michel",
+   "pos": "Zagueiro",
+   "estreia": 2021,
+   "ultimo": 2026,
+   "jogos": 4,
+   "gols": 0,
+   "nasc": "SP",
+   "nasceu": 2003,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Michel (footballer, born 2003)'"
+  },
+  {
+   "nome": "Kevin",
+   "pos": "Atacante",
+   "estreia": 2021,
+   "ultimo": 2024,
+   "jogos": 9,
+   "gols": 1,
+   "nasc": "SP",
+   "nasceu": 2003,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Kevin (footballer, born 2003)'"
+  },
+  {
+   "nome": "Thalys",
+   "pos": "Atacante",
+   "estreia": 2025,
+   "ultimo": 2025,
+   "jogos": 13,
+   "gols": 2,
+   "nasc": "AL",
+   "nasceu": 2005,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Thalys (footballer)'"
+  },
+  {
+   "nome": "Erick Belé",
+   "pos": "Meio-campo",
+   "estreia": 2025,
+   "ultimo": null,
+   "jogos": 1,
+   "gols": 0,
+   "nasc": "RS",
+   "nasceu": 2007,
+   "fonte": "Wikipédia em inglês (ficha do jogador; jogos só do campeonato nacional, podem estar abaixo do total): 'Erick Belé'"
   }
  ]
 }

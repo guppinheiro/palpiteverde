@@ -596,9 +596,10 @@ def main():
     if os.path.exists(arq):
         with open(arq, encoding="utf-8") as f:
             extras_manuais = json.load(f).get("jogadores", [])
-        existentes = {normal(j["nome"]) for j in jogadores}
+        # entra se não houver jogador com o mesmo nome e estreia próxima (homônimos de outra época entram)
+        existentes = [(normal(j["nome"]), j["estreia"]) for j in jogadores]
         novos = [{k: v for k, v in j.items() if k != "fonte"} for j in extras_manuais
-                 if normal(j["nome"]) not in existentes]
+                 if not any(n == normal(j["nome"]) and abs(e - j["estreia"]) <= 1 for n, e in existentes)]
         print(f"{len(novos)} jogadores de tools/jogadores_extras.json", file=sys.stderr)
         jogadores += novos
     unicos = escrever(jogadores, args.saida)
