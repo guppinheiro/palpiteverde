@@ -295,3 +295,5 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 /* nome do palpite com posição e ano de nascimento ao lado */
 .ficha__quem { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; min-width: 0; }
 .ficha__det { font-size: .78rem; color: var(--suave); white-space: nowrap; }
+.botao--whatsapp { background: #1f8f4d; }
+.botao--whatsapp:hover { background: #18773f; }

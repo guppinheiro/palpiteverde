@@ -371,13 +371,133 @@
   }
 
   async function copiar() {
+    try { await navigator.clipboard.writeText(textoResultado()); retorno("Resultado copiado!"); }
+    catch { retorno("Não foi possível copiar."); }
+  }
+
+  function textoResultado() {
     const comp = C[jogo.comp];
     const venceu = jogo.revelados.size === jogo.jogos.length;
-    const texto = `Palpite Verde · Campanhas\n${comp.nome} ${jogo.ano} · ${MODOS[jogo.modo].nome}\n`
+    const end = window.PalpiteCard?.ENDERECO || location.href.split("?")[0];
+    return `Palpite Verde · Campanhas\n${comp.nome} ${jogo.ano} · ${MODOS[jogo.modo].nome}\n`
       + `${venceu ? "✅" : "⚽"} ${jogo.revelados.size}/${jogo.jogos.length} jogos em ${jogo.usadas} de ${jogo.chances} chances\n`
-      + `${jogo.resultado === "Campeão" ? "🏆 " : ""}${jogo.resultado}`;
-    try { await navigator.clipboard.writeText(texto); retorno("Resultado copiado!"); }
-    catch { retorno("Não foi possível copiar."); }
+      + `${jogo.resultado === "Campeão" ? "🏆 " : ""}${jogo.resultado}\n${end}`;
+  }
+
+  // ---------------- card do resultado ----------------
+  // Imagem 1080×1350: competição, ano e modo, o placar de acertos e a campanha inteira,
+  // fase por fase, com os jogos descobertos em cor e os que faltaram em contorno.
+  async function desenharCardCampanha() {
+    const P = window.PalpiteCard;
+    const { COR, F_TITULO, F_TEXTO, retangulo, caber } = P;
+    try { await Promise.all([document.fonts.load(`800 96px ${F_TITULO}`), document.fonts.load(`600 30px ${F_TEXTO}`)]); } catch { /* fonte reserva */ }
+    const comp = C[jogo.comp];
+    const venceu = jogo.revelados.size === jogo.jogos.length;
+    const W = 1080, H = 1350, M = 56;
+    const cv = document.createElement("canvas"); cv.width = W; cv.height = H;
+    const ctx = cv.getContext("2d");
+    const VERM = "#c8352e";
+
+    ctx.fillStyle = COR.verde; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = "rgba(255,255,255,.04)";
+    for (let x = 72; x < W; x += 144) ctx.fillRect(x, 0, 72, H);
+
+    ctx.font = `800 64px ${F_TITULO}`; ctx.fillStyle = COR.branco;
+    ctx.fillText("PALPITE", M, 104);
+    const wP = ctx.measureText("PALPITE ").width, wV = ctx.measureText("VERDE").width;
+    retangulo(ctx, M + wP - 6, 52, wV + 20, 66, 8); ctx.fill();
+    ctx.fillStyle = COR.verde; ctx.fillText("VERDE", M + wP + 4, 104);
+    ctx.font = `600 26px ${F_TEXTO}`; ctx.fillStyle = "rgba(255,255,255,.8)";
+    ctx.fillText(`CAMPANHAS · MODO ${MODOS[jogo.modo].nome.toUpperCase()}`, M, 152);
+
+    const PX = M, PY = 186, PW = W - 2 * M, PH = H - PY - 92;
+    ctx.fillStyle = COR.branco; retangulo(ctx, PX, PY, PW, PH, 28); ctx.fill();
+    const IX = PX + 44, IW = PW - 88;
+    let y = PY + 64;
+
+    ctx.fillStyle = COR.suave; ctx.font = `700 24px ${F_TEXTO}`;
+    ctx.fillText(comp.nome.toUpperCase(), IX, y);
+    y += 100;
+    ctx.font = `800 120px ${F_TITULO}`; ctx.fillStyle = COR.verde;
+    ctx.fillText(jogo.ano, IX, y);
+    const wAno = ctx.measureText(jogo.ano + "  ").width;
+    const tamR = caber(ctx, jogo.resultado.toUpperCase(), IW - wAno, 52, F_TITULO);
+    ctx.font = `800 ${tamR}px ${F_TITULO}`; ctx.fillStyle = COR.tinta;
+    ctx.fillText(jogo.resultado.toUpperCase(), IX + wAno, y - 8);
+
+    y += 30;
+    ctx.fillStyle = venceu ? COR.vivo : COR.longe; retangulo(ctx, IX, y, IW, 84, 18); ctx.fill();
+    ctx.fillStyle = COR.branco; ctx.font = `800 50px ${F_TITULO}`;
+    ctx.fillText(venceu ? `CAMPANHA COMPLETA EM ${jogo.usadas} DE ${jogo.chances}` : `${jogo.revelados.size} DE ${jogo.jogos.length} JOGOS DESCOBERTOS`, IX + 28, y + 60);
+    y += 84 + 36;
+
+    // linhas: um título por fase e uma linha por adversário
+    const linhas = [];
+    for (const fase of comp.fases) {
+      const jogos = jogo.jogos.filter(j => j.fase === fase);
+      if (!jogos.length) continue;
+      linhas.push({ fase });
+      const porAdv = new Map();
+      jogos.forEach(j => { if (!porAdv.has(j.adv)) porAdv.set(j.adv, []); porAdv.get(j.adv).push(j); });
+      porAdv.forEach((lista, adv) => linhas.push({ adv, lista }));
+    }
+    const rodape = PY + PH - 40;
+    const nFases = linhas.filter(l => l.fase).length, nAdv = linhas.length - nFases;
+    const passo = Math.max(30, Math.min(54, Math.floor((rodape - y) / (nAdv + nFases * 0.8))));
+    const esc = passo / 54;
+    const CH = Math.round(40 * esc), CW = Math.round(96 * esc), GAP = 10;
+    for (const l of linhas) {
+      if (l.fase) {
+        y += Math.round(passo * 0.2);
+        ctx.fillStyle = COR.suave; ctx.font = `700 ${Math.round(20 * esc + 2)}px ${F_TEXTO}`;
+        ctx.fillText(l.fase.toUpperCase(), IX, y + Math.round(passo * 0.4));
+        y += Math.round(passo * 0.6);
+        continue;
+      }
+      const achou = l.lista.some(j => jogo.revelados.has(j.i));
+      const cy = y + (passo - CH) / 2;
+      // marcador de descoberto
+      ctx.fillStyle = achou ? COR.vivo : COR.nevoa; retangulo(ctx, IX, cy + CH / 2 - 9, 18, 18, 5); ctx.fill();
+      const larguraPlacar = l.lista.length * CW + (l.lista.length - 1) * GAP;
+      const tamN = caber(ctx, l.adv, IW - 40 - larguraPlacar - 20, Math.round(30 * esc), F_TEXTO, 600);
+      ctx.font = `600 ${tamN}px ${F_TEXTO}`; ctx.fillStyle = achou ? COR.tinta : COR.suave;
+      ctx.fillText(l.adv, IX + 34, cy + CH / 2 + tamN * 0.35);
+      l.lista.forEach((j, k) => {
+        const x = IX + IW - larguraPlacar + k * (CW + GAP);
+        const aberto = jogo.revelados.has(j.i);
+        const cor = j.gp > j.gc ? COR.vivo : j.gp < j.gc ? VERM : COR.longe;
+        retangulo(ctx, x, cy, CW, CH, 8);
+        if (aberto) { ctx.fillStyle = cor; ctx.fill(); }
+        else { ctx.strokeStyle = COR.linha; ctx.lineWidth = 2; ctx.stroke(); }
+        ctx.fillStyle = aberto ? COR.branco : COR.suave;
+        ctx.font = `800 ${Math.round(24 * esc + 2)}px ${F_TEXTO}`; ctx.textAlign = "center";
+        ctx.fillText(`${j.gp}×${j.gc}`, x + CW / 2, cy + CH / 2 + 9 * esc);
+        ctx.textAlign = "left";
+      });
+      y += passo;
+    }
+
+    ctx.font = `500 20px ${F_TEXTO}`; ctx.fillStyle = COR.suave;
+    ctx.fillText("Placar do Palmeiras primeiro · cheio = descoberto · contorno = faltou", IX, PY + PH - 26);
+
+    ctx.font = `500 22px ${F_TEXTO}`; ctx.fillStyle = "rgba(255,255,255,.75)"; ctx.textAlign = "center";
+    ctx.fillText("Palpite Verde · jogo de fã, sem ligação oficial com o clube", W / 2, H - 38);
+    ctx.textAlign = "left";
+    return cv;
+  }
+
+  async function abrirCardCampanha() {
+    if (!jogo || !window.PalpiteCard) return;
+    const btn = $("btn-camp-card");
+    btn.disabled = true;
+    try {
+      const cv = await desenharCardCampanha();
+      await window.PalpiteCard.mostrar(cv, `palpite-verde-${slug(jogo.comp)}-${jogo.ano}-${jogo.modo}.png`, textoResultado());
+    } catch (e) {
+      retorno("Não foi possível criar o card.");
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   // ---------------- eventos ----------------
@@ -389,6 +509,7 @@
   $("btn-camp-inicio").addEventListener("click", voltar);
   $("btn-camp-outro").addEventListener("click", voltar);
   $("btn-camp-copiar").addEventListener("click", copiar);
+  $("btn-camp-card").addEventListener("click", abrirCardCampanha);
   $("btn-ajuda-camp").addEventListener("click", () => $("modal-ajuda-camp").showModal());
   $("btn-ajuda-camp-inicio").addEventListener("click", () => $("modal-ajuda-camp").showModal());
   $("form-camp").addEventListener("submit", e => {

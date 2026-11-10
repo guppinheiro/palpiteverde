@@ -485,14 +485,14 @@
     const venceu = estado.palpites.at(-1) === estado.secreto.nome;
     const rotulo = NIVEIS[estado.nivel].rotulo;
     if (estado.modo === "treino") {
-      return `Palpite Verde · treino infinito (${rotulo})\n⚽ ${treino.acertos} acertos em ${treino.jogados} jogadores\n🔥 Recorde de sequência: ${treino.recorde}\n${location.href.split("?")[0]}`;
+      return `Palpite Verde · treino infinito (${rotulo})\n⚽ ${treino.acertos} acertos em ${treino.jogados} jogadores\n🔥 Recorde de sequência: ${treino.recorde}\n${ENDERECO}`;
     }
     const placar = `${venceu ? estado.palpites.length : "X"}/${MAX_PALPITES}`;
     const titulo = estado.modo === "dia"
       ? `Palpite Verde #${estado.dia} (${rotulo}) ${placar}`
       : `Palpite Verde (treino ${rotulo}) ${placar}`;
     const linhas = estado.palpites.map(n => comparar(porNome.get(n), estado.secreto).map(d => emoji[d.classe]).join(""));
-    return `${titulo}\n${linhas.join("\n")}\n${location.href.split("?")[0]}`;
+    return `${titulo}\n${linhas.join("\n")}\n${ENDERECO}`;
   }
 
   async function compartilhar() {
@@ -677,15 +677,27 @@
     return cv;
   }
 
-  let cardAtual = null;
+  // ---------- janela do card (usada pelos dois jogos) ----------
+  // mostrarCard(canvas, nomeDoArquivo, texto): exibe a imagem e guarda o que os botões usam.
+  let cardAtual = null, cardNome = "palpite-verde.png", cardTexto = "";
+  const ENDERECO = "https://guppinheiro.github.io/palpiteverde/";
+
+  async function mostrarCard(cv, nome, texto) {
+    cardAtual = await new Promise(res => cv.toBlob(res, "image/png"));
+    cardNome = nome; cardTexto = texto;
+    $("card-img").src = cv.toDataURL("image/png");
+    $("modal-card").showModal();
+  }
+
   async function abrirCard() {
     const btn = $("btn-card");
     btn.disabled = true;
     try {
       const cv = await desenharCard();
-      cardAtual = await new Promise(res => cv.toBlob(res, "image/png"));
-      $("card-img").src = cv.toDataURL("image/png");
-      $("modal-card").showModal();
+      const nome = estado.modo === "treino"
+        ? `palpite-verde-treino-${normalizar(estado.secreto.nome).replace(/[^a-z0-9]+/g, "-")}.png`
+        : `palpite-verde-desafio-${estado.dia}-${estado.nivel}.png`;
+      await mostrarCard(cv, nome, textoCompartilhar());
     } catch (e) {
       avisar("Não foi possível criar o card");
     } finally {
@@ -695,21 +707,46 @@
 
   async function salvarCard() {
     if (!cardAtual) return;
-    const nome = estado.modo === "treino"
-      ? `palpite-verde-treino-${normalizar(estado.secreto.nome).replace(/[^a-z0-9]+/g, "-")}.png`
-      : `palpite-verde-desafio-${estado.dia}-${estado.nivel}.png`;
     // Dentro do claude.ai, o arquivo é entregue pelo próprio site (o visitante confirma).
     const downloads = window.claude?.use ? await window.claude.use("downloads").catch(() => null) : null;
     if (downloads) {
-      try { await downloads.save({ filename: nome, data: cardAtual }); avisar("Imagem salva"); }
+      try { await downloads.save({ filename: cardNome, data: cardAtual }); avisar("Imagem salva"); }
       catch (e) { if (e?.code !== "declined") avisar("Não deu para salvar aqui. Toque e segure a imagem para salvar."); }
       return;
     }
     const url = URL.createObjectURL(cardAtual);
     const a = document.createElement("a");
-    a.href = url; a.download = nome; document.body.append(a); a.click(); a.remove();
+    a.href = url; a.download = cardNome; document.body.append(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
   }
+
+  // WhatsApp: no celular, a tela de compartilhamento do aparelho já leva a imagem e o texto;
+  // onde não dá (computador, claude.ai), abre o WhatsApp com o texto e a imagem fica para anexar.
+  async function enviarWhatsApp() {
+    if (!cardAtual) return;
+    const arquivo = new File([cardAtual], cardNome, { type: "image/png" });
+    try {
+      if (navigator.canShare && navigator.canShare({ files: [arquivo] })) {
+        await navigator.share({ files: [arquivo], text: cardTexto });
+        return;
+      }
+    } catch (e) {
+      if (e?.name === "AbortError") return;
+    }
+    const a = document.createElement("a");
+    a.href = "https://wa.me/?text=" + encodeURIComponent(cardTexto);
+    a.target = "_blank"; a.rel = "noopener";
+    document.body.append(a); a.click(); a.remove();
+    avisar("Abrimos o WhatsApp com o texto. Salve a imagem para anexar.");
+  }
+
+  async function copiarTextoCard() {
+    try { await navigator.clipboard.writeText(cardTexto); avisar("Texto copiado!"); }
+    catch { avisar("Não foi possível copiar"); }
+  }
+
+  // ferramentas de desenho e a janela do card, para o jogo de Campanhas
+  window.PalpiteCard = { mostrar: mostrarCard, retangulo, caber, carregarImagem, COR, F_TITULO, F_TEXTO, ENDERECO };
 
   // ---------- eventos ----------
   const campo = $("campo");
@@ -791,7 +828,8 @@
   $("btn-compartilhar").addEventListener("click", compartilhar);
   $("btn-card").addEventListener("click", abrirCard);
   $("btn-salvar-card").addEventListener("click", salvarCard);
-  $("btn-copiar-card").addEventListener("click", compartilhar);
+  $("btn-copiar-card").addEventListener("click", copiarTextoCard);
+  $("btn-whatsapp-card").addEventListener("click", enviarWhatsApp);
   $("btn-ajuda").addEventListener("click", () => $("modal-ajuda").showModal());
   $("btn-stats").addEventListener("click", () => { renderStats(); $("modal-stats").showModal(); });
   document.querySelectorAll("[data-fontes]").forEach(b => b.addEventListener("click", () => $("modal-fontes").showModal()));

@@ -21,11 +21,11 @@ Verde = igual, verde-claro = perto, cinza = longe. O campo de nascimento mostra 
 ## Telas
 
 - **Início**: escolhe o modo (Desafio do dia ou Treino ∞) e o nível, e mostra a situação do desafio de hoje e o recorde do treino.
-- **Jogo**: a busca, as fichas de dicas e, no fim, o resultado com o **card do resultado**: uma imagem 1080×1350 com o jogador secreto, o resultado, todos os palpites com as cores das dicas, o palpite que chegou mais perto e a sequência. Ela pode ser salva para postar.
+- **Jogo**: a busca, as fichas de dicas e, no fim, o resultado com o **card do resultado**: uma imagem 1080×1350 com o jogador secreto, o resultado, todos os palpites com as cores das dicas, o palpite que chegou mais perto e a sequência. Ela pode ser salva ou enviada direto no **WhatsApp** (no celular, vai a imagem com o texto; no computador, abre o WhatsApp com o texto e a imagem fica para anexar).
 
 ## Jogo de campanhas
 
-Na tela inicial, a aba **Campanhas** abre o segundo jogo: escolha a **Libertadores** (da fase de grupos em diante) ou a **Copa do Brasil**, um ano (ou sorteado) e o modo. A campanha do Palmeiras aparece jogo a jogo, com fase, data, mando e uma dica de cada adversário: a bandeira do país (Libertadores) ou o estado (Copa do Brasil). Cada palpite gasta uma chance.
+Na tela inicial, a aba **Campanhas** abre o segundo jogo: escolha a **Libertadores** (da fase de grupos em diante) ou a **Copa do Brasil**, um ano (ou sorteado) e o modo. A campanha do Palmeiras aparece jogo a jogo, com fase, data, mando e uma dica de cada adversário: a bandeira do país (Libertadores) ou o estado (Copa do Brasil). Cada palpite gasta uma chance. No fim, o **card do resultado** mostra a campanha inteira, fase por fase, com os placares descobertos em cor (verde vitória, cinza empate, vermelho derrota) e os que faltaram em contorno; ele também pode ser salvo ou enviado no WhatsApp.
 
 | Modo    | Chances            | Palpite                                                    |
 |---------|--------------------|------------------------------------------------------------|
