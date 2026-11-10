@@ -67,7 +67,7 @@
   // Nível = ano mínimo em que o jogador ainda atuava pelo clube
   const NIVEIS = {
     facil:   { desde: 2020, rotulo: "fácil",   nome: "Fácil",   semente: 1914 },
-    dificil: { desde: 1970, rotulo: "difícil", nome: "Difícil", semente: 1942 },
+    dificil: { desde: 1970, rotulo: "normal", nome: "Normal", semente: 1942 },
     lendas:  { desde: 0,    rotulo: "lendas",  nome: "Lendas",  semente: 1951 }
   };
   // Quem tem poucos jogos pelo clube vale como palpite, mas não é sorteado

@@ -50,7 +50,7 @@ O nível vale para o Desafio do dia e para o Treino. Ele define quem pode ser so
 | Nível   | Jogadores                                                     |
 |---------|---------------------------------------------------------------|
 | Fácil   | atuaram pelo clube de **2020** em diante                      |
-| Difícil | atuaram pelo clube de **1970** em diante                      |
+| Normal  | atuaram pelo clube de **1970** em diante                      |
 | Lendas  | **todas as épocas**, incluindo os grandes nomes antes de 1970 |
 
 O critério usa o ano do último jogo (`ultimo`); quem ainda está no elenco (`ultimo: null`) entra nos dois.
