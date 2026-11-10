@@ -69,7 +69,7 @@ O sorteio (do Desafio do dia e do Treino ∞) é ponderado por **época** e por 
 | 2000               | 1,0         |
 | anos 1970          | 0,6         |
 
-Assim, um jogador atual sai cerca de 7 vezes mais que um dos anos 1970. Esse peso é multiplicado pela história no clube, que depende do nível: no **Fácil**, (jogos/300)²; no **Normal**, (jogos/300)^1,3; no **Lendas**, a raiz de (jogos/200). Assim, Fácil e Normal sorteiam sobretudo quem jogou mais (cerca de 87% e 74% dos sorteados têm 100 jogos ou mais), e o Lendas é mais equilibrado. Para não repetir, os últimos sorteados (até 15, ou metade do nível) ficam bloqueados. A fórmula está na função `peso()` em `js/jogo.js`.
+Assim, um jogador atual sai cerca de 7 vezes mais que um dos anos 1970. Esse peso é multiplicado pela história no clube, que depende do nível: no **Fácil**, (jogos/300)^0,9; no **Normal**, (jogos/300)^1,3; no **Lendas**, a raiz de (jogos/200). Assim, cerca de 60% dos sorteados no Fácil e 74% no Normal têm 100 jogos ou mais, e o Lendas é mais equilibrado. Para não repetir, os últimos sorteados (até 15, ou metade do nível) ficam bloqueados. A fórmula está na função `peso()` em `js/jogo.js`.
 
 ## Redefinir o desafio do dia
 

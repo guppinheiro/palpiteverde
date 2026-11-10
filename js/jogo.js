@@ -72,7 +72,7 @@
   // recorte/chance: no sorteio, "chance" das vezes sai alguém com último jogo a partir de "recorte".
   const NIVEIS = {
     // jogos: quanto o número de jogos pelo clube pesa no sorteio (expoente; teto de "tetoJogos")
-    facil:   { desde: 1970, recorte: 2010, chance: 0.95, jogos: 2,   tetoJogos: 300, rotulo: "fácil",  nome: "Fácil",  semente: 1914 },
+    facil:   { desde: 1970, recorte: 2010, chance: 0.95, jogos: 0.9,   tetoJogos: 300, rotulo: "fácil",  nome: "Fácil",  semente: 1914 },
     dificil: { desde: 1970, recorte: 2000, chance: 0.75, jogos: 1.3, tetoJogos: 300, rotulo: "normal", nome: "Normal", semente: 1942 },
     lendas:  { desde: 0,                                 jogos: 0.5, tetoJogos: 200, rotulo: "lendas", nome: "Lendas", semente: 1951 }
   };
@@ -89,7 +89,7 @@
   // Peso no sorteio = época × história no clube.
   // Época: o peso cai com o tempo desde o último jogo pelo clube. Elenco
   // atual ≈ 4,5; 2020 ≈ 3,5; 2010 ≈ 1,7; 2000 ≈ 1,0; anos 1970 ≈ 0,6.
-  // História: (jogos / teto) elevado ao expoente do nível. Fácil (²) e Normal (^1,3) dão
+  // História: (jogos / teto) elevado ao expoente do nível. Fácil (^0,9) e Normal (^1,3) dão
   // muito mais chance a quem jogou mais; Lendas (raiz) é mais equilibrado.
   function peso(j, nivel = "lendas") {
     const cfg = NIVEIS[nivel];
