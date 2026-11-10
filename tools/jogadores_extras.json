@@ -1,13 +1,25 @@
 {
-  "_sobre": "Jogadores que não estão na Wikipédia nem no Wikidata. Entram na base se o nome ainda não existir. Fonte de cada um em 'fonte'.",
-  "jogadores": [
-    {
-      "nome": "Naves", "pos": "Zagueiro", "estreia": 2024, "ultimo": 2024, "jogos": 11, "gols": 0, "nasc": null,
-      "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024)"
-    },
-    {
-      "nome": "Gustavo García", "pos": "Zagueiro", "estreia": 2024, "ultimo": 2024, "jogos": 3, "gols": 0, "nasc": null,
-      "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024)"
-    }
-  ]
+ "_sobre": "Jogadores que não estão na Wikipédia nem no Wikidata. Entram na base se o nome ainda não existir. Fonte de cada um em 'fonte'.",
+ "jogadores": [
+  {
+   "nome": "Naves",
+   "pos": "Zagueiro",
+   "estreia": 2024,
+   "ultimo": 2024,
+   "jogos": 11,
+   "gols": 0,
+   "nasc": "SP",
+   "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024); nascimento: Wikipédia em inglês e Trivela (Santos-SP)"
+  },
+  {
+   "nome": "Gustavo García",
+   "pos": "Lateral",
+   "estreia": 2024,
+   "ultimo": 2024,
+   "jogos": 3,
+   "gols": 0,
+   "nasc": "SP",
+   "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024); nascimento: Wikipédia em inglês (São Paulo-SP); posição: lateral-direito"
+  }
+ ]
 }

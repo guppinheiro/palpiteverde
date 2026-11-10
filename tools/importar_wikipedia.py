@@ -403,6 +403,10 @@ def nascimento(campos):
             return ESTADOS[p], None
     if partes[0] in CAPITAIS:
         return CAPITAIS[partes[0]], None
+    # sigla do estado: "Itaporanga (SP)", "Magalhães Barata, PA", "Santo Antônio da Platina-PR"
+    m = re.search(r"(?:\(|,\s*|-|\s)(" + "|".join(sorted(set(ESTADOS.values()))) + r")\)?\s*(?:,\s*Brasil)?\s*$", vis)
+    if m:
+        return m.group(1), None
     for p in partes:
         if p in PAISES_PT:
             return "EXT", p
