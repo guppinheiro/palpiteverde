@@ -1,7 +1,7 @@
 /*
  * Base de jogadores do Palpite Verde — GERADA AUTOMATICAMENTE.
  * Fonte: fichas da Wikipédia em português (Categoria:Futebolistas da Sociedade Esportiva Palmeiras).
- * Gerada por tools/importar_wikipedia.py em 2026-11-09. Não edite à mão:
+ * Gerada por tools/importar_wikipedia.py em 2026-11-10. Não edite à mão:
  * para corrigir um jogador, use tools/correcoes.json e rode o importador de novo.
  *
  * Campos: nome, pos, estreia, ultimo (null = ainda no clube), jogos, gols,
@@ -456,7 +456,6 @@ window.JOGADORES = [
   {"nome": "Márcio Careca", "pos": "Lateral", "estreia": 2006, "ultimo": 2006, "jogos": 22, "gols": 1, "nasc": "RJ", "wiki": "Márcio Careca"},
   {"nome": "Mário Motta", "pos": "Atacante", "estreia": 1973, "ultimo": 1976, "jogos": 46, "gols": 15, "nasc": "SP", "wiki": "Mário Motta (futebolista)"},
   {"nome": "Mário Sérgio", "pos": "Meio-campo", "estreia": 1984, "ultimo": 1985, "jogos": 58, "gols": 3, "nasc": "RJ", "wiki": "Mário Sérgio (futebolista brasileiro)"},
-  {"nome": "Mílton Medeiros", "pos": "Meio-campo", "estreia": 1943, "ultimo": 1953, "jogos": 254, "gols": 78, "nasc": "SP", "wd": "Q3869237"},
   {"nome": "Müller", "pos": "Atacante", "estreia": 1995, "ultimo": 1996, "jogos": 65, "gols": 27, "nasc": "MS", "wiki": "Müller (futebolista)"},
   {"nome": "Nardo", "pos": "Atacante", "estreia": 1956, "ultimo": 1961, "jogos": 160, "gols": 57, "nasc": "SP", "wiki": "Leonardo Colella"},
   {"nome": "Nascimento", "pos": "Goleiro", "estreia": 1929, "ultimo": 1934, "jogos": 132, "gols": 0, "nasc": "SP", "wiki": "Oscar Francisco Nascimento"},
@@ -504,8 +503,7 @@ window.JOGADORES = [
   {"nome": "Pedrinho (1998)", "pos": "Meio-campo", "estreia": 1998, "ultimo": 1999, "jogos": 12, "gols": 0, "nasc": "RJ", "wiki": "José Pedro Santos"},
   {"nome": "Pedrinho (2001)", "pos": "Meio-campo", "estreia": 2001, "ultimo": 2005, "jogos": 125, "gols": 32, "nasc": "RJ", "wiki": "Pedro Paulo de Oliveira"},
   {"nome": "Pedro Acácio", "pos": "Atacante", "estreia": 2021, "ultimo": 2021, "jogos": 3, "gols": 0, "nasc": "RJ", "wd": "Q138635570"},
-  {"nome": "Pedro Bicalho (2020)", "pos": "Meio-campo", "estreia": 2020, "ultimo": null, "jogos": 6, "gols": 0, "nasc": null, "wiki": "Pedro Bicalho"},
-  {"nome": "Pedro Bicalho (2021)", "pos": "Meio-campo", "estreia": 2021, "ultimo": 2025, "jogos": 9, "gols": 0, "nasc": "SP", "wd": "Q96361581"},
+  {"nome": "Pedro Bicalho", "pos": "Meio-campo", "estreia": 2020, "ultimo": null, "jogos": 6, "gols": 0, "nasc": null, "wiki": "Pedro Bicalho"},
   {"nome": "Pedro Carmona da Silva Neto", "pos": "Meio-campo", "estreia": 2011, "ultimo": 2012, "jogos": 27, "gols": 8, "nasc": "RS", "wd": "Q7159504"},
   {"nome": "Pedro Rocha", "pos": "Meio-campo", "estreia": 1979, "ultimo": 1979, "jogos": 9, "gols": 1, "nasc": "EXT", "wiki": "Pedro Rocha", "pais": "Uruguai"},
   {"nome": "Pedro Silva", "pos": "Lateral", "estreia": 2002, "ultimo": 2006, "jogos": 3, "gols": 0, "nasc": "DF", "wiki": "Pedro Silva (futebolista)"},

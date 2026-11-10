@@ -541,6 +541,19 @@ def main():
     # quem só existe no Wikidata (sem artigo em português)
     apelidos = apelidos_wikidata(list(sem_artigo), args.cache)
     so_wd = [j for j in (jogador_so_wikidata(wd, apelidos.get(q, set())) for q, wd in sem_artigo.items()) if j]
+    # Evita duplicar quem já entrou pela Wikipédia (o item do Wikidata nem sempre está ligado ao
+    # artigo): mesmo nome com estreia a até 1 ano, ou mesmos anos/jogos/gols com 20+ jogos.
+    def ja_existe(w):
+        for j in jogadores:
+            if normal(j["nome"]) == normal(w["nome"]) and abs(j["estreia"] - w["estreia"]) <= 1:
+                return True
+            if w["jogos"] >= 20 and (j["estreia"], j["jogos"], j["gols"]) == (w["estreia"], w["jogos"], w["gols"]):
+                return True
+        return False
+    duplicados = [w["nome"] for w in so_wd if ja_existe(w)]
+    so_wd = [w for w in so_wd if not ja_existe(w)]
+    if duplicados:
+        print(f"duplicados do Wikidata descartados: {', '.join(duplicados)}", file=sys.stderr)
     print(f"{len(so_wd)} jogadores só do Wikidata (sem artigo em português)", file=sys.stderr)
     jogadores += so_wd
 
