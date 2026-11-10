@@ -22,6 +22,17 @@
    "nasc": "SP",
    "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024); nascimento: Wikipédia em inglês (São Paulo-SP); posição: lateral-direito",
    "nasceu": 2002
+  },
+  {
+   "nome": "Larson",
+   "pos": "Meio-campo",
+   "estreia": 2025,
+   "ultimo": null,
+   "jogos": 14,
+   "gols": 0,
+   "nasc": "RS",
+   "nasceu": 2005,
+   "fonte": "Wikipédia em inglês, 'Larson (footballer)': 5 jogos emprestado em 2025 e 9 em 2026 (só campeonato nacional; pode estar abaixo do total); nascido em Pelotas-RS em 2005"
   }
  ]
 }

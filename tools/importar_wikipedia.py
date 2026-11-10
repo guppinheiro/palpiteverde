@@ -99,15 +99,22 @@ def baixar(params, cache_dir):
         else json.load(open(arq_antigo, encoding="utf-8"))
 
 
+# subcategorias com jogadores do time masculino (a do feminino fica de fora)
+SUBCATEGORIAS = ["Categoria:Goleiros da Sociedade Esportiva Palmeiras"]
+
+
 def listar_categoria(cache_dir):
-    titulos, cont = [], {}
-    while True:
-        d = baixar({"action": "query", "list": "categorymembers", "cmtitle": CATEGORIA,
-                    "cmlimit": "500", "cmnamespace": "0", **cont}, cache_dir)
-        titulos += [m["title"] for m in d["query"]["categorymembers"]]
-        if "continue" not in d:
-            return titulos
-        cont = {"cmcontinue": d["continue"]["cmcontinue"]}
+    titulos = []
+    for cat in [CATEGORIA] + SUBCATEGORIAS:
+        cont = {}
+        while True:
+            d = baixar({"action": "query", "list": "categorymembers", "cmtitle": cat,
+                        "cmlimit": "500", "cmnamespace": "0", **cont}, cache_dir)
+            titulos += [m["title"] for m in d["query"]["categorymembers"] if m["title"] not in titulos]
+            if "continue" not in d:
+                break
+            cont = {"cmcontinue": d["continue"]["cmcontinue"]}
+    return titulos
 
 
 WIKIDATA = "https://query.wikidata.org/sparql"
@@ -472,7 +479,7 @@ def jogador(titulo, texto, wd=None):
         j["nasceu"] = nasceu
     if pais:
         j["pais"] = pais
-    if j["jogos"] <= 0:
+    if j["jogos"] <= 0 and j["ultimo"] is not None:  # do elenco atual entra mesmo sem ter jogado
         return None, "0 jogos"
     fim = j["ultimo"] or ANO_ATUAL
     if fim < ANO_LENDAS and j["jogos"] < JOGOS_MIN_LENDA:
