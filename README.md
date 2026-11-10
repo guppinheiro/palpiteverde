@@ -11,7 +11,7 @@ A cada palpite aparece uma ficha que compara o jogador escolhido com o secreto:
 |------------|--------------------------------------------------------|
 | Posição    | não tem "perto": acertou ou longe                      |
 | Estreia    | até 5 anos de diferença                                |
-| Saída      | até 5 anos (quem ainda está no elenco conta como 2026) |
+| Último jogo | até 5 anos (quem ainda está no elenco conta como 2026) |
 | Jogos      | até 25 jogos                                           |
 | Gols       | até 10 gols                                            |
 | Nascimento | outro estado da mesma região; país não tem "perto"     |

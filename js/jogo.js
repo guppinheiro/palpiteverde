@@ -157,7 +157,7 @@
     return [
       { rotulo: "Posição", valor: chute.pos, classe: chute.pos === certo.pos ? "ok" : "longe", seta: "" },
       { rotulo: "Estreia", valor: chute.estreia, ...compararNumero(chute.estreia, certo.estreia, 5) },
-      { rotulo: "Saída", valor: ultimoAno(chute), ...compararNumero(ultimoAno(chute), ultimoAno(certo), 5) },
+      { rotulo: "Último jogo", valor: ultimoAno(chute), ...compararNumero(ultimoAno(chute), ultimoAno(certo), 5) },
       { rotulo: "Jogos", valor: chute.jogos, ...compararNumero(chute.jogos, certo.jogos, 25) },
       { rotulo: "Gols", valor: chute.gols, ...compararNumero(chute.gols, certo.gols, 10) },
       { rotulo: "Nasceu", valor: localNascimento(chute), titulo: localNascimentoExtenso(chute), bandeira: bandeira(chute),
@@ -609,7 +609,7 @@
     // palpites, do primeiro ao último
     ctx.fillStyle = COR.suave; ctx.font = `700 22px ${F_TEXTO}`;
     ctx.fillText("PALPITES", IX, y);
-    const rotulos = ["POS", "EST", "SAÍ", "JOG", "GOL", "NAS"];
+    const rotulos = ["POS", "EST", "ÚLT", "JOG", "GOL", "NAS"];
     const Q = 40, G = 8, larguraQ = 6 * Q + 5 * G, QX = IX + IW - larguraQ;
     ctx.font = `700 16px ${F_TEXTO}`; ctx.textAlign = "center";
     rotulos.forEach((t, i) => ctx.fillText(t, QX + i * (Q + G) + Q / 2, y));
