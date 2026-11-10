@@ -35,7 +35,7 @@
   // ---------------- estado ----------------
   const escolha = {
     comp: armazenamento.ler("pv:camp:comp", "libertadores"),
-    modo: armazenamento.ler("pv:camp:modo", "normal")
+    modo: "normal" // ao abrir o site, o modo Normal vem sempre selecionado
   };
   if (!C[escolha.comp]) escolha.comp = "libertadores";
   if (!MODOS[escolha.modo]) escolha.modo = "normal";

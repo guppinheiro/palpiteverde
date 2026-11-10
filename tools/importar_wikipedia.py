@@ -113,12 +113,13 @@ def listar_categoria(cache_dir):
 WIKIDATA = "https://query.wikidata.org/sparql"
 PALMEIRAS_WD = "Q80964"
 CONSULTA_WD = """
-SELECT ?p ?pLabel ?artigo ?ini ?fim ?jogos ?gols ?posLabel ?ufLabel ?paisLabel WHERE {
+SELECT ?p ?pLabel ?artigo ?ini ?fim ?jogos ?gols ?posLabel ?ufLabel ?paisLabel ?dn WHERE {
   ?p p:P54 ?st . ?st ps:P54 wd:%s .
   OPTIONAL { ?artigo schema:about ?p ; schema:isPartOf <https://pt.wikipedia.org/> . }
   OPTIONAL { ?st pq:P580 ?ini } OPTIONAL { ?st pq:P582 ?fim }
   OPTIONAL { ?st pq:P1350 ?jogos } OPTIONAL { ?st pq:P1351 ?gols }
   OPTIONAL { ?p wdt:P413 ?pos }
+  OPTIONAL { ?p wdt:P569 ?dn }
   OPTIONAL { ?p wdt:P19 ?nasc . OPTIONAL { ?nasc wdt:P17 ?pais }
              OPTIONAL { ?nasc wdt:P131* ?uf . ?uf wdt:P31 wd:Q485258 } }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "pt,en". }
@@ -138,15 +139,18 @@ def consultar_wikidata(cache_dir):
         qid = g(r, "p").rsplit("/", 1)[1]
         if g(r, "artigo"):
             titulo = urllib.parse.unquote(g(r, "artigo").rsplit("/wiki/", 1)[1]).replace("_", " ")
-            i = info.setdefault(titulo, {"passagens": {}, "pos": None, "uf": None, "pais": None})
+            i = info.setdefault(titulo, {"passagens": {}, "pos": None, "uf": None, "pais": None, "nasceu": None})
         else:
-            i = sem_artigo.setdefault(qid, {"passagens": {}, "pos": None, "uf": None, "pais": None,
+            i = sem_artigo.setdefault(qid, {"passagens": {}, "pos": None, "uf": None, "pais": None, "nasceu": None,
                                             "nome": g(r, "pLabel"), "qid": qid})
         chave = (g(r, "ini"), g(r, "fim"))
         i["passagens"][chave] = (g(r, "jogos"), g(r, "gols"))
         i["pos"] = i["pos"] or g(r, "posLabel")
         i["uf"] = i["uf"] or g(r, "ufLabel")
         i["pais"] = i["pais"] or g(r, "paisLabel")
+        dn = g(r, "dn")
+        if dn and not i["nasceu"] and re.match(r"\d{4}", dn):
+            i["nasceu"] = int(dn[:4])
     return info, sem_artigo
 
 
@@ -181,6 +185,8 @@ def jogador_so_wikidata(wd, apelidos):
          "ultimo": None if any(p[1] is None for p in ps) else max(p[1] for p in ps),
          "jogos": sum(p[2] for p in com_numeros), "gols": sum(p[3] or 0 for p in com_numeros),
          "nasc": nasc, "wd": wd["qid"]}
+    if wd.get("nasceu"):
+        j["nasceu"] = wd["nasceu"]
     if pais:
         j["pais"] = pais
     fim = j["ultimo"] or ANO_ATUAL
@@ -418,6 +424,18 @@ def nome_curto(campos, titulo):
     return n.strip()
 
 
+def ano_nascimento(campos):
+    """Ano de nascimento da ficha: {{dni|3|4|1942}}, {{dnibr|...}}, {{Data de nascimento e idade|1995|6|19}}…"""
+    for chave, valor in campos.items():
+        if "nasc" not in chave or ("data" not in chave and "nascimento" != chave.split("_")[0]):
+            continue
+        m = re.search(r"\{\{\s*(?:dni|dnibr|nowrap\|\{\{dni|data de nascimento[^|]*|birth date[^|]*)\|([^}]*)", valor, re.I)
+        anos = re.findall(r"\b(18[89]\d|19\d\d|20[0-2]\d)\b", m.group(1) if m else valor)
+        if anos:
+            return int(anos[0])
+    return None
+
+
 def jogador(titulo, texto, wd=None):
     campos = extrair_infobox(texto) or {}
     ps_wd, pos_wd, nasc_wd, pais_wd = reserva_wikidata(wd) if wd else ([], None, None, None)
@@ -449,6 +467,9 @@ def jogador(titulo, texto, wd=None):
         "nasc": nasc,
         "wiki": titulo,
     }
+    nasceu = ano_nascimento(campos) or (wd or {}).get("nasceu")
+    if nasceu:
+        j["nasceu"] = nasceu
     if pais:
         j["pais"] = pais
     if j["jogos"] <= 0:
@@ -461,12 +482,14 @@ def jogador(titulo, texto, wd=None):
 
 # ---------------------------------------------------------------- saída
 def escrever(jogadores, saida):
-    # nomes repetidos ganham o ano de estreia para diferenciar
+    # nomes repetidos: "nome" ganha o ano de estreia (identificador único) e "exibe" guarda o
+    # nome como aparece no jogo; quem diferencia é a posição e o ano de nascimento ao lado
     contagem = {}
     for j in jogadores:
         contagem[j["nome"]] = contagem.get(j["nome"], 0) + 1
     for j in jogadores:
         if contagem[j["nome"]] > 1:
+            j["exibe"] = j["nome"]
             j["nome"] = f'{j["nome"]} ({j["estreia"]})'
     vistos = set()
     unicos = []

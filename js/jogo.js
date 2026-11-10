@@ -36,6 +36,9 @@
     const arq = j.nasc === "EXT" ? normalizar(j.pais || "").replace(/ /g, "-") : j.nasc;
     return arq ? `img/bandeiras/${arq}.png` : null;
   }
+  // nome como aparece no jogo (homônimos têm "nome" único com o ano de estreia e "exibe" sem ele)
+  const exibir = j => j.exibe || j.nome;
+  const detalhes = j => j.nasceu ? `${j.pos} · ${j.nasceu}` : j.pos;
   const localNascimento = j => !j.nasc ? "?" : j.nasc === "EXT" ? j.pais : j.nasc;
   const localNascimentoExtenso = j => !j.nasc ? "local desconhecido" : j.nasc === "EXT" ? j.pais : UF_NOME[j.nasc] || j.nasc;
 
@@ -179,7 +182,7 @@
   }
 
   // ---------- estado ----------
-  const nivelSalvo = armazenamento.ler("pv:nivel", "facil");
+  const nivelSalvo = "dificil"; // ao abrir o site, o nível Normal vem sempre selecionado
   const estado = {
     modo: "dia",
     nivel: NIVEIS[nivelSalvo] ? nivelSalvo : "facil",
@@ -320,8 +323,9 @@
     el.className = "ficha" + (acerto ? " ficha--acerto" : "");
     const topo = document.createElement("div");
     topo.className = "ficha__topo";
-    topo.innerHTML = `<span class="ficha__nome"></span><span class="ficha__n">Palpite ${indice + 1} de ${MAX_PALPITES}</span>`;
-    topo.firstChild.textContent = j.nome;
+    topo.innerHTML = `<span class="ficha__quem"><span class="ficha__nome"></span><small class="ficha__det"></small></span><span class="ficha__n">Palpite ${indice + 1} de ${MAX_PALPITES}</span>`;
+    topo.querySelector(".ficha__nome").textContent = exibir(j);
+    topo.querySelector(".ficha__det").textContent = detalhes(j);
     const dados = document.createElement("div");
     dados.className = "ficha__dados";
     for (const d of comparar(j, estado.secreto)) {
@@ -378,8 +382,8 @@
       $("fim-selo").textContent = venceu ? `Acertou em ${estado.palpites.length} de ${MAX_PALPITES}` : estado.pulou ? "Jogador pulado" : "Palpites esgotados";
       $("fim-titulo").textContent = venceu ? "Golaço!" : estado.pulou ? "Pulou!" : "Não foi dessa vez";
       $("fim-texto").textContent = venceu
-        ? `Você descobriu ${estado.secreto.nome} em ${estado.palpites.length} palpite${estado.palpites.length === 1 ? "" : "s"}.`
-        : `O jogador era ${estado.secreto.nome}.`;
+        ? `Você descobriu ${exibir(estado.secreto)} em ${estado.palpites.length} palpite${estado.palpites.length === 1 ? "" : "s"}.`
+        : `O jogador era ${exibir(estado.secreto)} (${detalhes(estado.secreto)}).`;
       const wiki = $("fim-wiki");
       const { wiki: artigo, wd } = estado.secreto;
       wiki.hidden = !artigo && !wd;
@@ -420,8 +424,8 @@
       li.setAttribute("role", "option");
       li.setAttribute("aria-selected", i === selecionada);
       li.innerHTML = "<span></span><small></small>";
-      li.firstChild.textContent = j.nome;
-      li.lastChild.textContent = j.pos;
+      li.firstChild.textContent = exibir(j);
+      li.lastChild.textContent = detalhes(j);
       li.addEventListener("mousedown", e => { e.preventDefault(); escolher(i); });
       return li;
     }));
@@ -597,9 +601,9 @@
     ctx.fillStyle = COR.suave; ctx.font = `700 24px ${F_TEXTO}`;
     ctx.fillText("O CRAQUE ERA", IX, y);
     y += 92;
-    const tam = caber(ctx, j.nome.toUpperCase(), IW, 104, F_TITULO);
+    const tam = caber(ctx, exibir(j).toUpperCase(), IW, 104, F_TITULO);
     ctx.font = `800 ${tam}px ${F_TITULO}`; ctx.fillStyle = COR.verde;
-    ctx.fillText(j.nome.toUpperCase(), IX, y);
+    ctx.fillText(exibir(j).toUpperCase(), IX, y);
     y += 52;
     let x = IX;
     const bj = imgs.get(j.nome);
@@ -633,9 +637,9 @@
       const cy = y + i * linhaH;
       ctx.fillStyle = COR.suave; ctx.font = `700 24px ${F_TEXTO}`;
       ctx.fillText(String(i + 1).padStart(2, "0"), IX, cy + Q - 10);
-      const tamN = caber(ctx, f.nome, QX - IX - 70, 30, F_TEXTO, 600);
+      const tamN = caber(ctx, exibir(porNome.get(f.nome)), QX - IX - 70, 30, F_TEXTO, 600);
       ctx.font = `600 ${tamN}px ${F_TEXTO}`; ctx.fillStyle = f.nome === j.nome ? COR.vivo : COR.tinta;
-      ctx.fillText(f.nome, IX + 52, cy + Q - 10);
+      ctx.fillText(exibir(porNome.get(f.nome)), IX + 52, cy + Q - 10);
       f.dados.forEach((d, k) => {
         const qx = QX + k * (Q + G);
         ctx.fillStyle = COR_CLASSE[d.classe]; retangulo(ctx, qx, cy, Q, Q, 8); ctx.fill();
@@ -655,7 +659,7 @@
     ctx.fillText(estado.modo === "treino" ? "SEQUÊNCIA / RECORDE" : "SEQUÊNCIA NO DESAFIO", IX + IW / 2 + 20, by + 38);
     ctx.font = `600 26px ${F_TEXTO}`; ctx.fillStyle = COR.tinta;
     const acertosPerto = r.maisPerto ? r.maisPerto.dados.filter(d => d.classe === "ok").length : 0;
-    ctx.fillText(r.maisPerto ? `${r.maisPerto.nome} (${acertosPerto} de 6 dicas)` : "Acertou no primeiro chute", IX, by + 72);
+    ctx.fillText(r.maisPerto ? `${exibir(porNome.get(r.maisPerto.nome))} (${acertosPerto} de 6 dicas)` : "Acertou no primeiro chute", IX, by + 72);
     ctx.fillText(`${r.seq.atual} atual · recorde ${r.seq.recorde}`, IX + IW / 2 + 20, by + 72);
 
     // assinatura

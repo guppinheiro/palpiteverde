@@ -291,3 +291,7 @@ button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid 
 .modal--fontes { width: min(560px, calc(100vw - 32px)); }
 .fontes { padding-left: 18px; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: .9rem; }
 .fontes a { color: var(--verde); font-weight: 600; }
+
+/* nome do palpite com posição e ano de nascimento ao lado */
+.ficha__quem { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.ficha__det { font-size: .78rem; color: var(--suave); white-space: nowrap; }

@@ -9,7 +9,8 @@
    "jogos": 11,
    "gols": 0,
    "nasc": "SP",
-   "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024); nascimento: Wikipédia em inglês e Trivela (Santos-SP)"
+   "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024); nascimento: Wikipédia em inglês e Trivela (Santos-SP)",
+   "nasceu": 2002
   },
   {
    "nome": "Gustavo García",
@@ -19,7 +20,8 @@
    "jogos": 3,
    "gols": 0,
    "nasc": "SP",
-   "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024); nascimento: Wikipédia em inglês (São Paulo-SP); posição: lateral-direito"
+   "fonte": "Kaggle: felipesembay/sofascore-and-transfermarkt-football-data (Sofascore, jogos até set/2024); nascimento: Wikipédia em inglês (São Paulo-SP); posição: lateral-direito",
+   "nasceu": 2002
   }
  ]
 }
