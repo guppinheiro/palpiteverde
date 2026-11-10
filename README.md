@@ -77,6 +77,10 @@ Para trocar, de forma extraordinária, o jogador de um dia (em todos os níveis)
 
 Se a base de jogadores mudar no meio de um dia, o sorteio daquele dia pode trocar de jogador. Para evitar, fixe o jogador do dia em `FIXADOS`, no `js/jogo.js` (número do desafio → nível → nome).
 
+## Atualizações
+
+Os arquivos de `css/` e `js/` são carregados com `?v=AAAAMMDDHHMM` no `index.html` (e em `corinthians/index.html`). Ao mudar um deles, troque esse número: assim o navegador baixa a versão nova na hora, em vez de usar a cópia guardada (o GitHub Pages deixa o navegador guardar por até 10 minutos).
+
 ## Rodar localmente
 
 É um site estático, sem build:
