@@ -65,10 +65,12 @@
   }
 
   // Nível = ano mínimo em que o jogador ainda atuava pelo clube
+  // desde: quem pode ser palpite e sorteado (último jogo a partir desse ano).
+  // recorte/chance: no sorteio, "chance" das vezes sai alguém com último jogo a partir de "recorte".
   const NIVEIS = {
-    facil:   { desde: 2020, rotulo: "fácil",   nome: "Fácil",   semente: 1914 },
-    dificil: { desde: 1970, rotulo: "normal", nome: "Normal", semente: 1942 },
-    lendas:  { desde: 0,    rotulo: "lendas",  nome: "Lendas",  semente: 1951 }
+    facil:   { desde: 1970, recorte: 2010, chance: 0.95, rotulo: "fácil",  nome: "Fácil",  semente: 1914 },
+    dificil: { desde: 1970, recorte: 2000, chance: 0.75, rotulo: "normal", nome: "Normal", semente: 1942 },
+    lendas:  { desde: 0,                                 rotulo: "lendas", nome: "Lendas", semente: 1951 }
   };
   // Quem tem poucos jogos pelo clube vale como palpite, mas não é sorteado
   const JOGOS_MIN_SORTEIO = 10;
@@ -101,6 +103,17 @@
     return lista[lista.length - 1];
   }
 
+  // Sorteio do nível: primeiro escolhe a faixa de época (recentes ou antigos, pela chance do
+  // nível), depois sorteia dentro dela com o peso de época e história.
+  function sortearNivel(lista, rnd, nivel) {
+    const cfg = NIVEIS[nivel];
+    if (!cfg.recorte) return sortearPonderado(lista, rnd);
+    const recentes = lista.filter(j => (j.ultimo ?? ANO_ATUAL) >= cfg.recorte);
+    const antigos = lista.filter(j => (j.ultimo ?? ANO_ATUAL) < cfg.recorte);
+    const faixa = rnd() < cfg.chance ? recentes : antigos;
+    return sortearPonderado(faixa.length ? faixa : lista, rnd);
+  }
+
   // Quantos sorteios recentes ficam bloqueados para não repetir jogador
   const semRepetir = pool => Math.min(15, Math.floor(pool.length / 2));
 
@@ -112,7 +125,7 @@
   // redefinido. Nesses dias o sorteio usa outra semente e evita o jogador que tinha saído,
   // e o progresso salvo da versão anterior é descartado. Vale para todos os níveis.
   // O #1 foi redefinido para não repetir jogadores do período de testes.
-  const REDEFINICOES = { 1: 1 };
+  const REDEFINICOES = { 1: 2 }; // #1 redefinido 2x: testes e novas regras de sorteio dos níveis
   const versaoDoDia = dia => REDEFINICOES[dia] || 0;
   function jogadorDoDia(dia, nivel) {
     const pool = SORTEAVEIS[nivel];
@@ -123,10 +136,10 @@
       const d = lista.length + 1;
       const recentes = new Set(lista.slice(-bloqueio));
       const candidatos = pool.filter(j => !recentes.has(j));
-      let escolhido = sortearPonderado(candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d));
+      let escolhido = sortearNivel(candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d), nivel);
       for (let v = 1; v <= versaoDoDia(d); v++) {
         const outros = candidatos.filter(j => j !== escolhido);
-        escolhido = sortearPonderado(outros.length ? outros : candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d + v * 7919));
+        escolhido = sortearNivel(outros.length ? outros : candidatos, aleatorioComSemente(NIVEIS[nivel].semente * 100003 + d + v * 7919), nivel);
       }
       lista.push(escolhido);
     }
@@ -205,7 +218,7 @@
   function proximoTreino() {
     const pool = SORTEAVEIS[estado.nivel];
     const recentes = new Set(treino.recentes.slice(-semRepetir(pool)));
-    const escolhido = sortearPonderado(pool.filter(j => !recentes.has(j.nome)), Math.random);
+    const escolhido = sortearNivel(pool.filter(j => !recentes.has(j.nome)), Math.random, estado.nivel);
     treino.recentes = [...treino.recentes, escolhido.nome].slice(-15);
     estado.secreto = escolhido;
     estado.palpites = [];

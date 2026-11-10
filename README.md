@@ -47,11 +47,11 @@ Os dados estão em `js/campanhas.js`, gerado por `tools/importar_campanhas.py` a
 
 O nível vale para o Desafio do dia e para o Treino. Ele define quem pode ser sorteado e quem aparece na busca:
 
-| Nível   | Jogadores                                                     |
-|---------|---------------------------------------------------------------|
-| Fácil   | atuaram pelo clube de **2020** em diante                      |
-| Normal  | atuaram pelo clube de **1970** em diante                      |
-| Lendas  | **todas as épocas**, incluindo os grandes nomes antes de 1970 |
+| Nível   | Quem vale                                   | Quem costuma ser sorteado                   |
+|---------|---------------------------------------------|---------------------------------------------|
+| Fácil   | atuou pelo clube de **1970** em diante      | 95% das vezes, alguém de **2010** em diante |
+| Normal  | atuou pelo clube de **1970** em diante      | 75% das vezes, alguém de **2000** em diante |
+| Lendas  | **todas as épocas**, inclusive antes de 1970 | qualquer época                              |
 
 O critério usa o ano do último jogo (`ultimo`); quem ainda está no elenco (`ultimo: null`) entra nos dois.
 
