@@ -70,8 +70,11 @@
   // ---------------- partida ----------------
   // Para as chances, os jogos contra o mesmo adversário numa fase valem um só:
   // ida e volta no mata-mata, casa e fora na fase de grupos.
-  function unidades(jogos) {
-    return new Set(jogos.map(j => `${j.fase}|${j.adv}`)).size;
+  // Base das chances: jogos contra o mesmo adversário numa fase contam como um só.
+  // No Extremo, cada jogo da fase de grupos conta separado (casa e fora = 2); o mata-mata segue 1 por confronto.
+  function unidades(jogos, modo) {
+    const extremo = MODOS[modo]?.placar;
+    return new Set(jogos.map((j, i) => extremo && j.fase === "Fase de grupos" ? `g|${i}` : `${j.fase}|${j.adv}`)).size;
   }
 
   function comecar() {
@@ -85,7 +88,7 @@
     jogo = {
       comp: escolha.comp, ano, modo: escolha.modo, jogos: camp.jogos.map((j, i) => ({ ...j, i })),
       resultado: camp.resultado, revelados: new Set(), usadas: 0,
-      chances: Math.ceil(unidades(camp.jogos) * MODOS[escolha.modo].fator), erros: [], fim: false, novos: new Set()
+      chances: Math.ceil(unidades(camp.jogos, escolha.modo) * MODOS[escolha.modo].fator), erros: [], fim: false, novos: new Set()
     };
     $("tela-inicio").hidden = true;
     $("tela-jogo").hidden = true;
