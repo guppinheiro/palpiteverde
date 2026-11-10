@@ -71,9 +71,10 @@
   // desde: quem pode ser palpite e sorteado (último jogo a partir desse ano).
   // recorte/chance: no sorteio, "chance" das vezes sai alguém com último jogo a partir de "recorte".
   const NIVEIS = {
-    facil:   { desde: 1970, recorte: 2010, chance: 0.95, rotulo: "fácil",  nome: "Fácil",  semente: 1914 },
-    dificil: { desde: 1970, recorte: 2000, chance: 0.75, rotulo: "normal", nome: "Normal", semente: 1942 },
-    lendas:  { desde: 0,                                 rotulo: "lendas", nome: "Lendas", semente: 1951 }
+    // jogos: quanto o número de jogos pelo clube pesa no sorteio (expoente; teto de "tetoJogos")
+    facil:   { desde: 1970, recorte: 2010, chance: 0.95, jogos: 2,   tetoJogos: 300, rotulo: "fácil",  nome: "Fácil",  semente: 1914 },
+    dificil: { desde: 1970, recorte: 2000, chance: 0.75, jogos: 1.3, tetoJogos: 300, rotulo: "normal", nome: "Normal", semente: 1942 },
+    lendas:  { desde: 0,                                 jogos: 0.5, tetoJogos: 200, rotulo: "lendas", nome: "Lendas", semente: 1951 }
   };
   // Quem tem poucos jogos pelo clube vale como palpite, mas não é sorteado
   const JOGOS_MIN_SORTEIO = 10;
@@ -88,19 +89,21 @@
   // Peso no sorteio = época × história no clube.
   // Época: o peso cai com o tempo desde o último jogo pelo clube. Elenco
   // atual ≈ 4,5; 2020 ≈ 3,5; 2010 ≈ 1,7; 2000 ≈ 1,0; anos 1970 ≈ 0,6.
-  // História: quem jogou mais sai mais (200+ jogos = 1; 50 jogos = 0,5; 10 jogos ≈ 0,22).
-  function peso(j) {
+  // História: (jogos / teto) elevado ao expoente do nível. Fácil (²) e Normal (^1,3) dão
+  // muito mais chance a quem jogou mais; Lendas (raiz) é mais equilibrado.
+  function peso(j, nivel = "lendas") {
+    const cfg = NIVEIS[nivel];
     const anos = ANO_ATUAL - (j.ultimo ?? ANO_ATUAL);
     const epoca = 0.5 + 4 * Math.exp(-anos / 12);
-    const historia = Math.sqrt(Math.min(j.jogos, 200) / 200);
+    const historia = Math.pow(Math.min(j.jogos, cfg.tetoJogos) / cfg.tetoJogos, cfg.jogos);
     return epoca * historia;
   }
 
-  function sortearPonderado(lista, rnd) {
-    const total = lista.reduce((s, j) => s + peso(j), 0);
+  function sortearPonderado(lista, rnd, nivel) {
+    const total = lista.reduce((s, j) => s + peso(j, nivel), 0);
     let r = rnd() * total;
     for (const j of lista) {
-      r -= peso(j);
+      r -= peso(j, nivel);
       if (r < 0) return j;
     }
     return lista[lista.length - 1];
@@ -110,11 +113,11 @@
   // nível), depois sorteia dentro dela com o peso de época e história.
   function sortearNivel(lista, rnd, nivel) {
     const cfg = NIVEIS[nivel];
-    if (!cfg.recorte) return sortearPonderado(lista, rnd);
+    if (!cfg.recorte) return sortearPonderado(lista, rnd, nivel);
     const recentes = lista.filter(j => (j.ultimo ?? ANO_ATUAL) >= cfg.recorte);
     const antigos = lista.filter(j => (j.ultimo ?? ANO_ATUAL) < cfg.recorte);
     const faixa = rnd() < cfg.chance ? recentes : antigos;
-    return sortearPonderado(faixa.length ? faixa : lista, rnd);
+    return sortearPonderado(faixa.length ? faixa : lista, rnd, nivel);
   }
 
   // Quantos sorteios recentes ficam bloqueados para não repetir jogador
