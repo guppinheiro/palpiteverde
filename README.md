@@ -84,7 +84,9 @@ python3 -m http.server 8000
 # abra http://localhost:8000
 ```
 
-Para publicar, basta servir os arquivos (por exemplo, GitHub Pages apontando para a raiz do repositório).
+## Publicação (GitHub Pages)
+
+O workflow `.github/workflows/pages.yml` publica o site a cada push (só `index.html`, `css/`, `js/` e `img/`). Para ligar, uma única vez: no GitHub, **Settings → Pages → Build and deployment → Source: GitHub Actions**. O endereço fica `https://guppinheiro.github.io/guppi/`. Em repositório privado, o GitHub Pages exige plano pago; a alternativa gratuita é conectar o repositório ao Netlify ou ao Cloudflare Pages (sem comando de build, pasta raiz).
 
 ## De onde vêm os jogadores
 

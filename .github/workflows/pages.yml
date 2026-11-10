@@ -1,0 +1,38 @@
+# Publica o Palpite Verde no GitHub Pages a cada push.
+# Requer, uma única vez: Settings → Pages → Source: "GitHub Actions".
+name: Publicar site
+
+on:
+  push:
+    branches: [main, claude/nossotime-site-analysis-r0hoip]
+    paths: ["index.html", "css/**", "js/**", "img/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Montar a pasta do site (só o que o jogo usa)
+        run: |
+          mkdir _site
+          cp -r index.html css js img _site/
+          touch _site/.nojekyll
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
